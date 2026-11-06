@@ -1,4 +1,4 @@
-# EAB CLI — EVE Asset Builder Utilities
+# EAB CLI — EVE Asset Builder Commandline Interface
 
 Command-line distribution of **EVE Asset Builder (EAB)** for Bridgetek EVE display
 controllers (FT80x, FT81x, BT88x, BT81x, BT82x).
@@ -31,8 +31,7 @@ eab_tools.exe --version
 eab_tools.exe list-tools
 ```
 
-`--version` reports the build version, e.g.
-`EAB Asset Builder Utilities, version 0.0.2`.
+`--version` reports the build version`.
 
 Convert an image for a BT82x target:
 

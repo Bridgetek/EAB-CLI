@@ -1,0 +1,13 @@
+BT82X BLOB
+==========
+
+BT82X uses a single flash driver blob for the whole generation, so there are no
+per-chip folders and no per-part release notes like the BT815/6 and BT817/8
+blobs have.
+
+bt82x.blob in this folder is the blob the Flash Image Generator writes when a
+BT82X part is selected. The Generator's Blob File list is scanned from
+flash_blob/, so any other *.blob dropped here shows up in that list too, and
+Browse… still takes any blob on the PC.
+
+For the NOR blob history see ../bt815_6-blob/README and ../bt817_8-blob/README.

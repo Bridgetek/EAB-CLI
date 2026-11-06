@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disassembler Utilities</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🧾 Disassembler Utilities</h1>
+      <p>Decode an EVE display list into readable instructions (BT82X / Legacy)</p>
+    </div>
+    <div class="app-row flex-nowrap">
+      <div class="left-col">
+        <div class="card col-12 col-sm-12 col-md-12" id="input-card" data-eab-role="input">
+          <div class="card-title"><span>📂 Input File <span id="file-count">(0)</span></span>
+            <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickInputFile()">＋ Add files…</button>
+            <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="addInputFolder()">📁 Add folder</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="disassembler" onclick="eabUseSample('disassembler', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearInputFiles()">🗑 Clear all</button>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-path" data-picker="btn-add-files"
+               tabindex="0" role="button" aria-label="Drop display lists or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="disassembler" onclick="eabUseSample('disassembler', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Show the preview and options columns">Show options ▸</button></div>
+            <span class="dz-icon">🧾</span>
+            <div>Drop one or more display lists here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — hex text or raw 32-bit LE binary</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <div id="empty-msg" class="file-list-empty">No display lists queued — drop a file above or click "Add files…".</div>
+          <div id="input-list" class="file-list list-group input-list"></div>
+          <div class="progress-status"></div>
+          <input id="input-path" type="text" class="visually-hidden form-control" readonly aria-hidden="true" tabindex="-1">
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="output-card" data-eab-role="output">
+          <div class="card-title">📁 Output</div>
+          <div class="row">
+            <div class="col-12">
+              <div class="input-group">
+                <span class="input-group-text">📁 Output folder</span>
+                <input id="output-dir" type="text" class="input-field is-path form-control" placeholder="Output folder..." value="." spellcheck="false">
+                <button id="btn-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickOutputDir()">Browse…</button>
+                <button id="btn-open-output" class="btn btn-secondary btn-sm" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mid-col">
+        <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar">
+          <div class="btn-progress-wrap overflow-hidden position-relative">
+            <div id="progress-fill" class="btn-progress-fill"></div>
+            <button id="btn-run" class="btn btn-primary" data-label="🔄 Disassemble" onclick="startRun()">🔄 Disassemble</button>
+          </div>
+          <div id="convert-controls" class="convert-controls hidden"></div>
+        </div>
+        <div id="disc-preview" class="card col-12 col-sm-12 col-md-12" data-eab-role="preview">
+          <div class="card-title">👁 Preview</div>
+          <div id="disc-empty" class="disc-empty">No file selected</div>
+          <div id="disc-meta" class="disc-meta hidden">
+            <div class="disc-row"><span class="disc-label">File</span><span id="disc-name" class="disc-value">-</span></div>
+            <div class="disc-row"><span class="disc-label">Detected</span><span id="disc-kind" class="disc-value">-</span></div>
+            <div class="disc-row"><span class="disc-label">Size</span><span id="disc-size" class="disc-value">-</span></div>
+            <div class="disc-row"><span class="disc-label">Command words</span><span id="disc-words" class="disc-value">-</span></div>
+            <div class="disc-row"><span class="disc-label">Decoded with</span><span id="disc-chip" class="disc-value">-</span></div>
+          </div>
+          <div id="disc-snippet-wrap" class="disc-snippet-wrap hidden">
+            <div class="disc-snippet-head" id="disc-snippet-head">First words</div>
+            <pre id="disc-snippet" class="disc-snippet"></pre>
+          </div>
+          <div id="disc-note" class="disc-note">Select a display list to inspect it before decoding.</div>
+        </div>
+                <div id="error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+      </div>
+      <div class="right-col">
+        <div class="card col-12 col-sm-12 col-md-12" id="chip-card" data-eab-role="chip">
+          <div class="card-title">🔳 EVE Chip</div>
+          <select id="chip-one" class="form-select" aria-label="EVE chip" title="The part name you have (FT813, BT883…). BT820 decodes with the BT82X command set.">
+            <option value="">Select chip…</option>
+          </select>
+          <div class="hint">Pick an EVE chip.</div>
+          <div class="hint" id="chip-hint">Decodes with the BT82X command set (no -c chip flag).</div>
+          <div id="chip-sources" hidden>
+            <div class="chip-pick">
+              <span data-chip-label="gen">Chip generation</span>
+              <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                <option value=""></option>
+                <option value="FT80X">FT80x · FT800 / FT801</option>
+                <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT82X" selected>BT82x · BT820</option>
+              </select>
+            </div>
+            <div class="chip-pick">
+              <span data-chip-label="part">🔳 EVE Chip</span>
+              <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                <option value=""></option>
+                <option value="FT800">FT800</option>
+                <option value="FT801">FT801</option>
+                <option value="FT810">FT810</option>
+                <option value="FT811">FT811</option>
+                <option value="FT812">FT812</option>
+                <option value="FT813">FT813</option>
+                <option value="BT880">BT880</option>
+                <option value="BT881">BT881</option>
+                <option value="BT882">BT882</option>
+                <option value="BT883">BT883</option>
+                <option value="BT815">BT815</option>
+                <option value="BT816">BT816</option>
+                <option value="BT817">BT817</option>
+                <option value="BT818">BT818</option>
+                <option value="BT820" selected>BT820</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="options-card" data-eab-role="options">
+          <div class="card-title">⚙ Options</div>
+          <div class="opt-body">
+            <div class="opt-check">
+              <input id="detail-flag" type="checkbox" checked class="form-check-input">
+              <label class="form-check-label" for="detail-flag">Detailed output format (-d)</label>
+            </div>
+            <div class="hint">When off, only the decoded instruction lines are written.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="state.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="decoder.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

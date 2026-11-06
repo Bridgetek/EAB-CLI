@@ -1,0 +1,50 @@
+{
+  "id": "session",
+  "date_install": "2026-10-15_08:00:00:015",
+  "category": "session",
+  "name": "Session",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "EAB sessions: create, save, auto-save and restore *.eab session files and keep the recent-session list. A Config > Session submenu exposes the current session, New Session, Save Session, Auto save (with the time since the last save) and Open / Restore Session. Manages session data only. Commands: session",
+  "icon": "\ud83d\uddc2\ufe0f",
+  "ui": "ui.html",
+  "cli_commands": [
+    "session",
+    "bt82x session",
+    "ft80x session",
+    "ft81x session",
+    "bt88x session",
+    "bt81x session"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.both"
+  ],
+  "dependencies": [],
+  "app_dlls": [
+    "native/session_cvt.dll"
+  ],
+  "menus": [
+    {
+      "menu": "config",
+      "label": "Session",
+      "order": 10,
+      "items": [
+        { "id": "current", "label": "No session", "type": "info" },
+        { "id": "new", "label": "New Session…", "type": "item" },
+        { "id": "save", "label": "Save Session", "type": "item" },
+        { "id": "autosave", "label": "Auto save (enabled)", "type": "check", "checked": true },
+        { "id": "restore", "label": "Open / Restore Session…", "type": "item" }
+      ]
+    }
+  ],
+  "api_version": "1.0",
+  "start_with_eab": "no",
+  "show_in_toolbar": false
+}

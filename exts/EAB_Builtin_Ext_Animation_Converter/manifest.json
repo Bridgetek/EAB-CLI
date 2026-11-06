@@ -1,0 +1,37 @@
+{
+  "id": "animation_converter",
+  "date_install": "2026-10-15_08:00:00:005",
+  "category": "converter",
+  "name": "Animation Converter",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Convert GIF animations for EVE display chips. Commands: bt82x animation, Legacy animation",
+  "icon": "\ud83c\udf9e\ufe0f",
+  "ui": "ui.html",
+  "cli_commands": [
+    "bt82x animation",
+    "ft80x animation",
+    "ft81x animation",
+    "bt88x animation",
+    "bt81x animation"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.bt82x",
+    "cli.legacy"
+  ],
+  "dependencies": {
+    "astc": "^5.5"
+  },
+  "app_dlls": [
+    "native/anim_cvt.dll"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

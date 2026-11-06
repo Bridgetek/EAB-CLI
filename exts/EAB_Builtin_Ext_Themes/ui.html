@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EAB Themes</title>
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div class="app-container">
+  <div class="app-header">
+    <h1>🎨 Themes</h1>
+    <p>Pick a theme — the host window and every extension follow it.</p>
+  </div>
+  <div class="card">
+    <div class="card-title">🎨 Installed Themes</div>
+    <div class="theme-grid" id="theme-grid"></div>
+    <div class="eab-hint">A theme is code in the pack and data for the host: this extension keeps its palettes in <code>themes.js</code>, hands them over through <code>EAB_THEME_API</code>, and any extension can ship its own.</div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

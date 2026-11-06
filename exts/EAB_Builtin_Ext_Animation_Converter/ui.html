@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animation Converter</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🎬 Animation Converter</h1>
+      <p>Convert GIF animations for EVE display chips (BT82X / Legacy)</p>
+    </div>
+    <div class="app-row flex-nowrap">
+      <div class="left-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" id="input-card" data-eab-role="input">
+          <div class="card-title"><span>📂 Input GIFs <span id="file-count">(0)</span></span>
+            <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickGifFiles()">＋ Add files…</button>
+            <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" title="Use a folder of numbered PNG frames instead of a GIF" onclick="pickGifFolder()">📁 Add PNG folder</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="animation" onclick="eabUseSample('animation', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
+               tabindex="0" role="button" aria-label="Drop GIF files or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="animation" onclick="eabUseSample('animation', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <span class="dz-icon">🎬</span>
+            <div>Drop one or more GIFs here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — GIF, or a folder of numbered PNG frames</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <div id="empty-msg" class="file-list-empty">No GIFs queued — drop a file above or click "Add files…".</div>
+          <div id="input-list" class="file-list list-group"></div>
+          <div class="progress-status" id="row-progress-status"></div>
+          <input id="gif-path" type="hidden">
+          <div id="gif-info" class="gif-info hidden">
+            <div class="info-row"><span class="info-label">Frames:</span><span id="frame-count">-</span></div>
+            <div class="info-row"><span class="info-label">Size:</span><span id="frame-size">-</span></div>
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="output">
+          <div class="row">
+          <div class="input-row">
+            <label for="output-dir">📁 Output folder</label>
+            <input id="output-dir" type="text" class="input-field is-path form-control" placeholder="Output folder..." value="." spellcheck="false">
+            <div class="input-row-actions">
+              <button id="btn-output-browse" class="btn btn-secondary" type="button" onclick="pickOutputDir()">Browse…</button>
+              <button id="btn-open-output" class="btn btn-secondary" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂 Open Output Folder</button>
+            </div>
+          </div>
+          <div class="input-row">
+            <label for="output-name">📝 Output name</label>
+            <input id="output-name" type="text" class="input-field form-control" placeholder="Output name (no extension)" value="animation">
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="mid-col overflow-y-auto">
+        <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar">
+          <div class="btn-progress-wrap overflow-hidden position-relative">
+            <div id="progress-fill" class="btn-progress-fill"></div>
+            <button id="btn-convert" class="btn btn-primary" disabled onclick="startBatch()">🔄 Convert Animation</button>
+          </div>
+          <div id="run-status" class="run-status hidden"></div>
+          <div id="convert-controls" class="convert-controls hidden">
+            <button id="btn-batch-pause" class="btn btn-secondary" type="button" onclick="eabToggleBatchPause()">⏸ Pause</button>
+            <button id="btn-batch-stop" class="btn btn-secondary" type="button" onclick="eabStopBatch()">■ Stop all</button>
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="preview">
+          <div class="card-title">👁 Preview</div>
+          <div class="preview-container">
+            <canvas id="preview-canvas" width="320" height="240"></canvas>
+            <div class="preview-controls">
+              <button class="btn btn-sm btn-secondary" type="button" onclick="prevFrame()">◀</button>
+              <span id="frame-indicator">0 / 0</span>
+              <button class="btn btn-sm btn-secondary" type="button" onclick="nextFrame()">▶</button>
+              <button id="pv-play" class="btn btn-sm btn-secondary" type="button" onclick="playAnim()">▶▶ Play</button>
+            </div>
+            <input id="pv-scrub" class="pv-scrub" type="range" min="0" max="0" value="0" disabled
+                   oninput="selectFrame(this.value)" aria-label="Scrub frames">
+            <div id="pv-strip" class="pv-strip"></div>
+            <div id="pv-meta" class="pv-meta">
+              <div class="pv-row"><span class="pv-label">Frame size</span><span id="pv-size" class="pv-value">-</span></div>
+              <div class="pv-row"><span class="pv-label">Frames</span><span id="pv-frames" class="pv-value">-</span></div>
+              <div class="pv-row"><span class="pv-label">Frame delay</span><span id="pv-delay" class="pv-value">-</span></div>
+              <div class="pv-row"><span class="pv-label">Duration</span><span id="pv-duration" class="pv-value">-</span></div>
+              <div class="pv-row"><span class="pv-label">File size</span><span id="pv-filesize" class="pv-value">-</span></div>
+            </div>
+            <div id="pv-note" class="pv-note">Select a GIF to preview its frames.</div>
+          </div>
+        </div>
+                <div id="error-panel" class="alert alert-danger hidden"></div>
+      </div>
+      <div class="right-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="options">
+          <div class="card-title">🔳 EVE Chip</div>
+          <select id="chip-one" class="form-select" aria-label="EVE chip" title="The part name you have (FT813, BT883…). BT820 writes the EVE 5 asset format; every other part writes the pre-BT82X format.">
+            <option value="">Select chip…</option>
+          </select>
+          <div class="hint">Pick an EVE chip.</div>
+          <div id="chip-sources" hidden>
+            <div class="chip-pick">
+              <span data-chip-label="gen">Chip generation</span>
+              <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                <option value=""></option>
+                <option value="FT80X">FT80x · FT800 / FT801</option>
+                <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT82X" selected>BT82x · BT820</option>
+              </select>
+            </div>
+            <div class="chip-pick">
+              <span data-chip-label="part">🔳 EVE Chip</span>
+              <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                <option value=""></option>
+              <option value="FT800">FT800</option>
+              <option value="FT801">FT801</option>
+              <option value="FT810">FT810</option>
+              <option value="FT811">FT811</option>
+              <option value="FT812">FT812</option>
+              <option value="FT813">FT813</option>
+              <option value="BT880">BT880</option>
+              <option value="BT881">BT881</option>
+              <option value="BT882">BT882</option>
+              <option value="BT883">BT883</option>
+              <option value="BT815">BT815</option>
+              <option value="BT816">BT816</option>
+              <option value="BT817">BT817</option>
+              <option value="BT818">BT818</option>
+              <option value="BT820" selected>BT820</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="options-card" data-eab-role="options">
+          <div class="card-title">⚙ Options</div>
+          <div class="opt-grid">
+            <div class="opt-field">
+              <label for="astc-block" title="ASTC block footprint">Block</label>
+              <select id="astc-block" class="form-select">
+                <option value="4x4">4x4</option>
+                <option value="5x4">5x4</option>
+                <option value="5x5">5x5</option>
+                <option value="6x5">6x5</option>
+                <option value="6x6">6x6</option>
+                <option value="8x5">8x5</option>
+                <option value="8x6">8x6</option>
+                <option value="8x8" selected>8x8</option>
+                <option value="10x5">10x5</option>
+                <option value="10x6">10x6</option>
+                <option value="10x8">10x8</option>
+                <option value="10x10">10x10</option>
+                <option value="12x10">12x10</option>
+                <option value="12x12">12x12</option>
+              </select>
+            </div>
+            <div class="opt-field">
+              <label for="astc-effort" title="ASTC encoding effort">Effort</label>
+              <select id="astc-effort" class="form-select">
+                <option value="fastest">Fastest</option>
+                <option value="fast">Fast</option>
+                <option value="medium">Medium</option>
+                <option value="thorough">Thorough</option>
+                <option value="exhaustive">Exhaustive</option>
+              </select>
+            </div>
+            <div class="opt-field">
+              <label for="tile-size" title="Tile size">Tile</label>
+              <select id="tile-size" class="form-select" onchange="onTileChange()">
+                <option value="auto" selected>Auto</option>
+                <option value="not-apply">No tile</option>
+                <option value="manual">Manual…</option>
+                <option value="3x2">3x2</option>
+                <option value="3x3">3x3</option>
+                <option value="4x4">4x4</option>
+                <option value="5x4">5x4</option>
+                <option value="6x5">6x5</option>
+                <option value="6x6">6x6</option>
+              </select>
+            </div>
+            <div class="opt-field hidden" id="tile-manual">
+              <label for="tile-w" title="Tile width × height">W × H</label>
+              <div class="input-row">
+                <input id="tile-w" type="number" class="input-field form-control" value="4" min="1" max="64">
+                <input id="tile-h" type="number" class="input-field form-control" value="4" min="1" max="64">
+              </div>
+            </div>
+            <div class="opt-field hidden" id="legacy-options">
+              <label for="memory-type" title="Memory device">Memory</label>
+              <select id="memory-type" class="form-select">
+                <option value="FLASH">FLASH</option>
+                <option value="RAM_G">RAM_G</option>
+              </select>
+            </div>
+            <div class="opt-field" id="address-field">
+              <label for="address-value">Address</label>
+              <input id="address-value" type="number" class="input-field form-control" value="0" min="0" step="64"
+                     title="Byte offset in FLASH / RAM_G — legacy chips only">
+            </div>
+            <div class="opt-field is-check hidden" id="bt82x-options">
+              <input id="reloc-check" type="checkbox">
+              <label for="reloc-check" title="Enable relocation">Reloc</label>
+            </div>
+            <div class="opt-field">
+              <label for="opt-fps" title="Preview playback speed">FPS</label>
+              <input id="opt-fps" type="number" class="input-field form-control" min="1" max="60" step="1" value="30"
+                     onchange="restartPreviewTimer()" title="Preview playback speed">
+            </div>
+            <div class="opt-field">
+              <label for="opt-frames" title="Frames in the selected GIF">Frames</label>
+              <input id="opt-frames" type="text" class="input-field form-control" value="-" readonly
+                     title="Frames in the selected GIF">
+            </div>
+            <div class="opt-field span-2">
+              <label for="astcenc-path" title="Path to astcenc.exe">astcenc</label>
+              <div class="input-row">
+                <input id="astcenc-path" type="text" class="input-field form-control" placeholder="Auto-detect">
+                <button class="btn btn-secondary" type="button" onclick="pickAstcenc()">Browse…</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="state.js"></script>
+<script src="chip_data.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="decoder.js"></script>
+<script src="preview_image.js"></script>
+<script src="cli_args.js"></script>
+<script src="file_drop.js"></script>
+<script src="media_player.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

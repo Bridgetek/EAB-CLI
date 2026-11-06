@@ -1,0 +1,30 @@
+{
+  "id": "eve_extension",
+  "date_install": "2026-10-15_08:00:00:000",
+  "category": "eve_custom",
+  "name": "EVE Extension",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Generate BT82x extension patch files (.bin/.h/.c/.py/.json). Command: eve_extension",
+  "icon": "\ud83e\udde9",
+  "ui": "ui.html",
+  "cli_commands": [
+    "eve_extension"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.both"
+  ],
+  "dependencies": [],
+  "app_dlls": [
+    "native/eve_extension_cvt.dll"
+  ],
+  "api_version": "1.0",
+  "start_with_eab": "yes"
+}

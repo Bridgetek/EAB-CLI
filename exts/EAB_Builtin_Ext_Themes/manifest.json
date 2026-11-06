@@ -1,0 +1,167 @@
+{
+  "id": "eab-builtin-themes",
+  "date_install": "2026-10-15_08:00:00:016",
+  "category": "other",
+  "name": "Themes",
+  "version": "1.0.0",
+  "extension_type": "theme",
+  "engine": "native",
+  "author": "Bridgetek",
+  "description": "The suite's built-in themes \u2014 every palette the app ships, kept in code and handed to the host through EAB_THEME_API.",
+  "icon": "\ud83c\udfa8",
+  "ui": "ui.html",
+  "cli_commands": [],
+  "permissions": [
+    "gui.render"
+  ],
+  "dependencies": [],
+  "app_dlls": [],
+  "api_version": "1.0",
+  "start_with_eab": "no",
+  "themes": [
+    {
+      "id": "builtin-theme-dark",
+      "name": "EAB theme - Dark",
+      "mode": "dark",
+      "description": "Default dark palette"
+    },
+    {
+      "id": "builtin-theme-light",
+      "name": "EAB theme - Light",
+      "mode": "light",
+      "description": "Neutral light palette"
+    },
+    {
+      "id": "builtin-theme-milk",
+      "name": "EAB theme - Milk White",
+      "mode": "light",
+      "description": "Warm off-white palette"
+    },
+    {
+      "id": "builtin-theme-linear",
+      "name": "EAB theme - Linear Minimal Dark",
+      "mode": "dark",
+      "description": "Near-black chrome, hairline borders, tight typography"
+    },
+    {
+      "id": "builtin-theme-geist",
+      "name": "EAB theme - Vercel Geist",
+      "mode": "light",
+      "description": "Strict monochrome, crisp rules, high contrast"
+    },
+    {
+      "id": "builtin-theme-raycast",
+      "name": "EAB theme - Raycast",
+      "mode": "dark",
+      "description": "Compact command-palette look with loud selection states"
+    },
+    {
+      "id": "builtin-theme-apple",
+      "name": "EAB theme - Apple Spatial",
+      "mode": "light",
+      "description": "Layered depth, soft edges, tight system typography"
+    },
+    {
+      "id": "builtin-theme-bento",
+      "name": "EAB theme - Bento",
+      "mode": "light",
+      "description": "Modular tiles: cards read lighter than the page"
+    },
+    {
+      "id": "builtin-theme-glass",
+      "name": "EAB theme - Refined Glass",
+      "mode": "dark",
+      "description": "Translucent chrome over a deep backdrop"
+    },
+    {
+      "id": "builtin-theme-brutalist",
+      "name": "EAB theme - Neo Brutalism",
+      "mode": "light",
+      "description": "Paper stock, hard black edges, heavy type, loud accent"
+    },
+    {
+      "id": "builtin-theme-soft",
+      "name": "EAB theme - Soft Minimalism",
+      "mode": "light",
+      "description": "Warm neutrals and barely-there edges"
+    },
+    {
+      "id": "builtin-theme-cyber",
+      "name": "EAB theme - Dark Cyber",
+      "mode": "dark",
+      "description": "Deep blue-black with two controlled neons"
+    },
+    {
+      "id": "builtin-theme-swiss",
+      "name": "EAB theme - Editorial Swiss",
+      "mode": "light",
+      "description": "White stock, crisp rules, grotesk type, one red"
+    },
+    {
+      "id": "builtin-theme-legacy",
+      "name": "EAB theme - Legacy",
+      "mode": "light",
+      "description": "EAB 4.5.0 look: native Qt/Windows colours and form layout"
+    },
+    {
+      "id": "builtin-theme-skeuomorphism",
+      "name": "EAB Theme - Skeuomorphism",
+      "mode": "light",
+      "description": "Real materials: paper stock, brushed metal bars, bevelled controls"
+    },
+    {
+      "id": "builtin-theme-minimalism",
+      "name": "EAB Theme - Minimalism",
+      "mode": "light",
+      "description": "Hairlines, air and one ink colour — nothing decorative"
+    },
+    {
+      "id": "builtin-theme-glassmorphism",
+      "name": "EAB Theme - Glassmorphism",
+      "mode": "dark",
+      "description": "Frosted panes floating over a saturated gradient"
+    },
+    {
+      "id": "builtin-theme-neumorphism",
+      "name": "EAB Theme - Neumorphism",
+      "mode": "light",
+      "description": "One material, extruded: soft light and dark shadows on a single surface"
+    },
+    {
+      "id": "builtin-theme-claymorphism",
+      "name": "EAB Theme - Claymorphism",
+      "mode": "light",
+      "description": "Puffy pastel clay: big radii, inner light, coloured ambient shadow"
+    },
+    {
+      "id": "builtin-theme-neo-brutalism",
+      "name": "EAB Theme - Neo brutalism",
+      "mode": "light",
+      "description": "Paper stock, hard black rules, offset shadows, one loud accent"
+    },
+    {
+      "id": "builtin-theme-bento-grid",
+      "name": "EAB Theme - Bento grid",
+      "mode": "light",
+      "description": "The page as a tray of rounded tiles with hairline edges"
+    },
+    {
+      "id": "builtin-theme-retro-y2k",
+      "name": "EAB Theme - Retro y2k",
+      "mode": "dark",
+      "description": "Chrome gradients, techno type, cyan and magenta glow over a starfield"
+    },
+    {
+      "id": "builtin-theme-liquid-glass",
+      "name": "EAB Theme - Liquid glass",
+      "mode": "dark",
+      "description": "Dark pool with light refracting through heavy-blurred chrome"
+    },
+    {
+      "id": "builtin-theme-flat",
+      "name": "EAB Theme - Flat design",
+      "mode": "light",
+      "description": "Solid fills, no gradients, no shadows — hierarchy from colour alone"
+    }
+  ]
+}

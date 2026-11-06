@@ -1,0 +1,119 @@
+BT815/6 BLOB Version 8
+======================
+
+Release note:
+1) Refixing multiple switching between cmd_flashdetach, cmd_flashattach and cmd_flashfast not working
+   as previous fixed affected OTP patches for cmd_setfont2, cmd_playvideo and cmd_videostartf.
+
+BT815/6 BLOB Version 7
+======================
+
+Release note:
+1) Fix multiple switching between cmd_flashdetach, cmd_flashattach and cmd_flashfast not working.
+
+
+BT815/6 BLOB Version 6
+======================
+
+Release note:
+1) Include patches for Display List instruction overfetch.
+   For details, refer to https://brtchip.com/wp-content/uploads/2024/04/BRT_TN_005_BT81x_Errata_Technical_Note.pdf
+
+2) This release contains three different BLOB:
+   - default-fl.blob
+   - cypress-fl.blob
+   - macronix-fl.blob
+
+2.1) default-fl.blob
+     Always select this blob as default blob except for RDID indicate in 2.2 and 2.3.
+     This blob includes coprocessor patches and support the list of flash chips as below:
+
+     Cypress:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           S25FL-K       |  S25FL116K0XMFB040
+           S25FL-K       |  S25FL132K0XMFA010
+           S25FL-K       |  S25FL164K0XMFI011
+           S25FS-S       |  S25FS128SAGMFI101
+
+     GigaDevice:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           GD25Q-D       |  GD25Q256DYIGR
+           GD25Q-C       |  GD25Q127CSIGR
+           GD25Q-C       |  GD25Q64CSIGR
+           GD25Q-C       |  GD25Q32CSIGR
+           GD25Q-C       |  GD25Q64CSIG
+
+     ISSI:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           IS25LP-M      |  IS25LP512M-RMLE
+           IS25WP        |  IS25WP128-JBLE
+           IS25LP-A      |  IS25LP064A-JBLE
+           IS25WP-A      |  IS25WP064A-JBLE
+           IS25LP-D      |  IS25LP032D-JBLE
+           IS25LP-D      |  IS25LP016D-JBLE
+           IS25LP-A      |  IS25LP128-JBLE
+           IS25LP-D      |  IS25LP256D-JLLE
+
+     Micron:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           MT25QL-A      |  MT25QL128ABA8ESF-0AAT
+           MT25QL-A      |  MT25QL512ABB8ESF-0AAT
+           MT25QL-A      |  MT25QL256ABA1EW9-0SIT
+           MT25QL-A      |  MT25QL128ABA1EW7-0SIT
+           MT25QL-B      |  MT25QL01GBBB8ESF-0SIT
+
+     Winbond:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           W25Q-JV       |  W25Q128JVSIM
+           W25Q-NW       |  W25Q512NWEIM
+           W25Q-JV       |  W25Q16JVSSIQ
+           W25Q-FW       |  W25Q16FWSIQ
+           W25Q-JV       |  W25Q32JVSSIQ
+           W25Q-JV       |  W25Q64JVSSIQ
+           W25Q-FV       |  W25Q128FVSIG
+           W25Q-FV       |  W25Q64FVSSIG
+           W25M-JV       |  W25M512JVEIQ
+           W25Q-JV       |  W25Q256JVEIQ
+           W25Q-JV       |  W25Q128JVSIQ
+           W25Q-NW       |  W25Q01NWZEIM
+
+     ESMT/EON:
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           EN35QX-A      |  EN35QX512A
+
+2.2) cypress-fl.blob
+     This blob support Cypress flash with RDID 0160h.
+     It includes coprocessor patches and support the list of flash chips as below:
+
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           S25FL-L       |  S25FL128LAGMFA010
+           S25FL-L       |  S25FL128LAGMFM010
+           S25FL-L       |  S25FL256LAGNFV010
+           S25FL-L       |  S25FL256LAGNFM010
+           S25FL-L       |  S25FL064LABMFA001
+
+2.3) macronix-fl.blob
+     This blob support Macronix flash with RDID C220h, C223h and C225h.
+     It includes coprocessor patches and support the list of flash chips as below:
+
+       NOR flash Series  |    Part Number
+     -------------------------------------------
+           MX25L-35      |  MX25L25635FZ2I-10G
+           MX25L-35      |  MX25L12835FM2I-10G
+           MX25L-45      |  MX25L12845EZNI-10G
+           MX25L-45      |  MX25L6445EM2I-10G
+           KH25L-35      |  KH25L12835FM2I-12G
+           MX25U-45      |  MX25U51245GZ4I00
+           MX25U-35      |  MX25U12835FZ2I-10G
+           MX25U-35      |  MX25U6435FM2I-10G
+           MX25U-35      |  MX25U3235FM2I-10G
+           MX25V-35      |  MX25V1635FM2I
+
+

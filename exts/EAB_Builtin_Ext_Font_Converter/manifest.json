@@ -1,0 +1,45 @@
+{
+  "id": "font_converter",
+  "date_install": "2026-10-15_08:00:00:004",
+  "category": "converter",
+  "name": "Font Converter",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Convert EVE fonts, read font information and encode text. Commands: bt82x font, Legacy font, font_info, bt82x font_encode",
+  "icon": "\ud83d\udd24",
+  "ui": "ui.html",
+  "cli_commands": [
+    "bt82x font",
+    "ft80x font",
+    "ft81x font",
+    "bt88x font",
+    "bt81x font",
+    "font_info",
+    "bt82x font_info",
+    "ft80x font_info",
+    "ft81x font_info",
+    "bt88x font_info",
+    "bt81x font_info",
+    "bt82x font_encode"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.bt82x",
+    "cli.legacy",
+    "cli.both"
+  ],
+  "dependencies": {
+    "astc": "^5.5"
+  },
+  "app_dlls": [
+    "native/font_cvt.dll"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "video_converter",
+  "date_install": "2026-10-15_08:00:00:002",
+  "category": "converter",
+  "name": "Video Converter",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Convert videos to MJPEG AVI for EVE display chips. Commands: bt82x video, Legacy video",
+  "icon": "\ud83c\udfac",
+  "ui": "ui.html",
+  "cli_commands": [
+    "bt82x video",
+    "ft80x video",
+    "ft81x video",
+    "bt88x video",
+    "bt81x video"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.bt82x",
+    "cli.legacy"
+  ],
+  "dependencies": {
+    "ffmpeg": "^4.3"
+  },
+  "app_dlls": [
+    "native/vid_cvt.dll"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

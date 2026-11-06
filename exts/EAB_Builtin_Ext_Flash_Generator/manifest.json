@@ -1,0 +1,35 @@
+{
+  "id": "flash_generator",
+  "date_install": "2026-10-15_08:00:00:006",
+  "category": "flashing",
+  "name": "Flash Generator",
+  "version": "0.2.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Write a JSON project manifest (fonts, images, videos, animations, audio, raw assets) and build the flash image from it: each entry is converted with the real converters, packed with flash_gen and described in assets.h. Commands: flashgen, bt82x flashgen, Legacy flashgen",
+  "icon": "\ud83d\udce6",
+  "ui": "ui.html",
+  "cli_commands": [
+    "flashgen",
+    "bt82x flashgen",
+    "ft80x flashgen",
+    "ft81x flashgen",
+    "bt88x flashgen",
+    "bt81x flashgen"
+  ],
+  "permissions": [
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.bt82x",
+    "cli.legacy",
+    "cli.both"
+  ],
+  "dependencies": [],
+  "app_dlls": [
+    "native/flashgen.dll"
+  ],
+  "api_version": "1.0",
+  "start_with_eab": "no"
+}

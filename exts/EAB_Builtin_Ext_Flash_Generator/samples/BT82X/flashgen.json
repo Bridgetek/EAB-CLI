@@ -1,0 +1,30 @@
+{
+  "_comment": "EAB flashgen input. After running: the flash image, flash.json/.map/.edf/.c and the header (FLASH_ADDR_* constants)",
+  "device": "BT820",
+  "output": "build/flash.bin",
+  "gen_edf": true,
+  "no_align": false,
+  "align_asset": 64,
+  "align_image": 4096,
+  "entries": [
+    {
+      "name": "logo",
+      "type": "image",
+      "src": "case.png",
+      "format": "L8"
+    },
+    {
+      "name": "music",
+      "type": "font",
+      "src": "C:\\Users\\nvtua\\Downloads\\Gemini_Generated_Image_fe4ktqfe4ktqfe4k.png",
+      "size": 25,
+      "format": "L4"
+    },
+    {
+      "name": "ss",
+      "type": "image",
+      "src": "C:\\Users\\nvtua\\Downloads\\Gemini_Generated_Image_fe4ktqfe4ktqfe4k.png",
+      "format": "L8"
+    }
+  ]
+}

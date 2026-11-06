@@ -1,0 +1,61 @@
+{
+  "id": "custom_touch",
+  "date_install": "2026-10-15_08:00:00:013",
+  "category": "eve_custom",
+  "name": "Custom Touch",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Compile EVE custom touch firmware. Command: Legacy fwtouch",
+  "icon": "\ud83d\udc46",
+  "ui": "ui.html",
+  "cli_commands": [
+    "ft80x fwtouch",
+    "ft81x fwtouch",
+    "bt88x fwtouch",
+    "bt81x fwtouch",
+    "touch-devices",
+    "touch-pico-list",
+    "touch-pico-ports",
+    "touch-pico-ping",
+    "touch-pico-connect",
+    "touch-pico-disconnect",
+    "touch-pico-bootsel",
+    "touch-pico-flash",
+    "touch-connect",
+    "touch-disconnect",
+    "touch-status",
+    "touch-poll",
+    "touch-load-firmware",
+    "touch-calibrate",
+    "touch-read-transform",
+    "touch-write-transform",
+    "touch-read-screen",
+    "touch-write-screen",
+    "touch-set-extended",
+    "touch-set-spi-clock",
+    "touch-debug-patch",
+    "usb-watch"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.legacy"
+  ],
+  "dependencies": {
+    "jtc": "^4.5",
+    "ftdi": "^3.2",
+    "eve-emu": "^5.0",
+    "zlib": "^1.2",
+    "msvc-runtime": "^14.40"
+  },
+  "app_dlls": [
+    "native/touch_cvt.dll"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

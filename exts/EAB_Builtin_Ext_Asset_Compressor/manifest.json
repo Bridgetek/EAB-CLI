@@ -1,0 +1,35 @@
+{
+  "id": "asset_compressor",
+  "date_install": "2026-10-15_08:00:00:010",
+  "category": "other",
+  "name": "Asset Compressor",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Compress/decompress EVE assets (zlib / zopfli). Command: compress",
+  "icon": "\ud83d\udddc\ufe0f",
+  "ui": "ui.html",
+  "cli_commands": [
+    "compress",
+    "bt82x compress",
+    "ft80x compress",
+    "ft81x compress",
+    "bt88x compress",
+    "bt81x compress"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.both"
+  ],
+  "dependencies": [],
+  "app_dlls": [
+    "native/compress_cvt.dll"
+  ],
+  "api_version": "1.0",
+  "start_with_eab": "yes"
+}

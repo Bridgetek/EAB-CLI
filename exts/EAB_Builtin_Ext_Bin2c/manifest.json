@@ -1,0 +1,35 @@
+{
+  "id": "bin2c",
+  "date_install": "2026-10-15_08:00:00:011",
+  "category": "other",
+  "name": "Bin2C",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Convert a binary file to a C array. Command: bin2c",
+  "icon": "\ud83d\udd22",
+  "ui": "ui.html",
+  "cli_commands": [
+    "bin2c",
+    "bt82x bin2c",
+    "ft80x bin2c",
+    "ft81x bin2c",
+    "bt88x bin2c",
+    "bt81x bin2c"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.both"
+  ],
+  "dependencies": [],
+  "app_dlls": [
+    "native/bin2c_cvt.dll"
+  ],
+  "api_version": "1.0",
+  "start_with_eab": "yes"
+}

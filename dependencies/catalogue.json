@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "generated": "2026-11-06T09:52:51Z",
+  "generatedBy": "eab_tools deps catalog",
+  "dependencies": {
+    "astc": {
+      "description": "ASTC texture encoder used for ASTC_* bitmap and extended-font formats. The reference binary is kept verbatim so encoded blocks stay byte-identical.",
+      "versions": {
+        "5.5.0": {
+          "revision": null,
+          "license": "Apache-2.0",
+          "source": "https://github.com/ARM-software/astc-encoder",
+          "description": "ASTC texture encoder used for ASTC_* bitmap and extended-font formats. The reference binary is kept verbatim so encoded blocks stay byte-identical.",
+          "variants": {
+            "windows-x64": {
+              "path": "astc/5.5.0/windows-x64",
+              "size": 1196072,
+              "fileCount": 1,
+              "digest": "sha256:dd60272e05c2bd6cc0dc0ba53ba8fbcdfb1518159f480d4b4683af3a0d2d364a",
+              "provides": [
+                {
+                  "src": "astcenc.exe",
+                  "dst": "native/astcenc.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "astcenc.exe",
+                  "size": 1196072,
+                  "sha256": "7c255305707d16f0bf4862050732255d20cc27a41d8b7e0df646b4fe361fb86f"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "eve-emu": {
+      "description": "BT8xx/EVE emulation DLLs used by the reference helper binaries (audio verification).",
+      "versions": {
+        "5.0.25": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "BT8xx/EVE emulation DLLs used by the reference helper binaries (audio verification).",
+          "variants": {
+            "windows-x64": {
+              "path": "eve-emu/5.0.25/windows-x64",
+              "size": 5507808,
+              "fileCount": 2,
+              "digest": "sha256:eda64a8f7d0f4b2b8b601e3c4d78169556ef8238b582fe2d76c4633425dd399b",
+              "depends_on": {
+                "msvc-runtime": "^14.40"
+              },
+              "provides": [
+                {
+                  "src": "bt8xxemu.dll",
+                  "dst": "native/bt8xxemu.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "eve_hal.dll",
+                  "dst": "native/eve_hal.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "bt8xxemu.dll",
+                  "size": 5407344,
+                  "sha256": "b7a341dfaada3e6fa819cb0815dacd8730387fcb0dac31a8ec7117eb16256eb2"
+                },
+                {
+                  "path": "eve_hal.dll",
+                  "size": 100464,
+                  "sha256": "ca30722b9a8ac504f0e452216a012e5514b193ba868f7906ac462a6e8502d839"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ffmpeg": {
+      "description": "FFmpeg shared build shipped with the EAB 4.5.0 reference (libavcodec 58.99.100). The reference's binaries are kept verbatim so video (AVI) and audio output stay byte-identical.",
+      "versions": {
+        "4.3": {
+          "revision": "git-2020-08-06-2c35797",
+          "license": "GPL-3.0-or-later",
+          "source": "https://ffmpeg.org/",
+          "description": "FFmpeg shared build shipped with the EAB 4.5.0 reference (libavcodec 58.99.100). The reference's binaries are kept verbatim so video (AVI) and audio output stay byte-identical.",
+          "variants": {
+            "windows-x64": {
+              "path": "ffmpeg/4.3/windows-x64",
+              "size": 77836954,
+              "fileCount": 11,
+              "digest": "sha256:a797e22e8405ad28a6192bc8a3887acf56ecee6357c34078586d9c707f946786",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/ffmpeg",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "avcodec-58.dll",
+                  "size": 50149390,
+                  "sha256": "78831b0931e0948f8cf426e676bcd97fd8239370f6dc2ed5f42c8420cea5f83c"
+                },
+                {
+                  "path": "avdevice-58.dll",
+                  "size": 2761742,
+                  "sha256": "c351405b2d628e9da52fd212aa70569e988263fd3a209c4231199641180aa2e5"
+                },
+                {
+                  "path": "avfilter-7.dll",
+                  "size": 11024910,
+                  "sha256": "e07a57d6954423700038031ba929f9c0b1c08ed0fd0afbe5c217e239c39f7a0e"
+                },
+                {
+                  "path": "avformat-58.dll",
+                  "size": 11201038,
+                  "sha256": "7a2f2cba4c4be4038a242b5168a8f8a7efb8502afb5a7136bfd7d90b22811f45"
+                },
+                {
+                  "path": "avutil-56.dll",
+                  "size": 869902,
+                  "sha256": "5218bcab4c383a66abebbcb61fb6dd6ce69bfd9d48dbd8d17a0ca4058494cd9b"
+                },
+                {
+                  "path": "ffmpeg.exe",
+                  "size": 357390,
+                  "sha256": "763ba5f5233d9ea43cb592b27efa967ac24c6d4ccc062200391be6b714e1d645"
+                },
+                {
+                  "path": "ffplay.exe",
+                  "size": 156686,
+                  "sha256": "d3cd61489545ebb290aa86ebe342b6e2b8340c5815af2f7e4a19d9cb89937ff7"
+                },
+                {
+                  "path": "ffprobe.exe",
+                  "size": 188430,
+                  "sha256": "ae36f22626bcc0491d840bd82250cb992262b2e75af5df57b50d1c1109dd975c"
+                },
+                {
+                  "path": "postproc-55.dll",
+                  "size": 135182,
+                  "sha256": "14daf77bf6c7061b081bbc608258579837e2d4301b99ab7b9d6ee677099cfc78"
+                },
+                {
+                  "path": "swresample-3.dll",
+                  "size": 434702,
+                  "sha256": "074f994d1e41d04c161fe9221ac2640e74ae4462aa07651c7c8a914707a36fa2"
+                },
+                {
+                  "path": "swscale-5.dll",
+                  "size": 557582,
+                  "sha256": "2176f16f335277ab0e453168857dc25655d52c86a9d5b9c8299802e73e9addb6"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ftdi": {
+      "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
+      "versions": {
+        "3.2.14": {
+          "revision": null,
+          "license": "FTDI (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
+          "variants": {
+            "windows-x64": {
+              "path": "ftdi/3.2.14/windows-x64",
+              "size": 1062272,
+              "fileCount": 2,
+              "digest": "sha256:e230736e500507951ee40a277c993a20a0c693a57d211412c3ee328338189eec",
+              "provides": [
+                {
+                  "src": "libMPSSE.dll",
+                  "dst": "native/libMPSSE.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "LibFT4222-64.dll",
+                  "dst": "native/LibFT4222-64.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "LibFT4222-64.dll",
+                  "size": 504704,
+                  "sha256": "54f25f6741bb1962ffeb01e20d844cf05fd6dde575bd896da599e27dbfd54a56"
+                },
+                {
+                  "path": "libMPSSE.dll",
+                  "size": 557568,
+                  "sha256": "a2a81cd035f68e37d55fe94592839062440dab713660fe10c0a0165b991905a2"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "jtc": {
+      "description": "Custom-touch firmware/patch generators (16 MB payload).",
+      "versions": {
+        "4.5": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "Custom-touch firmware/patch generators (16 MB payload).",
+          "variants": {
+            "windows-x64": {
+              "path": "jtc/4.5/windows-x64",
+              "size": 18068456,
+              "fileCount": 2,
+              "digest": "sha256:171970f0abda60b9edd5b281f89126209c53aa3214e376ab14eca040bfb0d500",
+              "provides": [
+                {
+                  "src": "jtc.exe",
+                  "dst": "native/jtc.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "jtc_FT81X_BT88X.exe",
+                  "dst": "native/jtc_FT81X_BT88X.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "jtc.exe",
+                  "size": 9034776,
+                  "sha256": "75d5e6cffd0fa59bb60c6c01deda9bc9a77583f2d06a6e448534ad3636cad449"
+                },
+                {
+                  "path": "jtc_FT81X_BT88X.exe",
+                  "size": 9033680,
+                  "sha256": "774c344faa208c60347659d32458ac0a85880f69477b49e4710fc2bcc0855ea7"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "msvc-runtime": {
+      "description": "Visual C++ runtime DLLs required by the FTDI/EVE emulation DLLs and the bundled helper executables.",
+      "versions": {
+        "14.40.33816": {
+          "revision": null,
+          "license": "Microsoft Visual C++ Redistributable (redistributable terms)",
+          "source": "https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist",
+          "description": "Visual C++ runtime DLLs required by the FTDI/EVE emulation DLLs and the bundled helper executables.",
+          "variants": {
+            "windows-x64": {
+              "path": "msvc-runtime/14.40.33816/windows-x64",
+              "size": 1044168,
+              "fileCount": 4,
+              "digest": "sha256:2d5a9a77cd4eac77d2000f184aa54a30e2b9bfa87565439f3114c561bb19f604",
+              "provides": [
+                {
+                  "src": "msvcp140.dll",
+                  "dst": "native/msvcp140.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "vcruntime140.dll",
+                  "dst": "native/vcruntime140.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "vcruntime140_1.dll",
+                  "dst": "native/vcruntime140_1.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "concrt140.dll",
+                  "dst": "native/concrt140.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "concrt140.dll",
+                  "size": 333632,
+                  "sha256": "511aba3d00b9925e7bc64e2132d77a76c1fd9e9d200ec0ef864b7a0f00c68995"
+                },
+                {
+                  "path": "msvcp140.dll",
+                  "size": 575056,
+                  "sha256": "7b8a6f283884e6448559dcf510b00c1a885bfb8e598ea05cd2c290c874657326"
+                },
+                {
+                  "path": "vcruntime140.dll",
+                  "size": 98224,
+                  "sha256": "9d2b40f0395cc5d1b4d5ea17b84970c29971d448c37104676db577586d4ad1b1"
+                },
+                {
+                  "path": "vcruntime140_1.dll",
+                  "size": 37256,
+                  "sha256": "34048abaa070ecc13b318cea31425f4ca3edd133d350318ac65259e6058c8b32"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "zlib": {
+      "description": "zlib runtime DLL required by the Flash/audio helper executables.",
+      "versions": {
+        "1.2.11": {
+          "revision": null,
+          "license": "zlib",
+          "source": "https://zlib.net/",
+          "description": "zlib runtime DLL required by the Flash/audio helper executables.",
+          "variants": {
+            "windows-x64": {
+              "path": "zlib/1.2.11/windows-x64",
+              "size": 96984,
+              "fileCount": 1,
+              "digest": "sha256:9dce13e308be19f9ecc0a560d201b47da4b2085600bbf5ae9959f003b908e9fe",
+              "provides": [
+                {
+                  "src": "zlib.dll",
+                  "dst": "native/zlib.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "zlib.dll",
+                  "size": 96984,
+                  "sha256": "999eb98a1916a098c6c88f726a12b1702fea88bdaf04d3c0f281ec2d2630ff6d"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "audio_converter",
+  "date_install": "2026-10-15_08:00:00:003",
+  "category": "converter",
+  "name": "Audio Converter",
+  "version": "0.1.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Convert/validate audio for EVE chips. Commands: bt82x audio, Legacy audio, audio_validate",
+  "icon": "\ud83d\udd0a",
+  "ui": "ui.html",
+  "cli_commands": [
+    "bt82x audio",
+    "ft80x audio",
+    "ft81x audio",
+    "bt88x audio",
+    "bt81x audio",
+    "audio_validate"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.bt82x",
+    "cli.legacy",
+    "cli.both"
+  ],
+  "dependencies": {
+    "ffmpeg": "^4.3",
+    "zlib": "^1.2",
+    "eve-emu": "^5.0",
+    "ftdi": "^3.2"
+  },
+  "app_dlls": [
+    "native/audio_cvt.dll"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

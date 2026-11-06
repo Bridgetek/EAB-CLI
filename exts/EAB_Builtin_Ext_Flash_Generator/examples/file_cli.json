@@ -1,0 +1,19 @@
+{
+  "_comment": "EAB flashgen input. After running: flash.bin, flash.json/.map/.edf/.c and assets.h (FLASH_ADDR_* constants)",
+  "device": "BT817",
+  "output": "build/flash.bin",
+  "header": "src/assets.h",
+  "entries": [
+    { "name": "F24",  "type": "font",  "src": "fonts/NotoSansCJKsc-Regular.otf", "size": 24, "format": "ASTC_4x4", "charset": "charset_all.txt",   "outputs": ["F24_GLYPH", "F24_XFONT"] },
+    { "name": "F32",  "type": "font",  "src": "fonts/NotoSansCJKsc-Regular.otf", "size": 32, "format": "ASTC_4x4", "charset": "charset_all.txt",   "outputs": ["F32_GLYPH", "F32_XFONT"] },
+    { "name": "F48",  "type": "font",  "src": "fonts/NotoSansCJKsc-Medium.otf",  "size": 48, "format": "ASTC_4x4", "charset": "charset_title.txt", "outputs": ["F48_GLYPH", "F48_XFONT"] },
+    { "name": "F96",  "type": "font",  "src": "fonts/NotoSansMono-Medium.ttf",   "size": 96, "format": "ASTC_4x4", "charset": "0123456789.:Y%kWh ", "outputs": ["F96_GLYPH", "F96_XFONT"] },
+    { "name": "IC_PLUG",  "type": "image", "src": "icons/plug_120.png",  "format": "L8" },
+    { "name": "IC_CARD",  "type": "image", "src": "icons/card_100.png",  "format": "L8" },
+    { "name": "IC_CAR",   "type": "image", "src": "icons/car_140.png",   "format": "L8" },
+    { "name": "IC_WARN",  "type": "image", "src": "icons/warn_100.png",  "format": "L8" },
+    { "name": "IC_WIFI",  "type": "image", "src": "icons/wifi_32x4.png", "format": "L8", "_note": "4 frames vertical, CELL 0..3" },
+    { "name": "IC_LANG",  "type": "image", "src": "icons/lang_40.png",   "format": "L8" },
+    { "name": "IC_CHECK", "type": "image", "src": "icons/check_64.png",  "format": "L8" }
+  ]
+}

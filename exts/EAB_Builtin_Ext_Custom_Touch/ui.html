@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Touch</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🖱 Custom Touch</h1>
+      <p>Compile EVE custom touch firmware (coprocessor loadable touch controller)</p>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active" type="button" data-tab="compile" onclick="switchTab('compile')">🔄 Compile</button>
+      <button class="tab-btn" type="button" data-tab="samplecode" onclick="switchTab('samplecode')">📄 Sample Code</button>
+      <button class="tab-btn" type="button" data-tab="readme" onclick="switchTab('readme')">📖 Read Me</button>
+      <button class="tab-btn" type="button" data-tab="debug" onclick="switchTab('debug')">🐞 Debug</button>
+    </div>
+    <div id="tab-compile" class="tab-content active">
+    <div class="app-row app-main flex-nowrap">
+      <div class="left-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" id="input-card" data-eab-role="input">
+          <div class="card-title"><span>📂 Input C Source <span id="file-count">(0)</span></span>
+            <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickInputFiles()">＋ Add files…</button>
+            <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="pickInputFolder()">📁 Add folder</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="touch" onclick="eabUseSample('touch', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
+               tabindex="0" role="button" aria-label="Drop C sources or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="touch" onclick="eabUseSample('touch', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <span class="dz-icon">📄</span>
+            <div>Drop one or more C sources here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — C, H</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <div id="empty-msg" class="file-list-empty">No source queued — drop a file above or click "Add files…".</div>
+          <div id="input-list" class="file-list list-group input-list"></div>
+          <div class="progress-status" id="row-progress-status"></div>
+          <input id="input-path" type="text" class="visually-hidden form-control" readonly aria-hidden="true" tabindex="-1">
+          <div class="hint">Compiled with the Bridgetek EVE JTC tool; outputs &lt;base&gt;.load.h + &lt;base&gt;.load.bin.</div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="output">
+          <div class="card-title">📁 Output</div>
+          <div class="row">
+            <div class="col-12">
+              <div class="output-field">
+                <label for="output-dir" class="form-label">Output Folder</label>
+                <input id="output-dir" type="text" value="." placeholder="Output folder…" class="input-field is-path form-control" spellcheck="false">
+                <button id="btn-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickOutputDir()">Browse…</button>
+                <button id="btn-open-output" class="btn btn-secondary btn-sm" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mid-col overflow-y-auto">
+        <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar">
+          <div class="btn-progress-wrap overflow-hidden position-relative">
+            <div id="progress-fill" class="btn-progress-fill"></div>
+            <button id="btn-run" class="btn btn-primary" disabled onclick="startBatch()">🔄 Compile Firmware</button>
+          </div>
+          <div id="convert-controls" class="convert-controls hidden"></div>
+        </div>
+        <div id="ct-preview" class="card col-12 col-sm-12 col-md-12" data-eab-role="preview">
+          <div class="card-title"><span>👁 Preview</span></div>
+          <div id="ct-empty" class="ct-empty">No source file selected</div>
+          <div id="ct-meta" class="ct-meta hidden">
+            <div class="ct-row"><span class="ct-label">File</span><span id="ct-name" class="ct-value">-</span></div>
+            <div class="ct-row"><span class="ct-label">Size</span><span id="ct-size" class="ct-value">-</span></div>
+            <div class="ct-row"><span class="ct-label">Lines</span><span id="ct-lines" class="ct-value">-</span></div>
+            <div class="ct-row"><span class="ct-label">Declares</span><span id="ct-declares" class="ct-value">-</span></div>
+          </div>
+          <div id="ct-snippet-wrap" class="ct-snippet-wrap hidden">
+            <div class="ct-snippet-head">First lines</div>
+            <pre id="ct-snippet" class="ct-snippet"></pre>
+          </div>
+          <div id="ct-note" class="ct-note">The queued file's header is shown here.</div>
+        </div>
+                <div id="error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+      </div>
+      <div class="right-col overflow-y-auto">
+        <div class="card opt-card col-12 col-sm-12 col-md-12" data-eab-role="chip">
+          <div class="card-title">🔳 EVE Chip</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label for="chip-one" class="form-label">Touch chip</label>
+              <select id="chip-one" class="form-select" aria-label="EVE chip" title="The touch toolchain is pre-BT82X only (FT81x / BT88x / BT81x).">
+                <option value="">Select chip…</option>
+              </select>
+            </div>
+          </div>
+          <div class="hint">No FT80x support, and the touch toolchain is pre-BT82X only.</div>
+          <div id="chip-hint" class="hint">Uses jtc.exe (BT81X toolchain).</div>
+          <div id="chip-sources" hidden>
+            <div class="chip-pick">
+              <span data-chip-label="gen">Chip generation</span>
+              <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                <option value=""></option>
+                <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+              </select>
+            </div>
+            <div class="chip-pick">
+              <span data-chip-label="part">🔳 EVE Chip</span>
+              <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                <option value=""></option>
+                <option value="FT810">FT810</option>
+                <option value="FT811">FT811</option>
+                <option value="FT812">FT812</option>
+                <option value="FT813">FT813</option>
+                <option value="BT880">BT880</option>
+                <option value="BT881">BT881</option>
+                <option value="BT882">BT882</option>
+                <option value="BT883">BT883</option>
+                <option value="BT815">BT815</option>
+                <option value="BT816">BT816</option>
+                <option value="BT817">BT817</option>
+                <option value="BT818">BT818</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+        <div class="card opt-card col-12 col-sm-12 col-md-12" id="prebuilt-card" data-eab-role="options">
+          <div class="card-title"><span>📦 Prebuilt Touch Binaries</span></div>
+          <div class="hint">Vendor firmware shipped with the tools (opens the folder).</div>
+          <div class="pb-grid">
+            <button id="pb-eeti" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('EETI')">EETI</button>
+            <button id="pb-focaltech" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('FocalTech')">FocalTech</button>
+            <button id="pb-goodix" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('Goodix')">Goodix</button>
+            <button id="pb-hycon" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('Hycon')">Hycon</button>
+            <button id="pb-ilitek" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('Ilitek')">Ilitek</button>
+            <button id="pb-sitronix" class="btn btn-secondary btn-sm pb-btn align-items-center justify-content-center" type="button" onclick="openPrebuiltFolder('Sitronix')">Sitronix</button>
+          </div>
+          <div class="pb-status" id="pb-status"></div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ---------- Sample Code ---------- -->
+    <div id="tab-samplecode" class="tab-content">
+      <div class="pane">
+        <div class="card" data-eab-role="result">
+          <div class="card-title"><span>📄 Sample Code</span>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="copyTouchSample()">📋 Copy</button>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="openTouchSampleFolder()" title="Open the prebuilt binaries for this vendor">📂 Open Binary</button>
+          </div>
+          <div class="tab-sub" id="touch-sample-tabs" role="tablist" aria-label="Sample pages"></div>
+          <p id="touch-sample-hint" class="hint"></p>
+          <pre id="touch-sample-code" class="code-block code-block-fill"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Read Me ---------- -->
+    <div id="tab-readme" class="tab-content">
+      <div class="pane">
+        <div class="card" data-eab-role="result">
+          <div class="card-title"><span>📖 Read Me</span>
+            <button class="btn btn-secondary btn-sm" type="button" onclick="openTouchDebugFolder()" title="Open the debug support patches">📂 Debug patches</button>
+          </div>
+          <div id="touch-readme" class="readme-body">Loading…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Debug ---------- -->
+    <div id="tab-debug" class="tab-content">
+      <div class="dbg-row">
+        <div class="dbg-col dbg-col-side overflow-y-auto">
+          <div class="card" id="dbg-conn-card" data-eab-role="chip">
+            <div class="card-title"><span>🔗 Connection</span>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="dbgScan()"
+                      title="Ask every interface which EVE answers, read its chip ID and select the first device found">🔍 Scan</button>
+            </div>
+
+            <div class="dev-section">
+              <div class="dev-section-title">Detected <span id="dbg-dev-count"></span></div>
+              <div class="dev-list" id="dbg-dev-list" role="group" aria-label="Detected devices"></div>
+              <p class="hint dev-empty" id="dbg-dev-empty">No device detected yet — press Scan with the board plugged in.</p>
+            </div>
+
+            <details class="dev-supported" id="dbg-dev-supported-box">
+              <summary>Supported device list</summary>
+              <div class="dev-list" id="dbg-dev-supported" role="group" aria-label="Supported programmers"></div>
+            </details>
+
+            <details class="dev-supported" id="dbg-connection-help">
+              <summary>Connection troubleshooting</summary>
+              <p class="hint">Press <b>Scan</b>; the connected EVE chip is detected automatically. FT4222 and MPSSE adapters are supported.</p>
+              <p class="hint">If the board is not detected, check that it is powered, the SPI connections are correct, and the FTDI adapter uses the FTDI D2XX/bus driver (<code>ftdibus.inf</code>, shown as <b>USB Serial Converter</b>). WinUSB or USB COM drivers, often installed with Zadig, are not compatible.</p>
+              <p class="hint">A board that does not answer at the selected SPI clock is retried at 12, 6 and 3 MHz automatically.</p>
+              <p class="hint">A Raspberry Pi Pico running <code>eve_touch_bridge.uf2</code> is a full programmer: it owns the SPI bus (GP2 SCK, GP3 MOSI, GP4 MISO, GP5 CS#) and drives the live monitor and the settings pages. Flash the UF2 from <code>pico/</code> in this extension once, then plug the Pico in — no BOOTSEL needed afterwards.</p>
+            </details>
+
+            <div class="opt-body">
+              <div class="opt-field">
+                <label class="form-label" for="dbg-spi-clock">SPI clock (MHz)</label>
+                <input id="dbg-spi-clock" type="number" class="input-field form-control input-narrow" value="12" min="1" max="30" step="1"
+                       title="SPI clock frequency in MHz (1-30) — used by the FT4222 and MPSSE adapters">
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-eve-clock">System clock (MHz)</label>
+                <input id="dbg-eve-clock" type="number" class="input-field form-control input-narrow" value="72" min="24" max="84" step="12">
+              </div>
+            </div>
+
+            <div class="dbg-conn-actions">
+              <button id="dbg-btn-update" class="btn btn-primary" type="button" onclick="dbgUpdate()" disabled
+                      title="Reconnect with the clock settings above">🔄 Update</button>
+              <button id="dbg-btn-flash-pico" class="btn btn-secondary" type="button" onclick="dbgFlashPico()"
+                      title="Copy eve_touch_bridge.uf2 onto a Pico in BOOTSEL mode (RPI-RP2 drive)">⚡ Flash Pico bridge</button>
+            </div>
+            <div class="hint" id="dbg-conn-detail"></div>
+          </div>
+        </div>
+        <div class="dbg-divider" id="dbg-divider" role="separator" aria-orientation="vertical" tabindex="0"
+             title="Drag to resize the columns · double-click to reset"></div>
+        <div class="dbg-col dbg-col-main overflow-y-auto">
+          <div class="tab-sub" id="dbg-tabs" role="tablist" aria-label="Debug pages">
+            <button class="tab-sub-btn active" type="button" role="tab" aria-selected="true" data-dbg-tab="monitor" onclick="dbgSwitchPage('monitor')">📡 Monitor</button>
+            <button class="tab-sub-btn" type="button" role="tab" aria-selected="false" data-dbg-tab="settings" onclick="dbgSwitchPage('settings')">⚙ Settings</button>
+          </div>
+
+          <div id="dbg-page-monitor" class="dbg-page active">
+            <div class="dbg-run-bar">
+              <button id="dbg-btn-monitor" class="btn btn-primary" type="button" onclick="dbgToggleMonitor()" disabled>▶ Start Monitor</button>
+              <button id="dbg-btn-load" class="btn btn-primary" type="button" onclick="dbgLoadFirmware()" disabled>⬆ Load Firmware</button>
+              <button id="dbg-btn-calibrate" class="btn btn-primary" type="button" onclick="dbgCalibrate()" disabled>🎯 Calibrate</button>
+            </div>
+
+            <div class="card" data-eab-role="preview">
+              <div class="card-title"><span>👆 Touch Points</span>
+                <label class="dbg-inline-check"><input id="dbg-extended" type="checkbox" onchange="dbgSetExtended(this.checked)"> Extended mode</label>
+              </div>
+              <div id="dbg-touch-points" class="dbg-touch-points"></div>
+              <p class="hint" id="dbg-monitor-hint">Connect the board, then press Start Monitor to read the touch registers.</p>
+            </div>
+
+            <div class="card" data-eab-role="options">
+              <div class="card-title"><span>🔀 Touch Transform</span>
+                <label class="dbg-inline-check"><input id="dbg-hex" type="checkbox" onchange="dbgRenderTransform()"> Hex format</label>
+                <button class="btn btn-secondary btn-sm" type="button" onclick="dbgReadTransform()">📥 Read</button>
+                <button class="btn btn-secondary btn-sm" type="button" onclick="dbgWriteTransform()">📤 Apply</button>
+              </div>
+              <div class="dbg-transform-grid" id="dbg-transform"></div>
+            </div>
+          </div>
+
+          <div id="dbg-page-settings" class="dbg-page">
+            <div class="card" data-eab-role="options">
+              <div class="card-title"><span>🖥 Screen Configuration</span>
+                <button class="btn btn-secondary btn-sm" type="button" onclick="dbgReadScreen()">📥 Read</button>
+                <button class="btn btn-secondary btn-sm" type="button" onclick="dbgWriteScreen()">📤 Apply</button>
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-preset">Preset</label>
+                <select id="dbg-preset" class="form-select" onchange="dbgApplyPreset(this.value)">
+                  <option value="">— Custom —</option>
+                  <option value="480x272">WQVGA (480x272)</option>
+                  <option value="800x480">WVGA (800x480)</option>
+                  <option value="1024x600">WSVGA (1024x600)</option>
+                  <option value="1280x800">WXGA (1280x800)</option>
+                </select>
+              </div>
+              <div class="dbg-screen-grid" id="dbg-screen"></div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-brightness">Brightness</label>
+                <input id="dbg-brightness" type="range" class="form-range" min="0" max="128" value="128" oninput="dbgSetBrightness(this.value)">
+                <span id="dbg-brightness-val" class="dbg-status-value">128</span>
+              </div>
+            </div>
+
+            <div class="card" data-eab-role="options">
+              <div class="card-title">🧩 Custom Touch Configuration</div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-debug-mode">Debug mode</label>
+                <select id="dbg-debug-mode" class="form-select">
+                  <option value="off">OFF</option>
+                  <option value="on">ON</option>
+                </select>
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-fw-path">FW path</label>
+                <div class="opt-field-row">
+                  <input id="dbg-fw-path" type="text" class="input-field is-path form-control" placeholder="Select custom touch FW file…" spellcheck="false">
+                  <button class="btn btn-secondary btn-sm" type="button" onclick="dbgPickFirmware()">Browse…</button>
+                </div>
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-debug-fw-path">Debug FW path</label>
+                <div class="opt-field-row">
+                  <input id="dbg-debug-fw-path" type="text" class="input-field is-path form-control" placeholder="Select custom touch debug FW file…" spellcheck="false">
+                  <button class="btn btn-secondary btn-sm" type="button" onclick="dbgPickDebugFirmware()">Browse…</button>
+                  <button class="btn btn-secondary btn-sm" type="button" onclick="dbgUseDebugPatch()" title="Fill in the patch that matches the connected chip">Use patch</button>
+                </div>
+              </div>
+              <p class="hint">Make sure the custom touch firmware contains the <code>printf</code> function to output debug information. In release mode, make sure it does not, to avoid unexpected behaviour.</p>
+            </div>
+
+            <div class="card" data-eab-role="options">
+              <div class="card-title">⏱ Sample Rate</div>
+              <div class="opt-field">
+                <label class="form-label" for="dbg-sample-rate">Sample read per second</label>
+                <input id="dbg-sample-rate" type="number" class="input-field form-control input-narrow" value="60" min="1" max="240" step="1" onchange="dbgSetSampleRate(this.value)">
+              </div>
+              <p class="hint" id="dbg-sample-hint">Current: 60 Hz</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Hotplug notifications: a plug or unplug is announced without stealing focus. -->
+<div class="dev-toast-wrap" id="dev-toast-wrap" role="status" aria-live="polite"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script src="touch_debug.js"></script>
+<script src="tab_nav.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

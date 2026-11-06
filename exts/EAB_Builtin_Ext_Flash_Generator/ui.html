@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Generator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>📦 Flash Generator</h1>
+      <p>Describe the fonts and images, save the manifest, and build the flash image from it</p>
+    </div>
+    <div class="app-row flex-nowrap">
+      <div class="left-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" id="manifest-card" data-eab-role="input">
+          <div class="card-title"><span>💾 Manifest</span>
+            <button id="btn-pick-manifest" class="btn btn-secondary btn-sm" type="button" onclick="genLoadFrom()">📄 Choose manifest…</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="manifest-drop-zone" data-for="gen-path" data-picker="btn-pick-manifest"
+               tabindex="0" role="button" aria-label="Drop a manifest JSON or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <span class="dz-icon">📄</span>
+            <div>Drop a manifest JSON here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — JSON</div>
+            <div>Converted by the real <code>img_cvt</code> / <code>font</code>, staged and packed by <code>flash_gen</code> — sources may be relative to the manifest folder.</div>
+            <span id="manifest-name" class="dz-name"></span>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <input id="gen-path" type="text" class="hidden" value="" spellcheck="false">
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="input-card" data-eab-role="input">
+          <div class="gen-head">
+            <div class="card-title"><span>🗂 Input <span id="gen-count" class="tag">0</span></span>
+              <button id="btn-add-file" class="btn btn-secondary btn-sm" type="button" onclick="genAddFile()">＋ Add files…</button>
+              <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="genAddFolder()">📁 Add folder</button>
+              <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" onclick="genClearAll()" title="Remove every entry">🗑 Clear all</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
+            </div>
+            <label class="check-inline" title="Name every entry &lt;number&gt;_&lt;file&gt;_&lt;format&gt; from what the row already says">
+              <input type="checkbox" id="gen-autoname" checked onchange="onAutoNameChange()">
+              <span>Autogenerate name</span>
+            </label>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="gen-entries" data-picker="btn-add-file"
+               tabindex="0" role="button" aria-label="Drop source files or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <span class="dz-icon">📦</span>
+            <div>Drop fonts and images here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — TTF, PNG, MP4, GIF, WAV, RAW…</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <div id="gen-empty" class="file-list-empty">No entries yet — drop a file above, click "Add files…" or press "＋ Add entry".</div>
+          <div id="gen-entries" class="gen-entries list-group"></div>
+          <div class="hint gen-legend">name · type · format/suffix · options · pt · charset · outputs · source</div>
+          <div class="gen-add-row">
+            <button class="btn btn-secondary" type="button" onclick="genAddEntry()">＋ Add entry</button>
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="output-card" data-eab-role="action">
+          <div class="card-title" id="gen-output-title">🎛 Output</div>
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+              <div class="output-field">
+                <label class="form-label" for="gen-output-dir">Output folder</label>
+                <input id="gen-output-dir" type="text" class="input-field is-path form-control" value="build" spellcheck="false" oninput="syncGenOutput()">
+                <button id="gen-browse" class="btn btn-secondary btn-sm" type="button" title="Choose the output folder" onclick="genPickOutputFolder()">Browse…</button>
+                <button id="btn-open-output" class="btn btn-secondary btn-sm" type="button" title="Open the output folder in the file manager" onclick="window.eabOpenOutputFolder?.()">📂</button>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-12">
+              <label class="form-label" for="gen-output-name">Base name <span class="field-note">(optional — defaults to flash)</span></label>
+              <input id="gen-output-name" type="text" class="input-field form-control" placeholder="flash" spellcheck="false" oninput="syncGenOutput()">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mid-col overflow-y-auto">
+        <div id="plan-preview" class="card col-12 col-sm-12 col-md-12" data-eab-role="preview" data-eab-pin="1">
+          <div class="card-title"><span>👁 Preview</span></div>
+          <div id="plan-empty" class="hint">Add entries to see the flash plan.</div>
+          <div id="plan-body" class="plan-body hidden">
+            <div class="plan-row"><span class="plan-label">Device</span><span id="plan-device" class="plan-value">-</span></div>
+            <div class="plan-row"><span class="plan-label">Entries</span><span id="plan-entries" class="plan-value">-</span></div>
+            <div class="plan-row"><span class="plan-label">Flash assets</span><span id="plan-assets" class="plan-value">-</span></div>
+            <div class="plan-row"><span class="plan-label">Image</span><span id="plan-image" class="plan-value">-</span></div>
+            <div class="plan-row"><span class="plan-label">Header</span><span id="plan-header" class="plan-value">-</span></div>
+            <div class="plan-list-head">Asset names, in build order</div>
+            <div id="plan-names" class="plan-names"></div>
+            <div id="plan-warnings" class="plan-warnings hidden"></div>
+          </div>
+        </div>
+                <div id="map-panel" class="card col-12 col-sm-12 col-md-12 hidden" data-eab-role="result">
+          <div class="card-title">🗺 Flash Map</div>
+          <div id="map-empty" class="hint">The flash layout appears after a build.</div>
+          <div id="flash-map" class="flash-map hidden"></div>
+        </div>
+        <div id="error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+      </div>
+      <div class="right-col overflow-y-auto">
+        <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar" data-eab-role="action">
+          <div class="btn-progress-wrap overflow-hidden position-relative">
+            <div id="gen-progress-fill" class="btn-progress-fill"></div>
+            <button id="btn-gen-build" class="btn btn-primary" onclick="genSaveManifest(true)">🔨 Build flash</button>
+          </div>
+          <div id="convert-controls" class="convert-controls hidden"></div>
+          <div class="manifest-file-box">
+            <div class="manifest-file-row">
+              <label class="form-label" for="gen-manifest-file">Manifest file</label>
+              <input id="gen-manifest-file" type="text" class="input-field is-path form-control" value="flashgen.json" spellcheck="false"
+                     oninput="genManifestStatus('')"
+                     title="File the manifest is written to — a relative path is resolved against the working folder">
+            </div>
+            <div class="run-actions">
+              <button id="btn-use-current-manifest" class="btn btn-secondary" type="button" onclick="genUseCurrentManifest()"
+                      title="Point the manifest file at the manifest loaded in the 💾 Manifest zone" disabled>Use current manifest</button>
+              <button id="btn-gen-save" class="btn btn-secondary" type="button" onclick="genSaveManifest(false)">💾 Save manifest</button>
+            </div>
+            <div id="gen-manifest-status" class="manifest-file-status"></div>
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="chip">
+            <div class="card-title">🔳 EVE Chip</div>
+            <select id="chip-one" class="form-select" aria-label="EVE chip" title="The part name you have (FT813, BT883…). BT820 writes the EVE 5 asset format; every other part writes the pre-BT82X format.">
+              <option value="">Select chip…</option>
+            </select>
+            <div class="hint">The offered formats follow this chip. <span id="gen-chip" class="chip-badge">-</span></div>
+            <div id="chip-sources" hidden>
+              <div class="chip-pick">
+                <span data-chip-label="gen">Chip generation</span>
+                <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                  <option value=""></option>
+                  <option value="FT80X">FT80x · FT800 / FT801</option>
+                  <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                  <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                  <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                  <option value="BT82X">BT82x · BT820</option>
+                </select>
+              </div>
+              <div class="chip-pick">
+                <span data-chip-label="part">🔳 EVE Chip</span>
+                <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
+          <input id="gen-output" type="hidden" value="build/flash.bin">
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="options">
+          <div class="card-title">⚙ Options</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label class="form-label" for="gen-blob">🧩 Default Blob</label>
+              <select id="gen-blob" class="form-select" title="Blob firmware written into the image (flash_gen --blob)"></select>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="gen-header">📝 Header</label>
+              <input id="gen-header" type="text" class="input-field is-path form-control" placeholder="(none) — e.g. src/assets.h">
+            </div>
+            <div class="opt-row">
+              <div class="opt-check">
+                <input type="checkbox" id="gen-edf" checked class="form-check-input">
+                <label class="form-check-label" for="gen-edf" title="Insert the EDF block into the image (flash_gen --gen-edf)">Insert EDF Block</label>
+              </div>
+              <div class="opt-check">
+                <input type="checkbox" id="gen-align" checked class="form-check-input" onchange="onGenAlignChange()">
+                <label class="form-check-label" for="gen-align" title="Keep data aligned — unchecking passes flash_gen --no-align">Data Alignment</label>
+              </div>
+            </div>
+            <div class="opt-row">
+              <div class="opt-field">
+                <label class="form-label" for="gen-align-asset">↔ Align assets (bytes)</label>
+                <input id="gen-align-asset" type="number" class="input-field gen-align-num form-control" min="0" step="4" value="64"
+                       title="Flash bytes every asset is padded to. flash_gen fixes this at 64 — the value is recorded in the manifest">
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="gen-align-image">↔ Align image (bytes)</label>
+                <input id="gen-align-image" type="number" class="input-field gen-align-num form-control" min="0" step="4" value="4096"
+                       title="Flash bytes the whole image is rounded up to. flash_gen fixes this at 4 K — the value is recorded in the manifest">
+              </div>
+            </div>
+          </div>
+          <div class="hint">flash_gen pads each asset to 64 bytes and the finished image to 4 K; both values are written into the manifest. Unchecking <strong>Data Alignment</strong> passes <code>--no-align</code>, which lays the assets out back to back.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="batch-modal" class="modal-backdrop hidden">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="batch-title">
+    <div id="batch-title" class="modal-title">Settings for the new entries</div>
+    <div id="batch-note" class="hint"></div>
+    <label class="form-label" for="batch-type">Type</label>
+    <select id="batch-type" class="input-field form-select" onchange="onBatchTypeChange()"></select>
+    <label class="form-label" id="batch-format-label" for="batch-format">Format</label>
+    <select id="batch-format" class="input-field form-select"></select>
+    <div class="gen-add-row">
+      <button class="btn btn-secondary" type="button" onclick="genBatchClose(false)">Cancel</button>
+      <button class="btn btn-primary" type="button" onclick="genBatchClose(true)">Apply to all</button>
+    </div>
+  </div>
+</div>
+<div id="opts-modal" class="modal-backdrop hidden">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="opts-title">
+    <div id="opts-title" class="modal-title">Converter options</div>
+    <div class="hint">An unset switch passes no flag — the converter's own default stands ([placeholder]).</div>
+    <div id="opts-body" class="gen-opt-body"></div>
+    <div class="gen-add-row">
+      <button class="btn btn-secondary" type="button" onclick="genOptsClose(false)">Cancel</button>
+      <button class="btn btn-primary" type="button" onclick="genOptsClose(true)">Apply</button>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

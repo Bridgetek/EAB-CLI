@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Converter</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🎬 Video Converter</h1>
+      <p>Convert a video into an MJPEG-encoded AVI file with mono or stereo audio (BT82X / Legacy)</p>
+    </div>
+    <div class="app-row flex-nowrap">
+      <div class="left-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" id="input-card" data-eab-role="input">
+          <div class="card-title"><span>📂 Input Videos <span id="file-count">(0)</span></span>
+            <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickVideoFiles()">＋ Add files…</button>
+            <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="pickVideoFolder()">📁 Add folder</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="video" onclick="eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
+          </div>
+          <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
+               tabindex="0" role="button" aria-label="Drop video files or browse">
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="video" onclick="eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <span class="dz-icon">🎬</span>
+            <div>Drop one or more videos here</div>
+            <div>or paste a file here from your clipboard</div>
+            <div>or click to browse — MP4, AVI, MOV, MKV, WebM, MPEG</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+          </div>
+          <div id="empty-msg" class="file-list-empty">No videos queued — drop a file above or click "Add files…".</div>
+          <div id="input-list" class="file-list list-group input-list"></div>
+          <div class="progress-status" id="row-progress-status"></div>
+          <input id="video-path" type="hidden">
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="output">
+          <div class="card-title">📁 Output</div>
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-12">
+              <div class="output-field">
+                <label for="output-path" class="form-label">Output File</label>
+                <input id="output-path" type="text" class="input-field is-path form-control" placeholder="Output file (generated from the input name)" spellcheck="false">
+                <button id="btn-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickOutputFile()">Browse…</button>
+                <button id="btn-open-dir" class="btn btn-secondary btn-sm" type="button" onclick="openOutputDir()" title="Open the output folder in the file manager" disabled>📂</button>
+              </div>
+            </div>
+            <input id="output-dir" type="hidden" value=".">
+            <input id="output-name" type="hidden">
+          </div>
+        </div>
+      </div>
+      <div class="mid-col overflow-y-auto">
+        <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar">
+          <div class="btn-progress-wrap overflow-hidden position-relative">
+            <div id="progress-fill" class="btn-progress-fill"></div>
+            <button id="btn-convert" class="btn btn-primary" disabled onclick="startBatch()">🎬 Convert</button>
+          </div>
+          <div id="convert-controls" class="convert-controls hidden"></div>
+        </div>
+        <div id="preview-card" class="card col-12 col-sm-12 col-md-12" data-eab-role="preview">
+          <div class="card-title">👁 Preview</div>
+          <aside class="preview" id="preview">
+            <div class="preview-empty" id="preview-empty">
+              <span class="pv-icon">🎬</span>
+              <div>Preview input video</div>
+            </div>
+            <div id="pv-player" class="pv-player hidden">
+              <video id="pv-media" class="pv-media" controls preload="metadata" playsinline></video>
+              <div class="pv-note hidden" id="pv-note"></div>
+            </div>
+            <div class="preview-meta hidden" id="preview-meta">
+              <div class="pv-row"><span>File</span><b id="pv-name">—</b></div>
+              <div class="pv-row"><span>Format</span><b id="pv-format">—</b></div>
+              <div class="pv-row"><span>Folder</span><b id="pv-folder" class="pv-folder">—</b></div>
+              <div class="pv-row"><span>Status</span><b id="pv-status">Ready</b></div>
+            </div>
+          </aside>
+        </div>
+        <div id="error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+      </div>
+      <div class="right-col overflow-y-auto">
+        <div class="card col-12 col-sm-12 col-md-12" data-eab-role="chip">
+          <div class="card-title">🔳 EVE Chip</div>
+          <select id="chip-one" class="form-select" aria-label="EVE chip" title="The part name you have (FT813, BT883…). BT820 writes the EVE 5 asset format; every other part writes the pre-BT82X format.">
+            <option value="">Select chip…</option>
+          </select>
+          <div class="hint">Pick an EVE chip.</div>
+          <div id="chip-sources" hidden>
+            <div class="chip-pick">
+              <span data-chip-label="gen">Chip generation</span>
+              <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                <option value=""></option>
+                <option value="FT80X">FT80x · FT800 / FT801</option>
+                <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT82X" selected>BT82x · BT820</option>
+              </select>
+            </div>
+            <div class="chip-pick">
+              <span data-chip-label="part">🔳 EVE Chip</span>
+              <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                <option value=""></option>
+                <option value="FT800">FT800</option>
+                <option value="FT801">FT801</option>
+                <option value="FT810">FT810</option>
+                <option value="FT811">FT811</option>
+                <option value="FT812">FT812</option>
+                <option value="FT813">FT813</option>
+                <option value="BT880">BT880</option>
+                <option value="BT881">BT881</option>
+                <option value="BT882">BT882</option>
+                <option value="BT883">BT883</option>
+                <option value="BT815">BT815</option>
+                <option value="BT816">BT816</option>
+                <option value="BT817">BT817</option>
+                <option value="BT818">BT818</option>
+                <option value="BT820" selected>BT820</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+        <div class="card col-12 col-sm-12 col-md-12" id="options-card" data-eab-role="options">
+          <div class="card-title">⚙ Options</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label for="width" class="form-label" title="Frame size written into the AVI. 1920 x 1200 matches the BT82X reference display.">Resolution</label>
+              <div class="resolution-group">
+                <input id="width" type="number" class="input-field num-field form-control" min="1" max="9999" value="1920" aria-label="Width">
+                <span>×</span>
+                <input id="height" type="number" class="input-field num-field form-control" min="1" max="9999" value="1200" aria-label="Height">
+              </div>
+            </div>
+            <div class="opt-field">
+              <label for="frame-rate" class="form-label" title="Frames per second. 0 keeps the source frame rate; the EVE player tolerates roughly 10-30 fps.">Frame Rate</label>
+              <input id="frame-rate" type="number" class="input-field num-field form-control" min="0" max="240" step="0.5" value="0">
+            </div>
+            <div class="opt-field" id="quality-options">
+              <label for="quality" class="form-label" title="MJPEG quality. Lower numbers mean better quality and a bigger file.">Quality</label>
+              <div class="slider-group">
+                <span class="slider-label">Worst</span>
+                <input id="quality" type="range" class="quality-slider" min="2" max="31" value="3" oninput="onQualityInput()" aria-label="MJPEG quality">
+                <span class="slider-label">Best</span>
+                <span id="quality-value" class="quality-value">3</span>
+              </div>
+              <div class="slider-ticks" id="quality-ticks" aria-hidden="true"></div>
+            </div>
+            <div class="opt-field">
+              <label for="ffmpeg-options" class="form-label" title="Extra arguments handed to ffmpeg verbatim (for example -vf eq=brightness=0.1). They are passed after the built-in options.">FFmpeg Options</label>
+              <input id="ffmpeg-options" type="text" class="input-field form-control" placeholder="Additional FFMPEG command-line options">
+            </div>
+            <div class="opt-check">
+              <input id="keep-audio" type="checkbox" onchange="onKeepAudioToggle()" class="form-check-input">
+              <label class="form-check-label" for="keep-audio">Keep Audio Stream</label>
+            </div>
+            <div id="audio-options" class="hidden">
+              <div class="opt-field">
+                <label for="sample-rate" class="form-label">Sample Rate</label>
+                <select id="sample-rate" class="full-width form-select">
+                  <option value="0">Same as source file</option>
+                  <option value="48000">48000 Hz</option>
+                  <option value="44100">44100 Hz</option>
+                  <option value="32000">32000 Hz</option>
+                  <option value="22050">22050 Hz</option>
+                  <option value="16000">16000 Hz</option>
+                  <option value="8000">8000 Hz</option>
+                </select>
+              </div>
+              <div class="opt-field">
+                <label for="audio-format" class="form-label">Audio Format</label>
+                <select id="audio-format" class="full-width form-select">
+                  <option value="4">S16S_SAMPLES (stereo, 2x16 bits)</option>
+                  <option value="3" selected>S16_SAMPLES (mono, 16 bits)</option>
+                </select>
+              </div>
+              <div class="opt-field">
+                <label for="audio-channel" class="form-label">Audio Channel</label>
+                <select id="audio-channel" class="full-width form-select">
+                  <option value="MIX">MIX</option>
+                  <option value="LEFT">LEFT</option>
+                  <option value="RIGHT">RIGHT</option>
+                </select>
+              </div>
+            </div>
+            <div class="opt-check">
+              <input id="control-bitrate" type="checkbox" onchange="onControlBitrateToggle()" class="form-check-input">
+              <label class="form-check-label" for="control-bitrate">Control Bitrate</label>
+            </div>
+            <div id="bitrate-options" class="hidden">
+              <div class="opt-field">
+                <label for="avg-bitrate" class="form-label">Average (kbps)</label>
+                <input id="avg-bitrate" type="number" class="input-field num-field form-control" min="0" max="999999999" value="32000">
+              </div>
+              <div class="opt-field">
+                <label for="max-bitrate" class="form-label">Max (kbps)</label>
+                <input id="max-bitrate" type="number" class="input-field num-field form-control" min="0" max="999999999" value="32000">
+              </div>
+              <div class="opt-field">
+                <label for="buffer-size" class="form-label">Buffer (kb)</label>
+                <input id="buffer-size" type="number" class="input-field num-field form-control" min="0" max="999999999" value="2048">
+              </div>
+            </div>
+            <div class="hint" id="quality-hint"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="chip_data.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="file_drop.js"></script>
+<script src="preview_image.js"></script>
+<script src="media_files.js"></script>
+<script src="cli_args.js"></script>
+<script src="decoder.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

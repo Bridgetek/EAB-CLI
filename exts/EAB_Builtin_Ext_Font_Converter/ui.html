@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Font Converter</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🔤 Font Converter</h1>
+      <p>Convert TrueType/OpenType fonts to EVE font assets and encode text with the converted font</p>
+      <div class="tab-bar">
+        <button class="tab-btn active" type="button" data-tab="converter" onclick="switchTab('converter')">🔤 Converter</button>
+        <button class="tab-btn" type="button" data-tab="encoder" onclick="switchTab('encoder')">🔡 Encoder</button>
+      </div>
+    </div>
+
+    <div id="tab-converter" class="tab-content active">
+      <div class="app-row flex-nowrap">
+        <div class="left-col overflow-y-auto">
+          <div class="card col-12 col-sm-12 col-md-12" data-eab-role="input">
+            <div class="card-title"><span>📂 Input Fonts <span id="file-count">(0)</span></span>
+              <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickFontFiles()">＋ Add files…</button>
+              <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="pickFontFolder()">📁 Add folder</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="converter" onclick="eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+              <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
+            </div>
+            <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
+                 tabindex="0" role="button" aria-label="Drop fonts or browse">
+              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="converter" onclick="eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+              <span class="dz-icon">🔤</span>
+              <div>Drop one or more font files here</div>
+              <div>or paste a file here from your clipboard</div>
+              <div>or click to browse — TTF, OTF, TTC, WOFF, WOFF2</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+            </div>
+            <div id="empty-msg" class="file-list-empty">No fonts queued — drop a file above or click "Add files…".</div>
+            <div id="input-list" class="file-list list-group input-list"></div>
+            <div class="progress-status" id="row-progress-status"></div>
+            <input id="font-path" type="text" class="visually-hidden form-control" readonly aria-hidden="true" tabindex="-1">
+            <div class="source-row">
+              <label class="source-toggle" title="Convert the Unicode range below">
+                <input id="use-range" type="checkbox" class="form-check-input" checked>
+              </label>
+              <span class="source-label">🔤 Characters</span>
+              <input id="char-range" type="text" class="input-field form-control" placeholder="U+0020-U+007F" value="U+0020-U+007F">
+              <button id="btn-select-ranges" class="btn btn-secondary btn-sm" type="button"
+                      title="Pick the character ranges to convert" onclick="openRangeDialog()">Ranges…</button>
+            </div>
+            <div class="source-row">
+              <label class="source-toggle" title="Convert the characters listed in a UTF-8 text file">
+                <input id="use-utf8" type="checkbox" class="form-check-input" checked>
+              </label>
+              <span class="source-label">🔤 UTF-8 file</span>
+              <input id="char-file" type="text" class="input-field form-control" placeholder="No text file chosen" readonly>
+              <button id="btn-char-range-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickCharFile()">Browse…</button>
+            </div>
+          </div>
+          <div class="card col-12 col-sm-12 col-md-12" data-eab-role="output">
+            <div class="card-title">📁 Output</div>
+            <div class="row">
+              <div class="col-12">
+                <div class="output-field">
+                  <label for="output-dir" class="form-label">Output Folder</label>
+                  <input id="output-dir" type="text" value="." placeholder="Output folder…" class="input-field is-path form-control" spellcheck="false">
+                  <button id="btn-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickOutputDir()">Browse…</button>
+                  <button id="btn-open-output" class="btn btn-secondary btn-sm" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mid-col overflow-y-auto">
+          <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="run-bar">
+            <div class="btn-progress-wrap overflow-hidden position-relative">
+              <div id="progress-fill" class="btn-progress-fill"></div>
+              <button id="btn-convert" class="btn btn-primary" disabled onclick="startBatch()">🔤 Convert</button>
+            </div>
+            <div id="convert-controls" class="convert-controls hidden"></div>
+          </div>
+          <div id="preview-card" class="card col-12 col-sm-12 col-md-12" data-eab-role="preview">
+            <div class="card-title">👁 Preview</div>
+            <div class="tabs" id="preview-tabs">
+              <button class="tab-btn active" type="button" data-preview="font" onclick="switchPreview('font')">Font</button>
+              <button class="tab-btn" type="button" data-preview="blocks" onclick="switchPreview('blocks')">Blocks</button>
+              <button class="tab-btn" type="button" data-preview="chars" onclick="switchPreview('chars')">Characters</button>
+            </div>
+            <div id="pv-font" class="preview-panel">
+              <div class="preview-container">
+                <canvas id="preview-canvas" width="320" height="160"></canvas>
+                <div class="preview-controls">
+                  <span id="preview-info" class="preview-info">No font loaded</span>
+                </div>
+              </div>
+              <div class="preview-loading hidden" id="pv-font-loading">
+                <span class="pv-spin"></span><span>Rendering the font preview…</span>
+              </div>
+            </div>
+            <div id="pv-blocks" class="preview-panel hidden">
+              <div id="block-info-status" class="preview-info">No font loaded</div>
+              <table class="range-table">
+                <thead>
+                  <tr><th>Block Name</th><th>Unicode Range</th><th class="rt-count">Valid</th><th class="rt-count">All</th></tr>
+                </thead>
+                <tbody id="block-info-body"></tbody>
+              </table>
+              <div class="preview-loading hidden" id="pv-blocks-loading">
+                <span class="pv-spin"></span><span>Reading the font blocks…</span>
+              </div>
+            </div>
+            <div id="pv-chars" class="preview-panel hidden">
+              <canvas id="char-canvas" width="600" height="180"></canvas>
+              <div class="preview-controls">
+                <span id="char-info" class="preview-info">No characters selected</span>
+              </div>
+              <div class="preview-loading hidden" id="pv-chars-loading">
+                <span class="pv-spin"></span><span>Rendering the characters…</span>
+              </div>
+            </div>
+          </div>
+                    <div id="error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+        </div>
+
+        <div class="right-col overflow-y-auto">
+          <div class="card col-12 col-sm-12 col-md-12" data-eab-role="chip">
+            <div class="card-title">🔳 EVE Chip</div>
+            <select id="chip-one" class="form-select" aria-label="EVE chip" title="The part name you have (FT813, BT883…). BT820 writes the EVE 5 asset format; every other part writes the pre-BT82X format.">
+              <option value="">Select chip…</option>
+            </select>
+            <div class="hint">Pick an EVE chip.</div>
+            <div id="chip-sources" hidden>
+              <div class="chip-pick">
+                <span data-chip-label="gen">Chip generation</span>
+                <select id="chip-gen" onchange="onChipPick('gen')" class="form-select">
+                <option value=""></option>
+                <option value="FT80X">FT80x · FT800 / FT801</option>
+                <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT82X" selected>BT82x · BT820</option>
+              </select>
+              </div>
+              <div class="chip-pick">
+                <span data-chip-label="part">🔳 EVE Chip</span>
+                <select id="chip-name" onchange="onChipPick('part')" class="form-select">
+                  <option value=""></option>
+                  <option value="FT800">FT800</option>
+                  <option value="FT801">FT801</option>
+                  <option value="FT810">FT810</option>
+                  <option value="FT811">FT811</option>
+                  <option value="FT812">FT812</option>
+                  <option value="FT813">FT813</option>
+                  <option value="BT880">BT880</option>
+                  <option value="BT881">BT881</option>
+                  <option value="BT882">BT882</option>
+                  <option value="BT883">BT883</option>
+                  <option value="BT815">BT815</option>
+                  <option value="BT816">BT816</option>
+                  <option value="BT817">BT817</option>
+                  <option value="BT818">BT818</option>
+                  <option value="BT820" selected>BT820</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+          <div class="card col-12 col-sm-12 col-md-12" id="options-card" data-eab-role="options">
+            <div class="card-title">⚙ Options</div>
+            <div class="opt-body">
+              <div class="opt-field">
+                <label class="form-label" for="point-size">Font Size</label>
+                <input id="point-size" type="number" class="input-field form-control" value="25" min="1" max="1000">
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="dpi">DPI</label>
+                <input id="dpi" type="number" class="input-field form-control" value="72" min="1" max="1000">
+              </div>
+            </div>
+
+            <!-- Font type: vertical tabs on the left, the options of the selected type on the right -->
+            <div class="struct-panel">
+              <div class="struct-rail">
+                <span class="struct-title">Font type</span>
+                <div class="struct-tabs" role="tablist" aria-label="Font type" aria-orientation="vertical">
+                  <button class="struct-tab active" type="button" role="tab" aria-selected="true"
+                          data-struct="legacy">Legacy</button>
+                  <button class="struct-tab" type="button" role="tab" aria-selected="false"
+                          data-struct="extended">Extended</button>
+                  <button class="struct-tab" type="button" role="tab" aria-selected="false"
+                          data-struct="ext1">Extended 1</button>
+                  <button class="struct-tab" type="button" role="tab" aria-selected="false"
+                          data-struct="ext2">Extended 2</button>
+                </div>
+              </div>
+              <div class="struct-body">
+                <div class="struct-fields">
+                  <div class="opt-field">
+                    <span class="form-label">Bitmap Format</span>
+                    <div class="bitmap-picks" id="bitmap-picks">
+                      <label class="bitmap-pick"><input type="checkbox" id="bp-all" onchange="toggleAllFormats(this.checked)">All</label>
+                      <label class="bitmap-pick"><input type="checkbox" data-bp-item="L1" onchange="syncAllFormat()">L1</label>
+                      <label class="bitmap-pick"><input type="checkbox" data-bp-item="L2" onchange="syncAllFormat()">L2</label>
+                      <label class="bitmap-pick"><input type="checkbox" data-bp-item="L4" checked onchange="syncAllFormat()">L4</label>
+                      <label class="bitmap-pick"><input type="checkbox" data-bp-item="L8" onchange="syncAllFormat()">L8</label>
+                      <label class="bitmap-pick"><input type="checkbox" data-bp-item="ASTC" onchange="refreshOptions()">ASTC</label>
+                    </div>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:legacy legacy:legacy" data-off="disable">
+                    <label class="form-label" for="first-char">First Character</label>
+                    <div class="spin-box">
+                      <input id="first-char" type="number" class="input-field form-control spin-input" value="32" min="1" max="127" step="1" inputmode="numeric">
+                      <div class="spin-btns">
+                        <button class="spin-btn" type="button" tabindex="-1" aria-label="Increase First Character" title="Increase" data-spin-step="1">▲</button>
+                        <button class="spin-btn" type="button" tabindex="-1" aria-label="Decrease First Character" title="Decrease" data-spin-step="-1">▼</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="opt-field" data-when="legacy:legacy" data-off="disable">
+                    <label class="form-label" for="eve-command">EVE Command</label>
+                    <select id="eve-command" class="full-width form-select">
+                      <option value="setfont2" selected>SetFont2</option>
+                      <option value="setfont">SetFont</option>
+                    </select>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:ext1,ext2 legacy:legacy,extended" data-off="disable" data-lock="bt82x"
+                       title="Not configurable for BT82x — the converter default (UTF-8) is used.">
+                    <label class="form-label" for="codepoint-mode">Code Point Mode</label>
+                    <select id="codepoint-mode" class="full-width form-select" onchange="onCodePointModeChange()">
+                      <option value="utf8" selected>UTF-8 (default)</option>
+                      <option value="ordinal">Ordinal (-L)</option>
+                    </select>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:ext1,ext2 legacy:extended" data-needs="astc">
+                    <label class="form-label" for="astc-block">ASTC Block</label>
+                    <select id="astc-block" class="full-width form-select">
+                      <option value="auto" selected>Auto</option>
+                      <option value="4x4">4x4</option>
+                      <option value="5x4">5x4</option>
+                      <option value="5x5">5x5</option>
+                      <option value="6x5">6x5</option>
+                      <option value="6x6">6x6</option>
+                      <option value="8x5">8x5</option>
+                      <option value="8x6">8x6</option>
+                      <option value="8x8">8x8</option>
+                      <option value="10x5">10x5</option>
+                      <option value="10x6">10x6</option>
+                      <option value="10x8">10x8</option>
+                      <option value="10x10">10x10</option>
+                      <option value="12x10">12x10</option>
+                      <option value="12x12">12x12</option>
+                    </select>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:ext1,ext2 legacy:extended" data-needs="astc">
+                    <label class="form-label" for="astc-effort">ASTC Effort</label>
+                    <select id="astc-effort" class="full-width form-select">
+                      <option value="fast" selected>Fast</option>
+                      <option value="fastest">Fastest</option>
+                      <option value="medium">Medium</option>
+                      <option value="thorough">Thorough</option>
+                      <option value="exhaustive">Exhaustive</option>
+                    </select>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:ext1,ext2 legacy:extended" data-needs="astc">
+                    <label class="form-label" for="astcenc-path">astcenc.exe</label>
+                    <div class="input-row">
+                      <input id="astcenc-path" type="text" class="input-field form-control" placeholder="Auto-detect">
+                      <button class="btn btn-secondary btn-sm" type="button" onclick="pickAstcenc()">Browse…</button>
+                    </div>
+                  </div>
+                  <div class="opt-field" data-when="legacy:*" data-off="disable">
+                    <label class="form-label" for="address">Glyph Address</label>
+                    <input id="address" type="number" class="input-field form-control" value="0" min="0" title="Flash address the font is written to (-d)">
+                  </div>
+                  <div class="opt-field" data-when="legacy:*" data-off="disable">
+                    <span class="form-label"></span>
+                    <label class="check-cell">
+                      <input id="ram-address" type="checkbox" class="form-check-input">
+                      <span class="form-check-label">Use RAMG address (-R)</span>
+                    </label>
+                  </div>
+                  <div class="opt-field" data-when="bt82x:ext2" data-off="disable">
+                    <span class="form-label"></span>
+                    <label class="check-cell">
+                      <input id="ext-kerning" type="checkbox" class="form-check-input">
+                      <span class="form-check-label">Code kerning (-K)</span>
+                    </label>
+                  </div>
+                </div>
+                <div class="hint" id="struct-hint">Legacy writes the ASCII code points with a 148-byte metric block.</div>
+              </div>
+            </div>
+
+            <!-- Flags: laid out across the card width, enabled only where the chip supports them -->
+            <div class="check-grid">
+              <label class="check-cell" data-when="legacy:*">
+                <input id="escape-line-break" type="checkbox" class="form-check-input">
+                <span class="form-check-label">Escape line break (-N)</span>
+              </label>
+              <label class="check-cell">
+                <input id="add-space" type="checkbox" class="form-check-input">
+                <span class="form-check-label">Reserve space 0x20 (-S)</span>
+              </label>
+              <label class="check-cell">
+                <input id="flag-bin" type="checkbox" class="form-check-input">
+                <span class="form-check-label">Font flag BIN (-B)</span>
+              </label>
+              <label class="check-cell">
+                <input id="flag-cjk" type="checkbox" class="form-check-input">
+                <span class="form-check-label">Font flag CJK (-W)</span>
+              </label>
+              <label class="check-cell" data-when="bt82x:*">
+                <input id="relocate" type="checkbox" class="form-check-input">
+                <span class="form-check-label">Relocatable (-R)</span>
+              </label>
+              <label class="check-cell">
+                <input id="gen-preview" type="checkbox" checked class="form-check-input">
+                <span class="form-check-label">Generate preview image (-p)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-encoder" class="tab-content">
+      <div class="app-row flex-nowrap">
+        <div class="left-col overflow-y-auto">
+          <div class="card col-12 col-sm-12 col-md-12" data-eab-role="input">
+            <div class="card-title"><span>📂 Input Files</span>
+              <button id="btn-enc-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickEncoderText()">＋ Add file…</button>
+              <button id="btn-enc-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Clear the text file" onclick="clearEncoderInput()">🗑 Clear all</button>
+            </div>
+            <div class="drop-zone align-items-center flex-column justify-content-center" id="enc-drop-zone" data-for="enc-input" data-picker="btn-enc-add-files"
+                 tabindex="0" role="button" aria-label="Drop a UTF-8 text file or browse">
+              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="encoder" onclick="eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+              <span class="dz-icon">🔡</span>
+              <div>Drop a UTF-8 text file here</div>
+              <div>or paste a file here from your clipboard</div>
+              <div>or click to browse — TXT, UTF8, CSV, LST</div>
+            <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+            </div>
+            <div id="enc-empty-msg" class="file-list-empty">No text file chosen — drop one above or click "Add file…".</div>
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <span class="input-group-text">Font JSON</span>
+                  <input id="enc-json" type="text" class="input-field form-control" placeholder="Font JSON from the converter…" readonly>
+                  <button id="enc-browse-json" class="btn btn-secondary btn-sm" type="button" onclick="pickEncoderJson()">Browse…</button>
+                  <button id="btn-receive-last" class="btn btn-secondary btn-sm" type="button" title="No conversion JSON yet" disabled onclick="receiveLastConversion()">↩ Last</button>
+                </div>
+                <div class="input-group">
+                  <span class="input-group-text">Text file</span>
+                  <input id="enc-input" type="text" class="input-field form-control" placeholder="UTF-8 text file to encode…" readonly>
+                  <button id="enc-browse-text" class="btn btn-secondary btn-sm" type="button" onclick="pickEncoderText()">Browse…</button>
+                </div>
+                <div class="hint">Both files come from a conversion: the JSON lists the glyphs, the text file holds the characters.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card col-12 col-sm-12 col-md-12" data-eab-role="output">
+            <div class="card-title">📁 Output</div>
+            <div class="row">
+              <div class="col-12">
+                <div class="output-field">
+                  <label for="enc-output" class="form-label">Output Folder</label>
+                  <input id="enc-output" type="text" value="." placeholder="Output folder…" class="input-field is-path form-control" spellcheck="false">
+                  <button id="btn-enc-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickEncoderOut()">Browse…</button>
+                  <button id="btn-enc-open-output" class="btn btn-secondary btn-sm" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="encoder" onclick="eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mid-col overflow-y-auto">
+          <div class="eab-run-bar col-12 col-sm-12 col-md-12" id="enc-run-bar">
+            <div class="btn-progress-wrap overflow-hidden position-relative">
+              <div id="enc-progress-fill" class="btn-progress-fill"></div>
+              <button id="btn-encode" class="btn btn-primary" onclick="runEncoder()">🔡 Encode Text</button>
+            </div>
+            <div class="convert-controls">
+              <button id="btn-enc-reset" class="btn btn-secondary" type="button" onclick="resetEncoder()">⟲ Reset</button>
+            </div>
+          </div>
+                    <div id="enc-error-panel" class="alert alert-danger hidden col-12 col-sm-12 col-md-12" data-eab-role="alert"></div>
+        </div>
+        <div class="right-col overflow-y-auto">
+          <div class="card col-12 col-sm-12 col-md-12" id="enc-options-card" data-eab-role="options">
+            <div class="card-title">⚙ Options</div>
+            <div class="opt-body">
+              <div class="opt-field">
+                <label class="form-label" for="enc-prefix">Escape Prefix</label>
+                <select id="enc-prefix" class="full-width form-select">
+                  <option value="0" selected>\x — hexadecimal</option>
+                  <option value="1">\u — Unicode 16-bit</option>
+                  <option value="2">\U — Unicode 32-bit</option>
+                </select>
+              </div>
+              <div class="opt-field">
+                <label class="form-label" for="enc-unknown">Unknown text</label>
+                <input id="enc-unknown" type="text" class="input-field form-control" maxlength="16" placeholder="?" title="Text used for characters the font has no glyph for (≤16 characters)">
+              </div>
+              <div class="hint">Unknown text replaces every character the font has no glyph for, up to 16 characters.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="range-dialog" class="modal-backdrop hidden">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="range-title">
+    <div class="modal-header">
+      <span id="range-title">Select Range</span>
+      <button class="modal-close" type="button" aria-label="Close" onclick="closeRangeDialog()">✕</button>
+    </div>
+    <div class="range-toolbar">
+      <div class="form-check">
+        <input id="range-select-all" type="checkbox" onchange="toggleAllRanges(this.checked)" class="form-check-input">
+        <label class="form-check-label" for="range-select-all">Select All</label>
+      </div>
+      <span id="range-status" class="range-status"></span>
+    </div>
+    <div class="range-table-wrap">
+      <table class="range-table">
+        <thead>
+          <tr><th class="rt-check"></th><th>Block Name</th><th>Unicode Range</th><th class="rt-count">Valid Glyphs</th></tr>
+        </thead>
+        <tbody id="range-body"></tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" onclick="closeRangeDialog()">Cancel</button>
+      <button class="btn btn-primary" type="button" onclick="applyRangeSelection()">Select To Convert</button>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="tab_nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

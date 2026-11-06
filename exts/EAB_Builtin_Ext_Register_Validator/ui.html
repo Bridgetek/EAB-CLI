@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register Validator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🔍 Register Validator</h1>
+      <p>Validate EVE display configuration registers (all chips)</p>
+    </div>
+    <div class="app-toolbar">
+      <div class="btn-progress-wrap overflow-hidden position-relative">
+        <button id="btn-run" class="btn btn-primary" onclick="startRun()">✅ Validate Registers</button>
+      </div>
+    </div>
+    <div class="row g-3 app-body">
+      <div class="col-12">
+        <div id="error-panel" class="alert alert-danger hidden"></div>
+      </div>
+
+      <div class="col-12">
+        <div class="card advanced h-100">
+          <div class="card-title">⚙ Scaling Option</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label class="form-label" for="so-mode">REG_SO_MODE</label>
+              <select id="so-mode" class="form-select" onchange="updateSoHint()">
+                <option value="0">0 — 1 pixel per clock</option>
+                <option value="1">1 — 2 pixels per clock</option>
+                <option value="2">2 — 2 pixels per clock</option>
+                <option value="3" selected>3 — 4 pixels per clock</option>
+              </select>
+            </div>
+          </div>
+          <div class="hint" id="so-hint">Selected: 4 pixels per clock. HCYCLE/HOFFSET/HSYNC0/HSYNC1 must be multiples of this value.</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="card h-100">
+          <div class="card-title">📐 Display Configuration Registers</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label class="form-label" for="hsize">REG_HSIZE</label>
+              <input id="hsize" type="number" class="input-field form-control" value="1920" min="0" step="1" required>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="vsize">REG_VSIZE</label>
+              <input id="vsize" type="number" class="input-field form-control" value="1200" min="0" step="1" required>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="hcycle">REG_HCYCLE</label>
+              <input id="hcycle" type="number" class="input-field form-control" value="2080" min="0" step="1" required>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="hoffset">REG_HOFFSET</label>
+              <input id="hoffset" type="number" class="input-field form-control" value="50" min="0" step="1" required>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="hsync0">REG_HSYNC0</label>
+              <input id="hsync0" type="number" class="input-field form-control" value="0" min="0" step="1" required>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="hsync1">REG_HSYNC1</label>
+              <input id="hsync1" type="number" class="input-field form-control" value="30" min="0" step="1" required>
+            </div>
+          </div>
+          <div class="hint">HSIZE must be a multiple of 16. (HSIZE × VSIZE) must be a multiple of 128.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui.js"></script>
+<script src="advanced.js"></script>
+<script src="click_safety.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

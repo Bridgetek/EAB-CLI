@@ -1,0 +1,18 @@
+{
+  "name": "zlib",
+  "version": "1.2.11",
+  "license": "zlib",
+  "source": "https://zlib.net/",
+  "description": "zlib runtime DLL required by the Flash/audio helper executables.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "zlib.dll",
+          "dst": "native/zlib.dll",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flash Utilities</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root" class="container-fluid p-0">
+<div class="app-container">
+
+  <header class="app-header">
+    <h1>💾 Flash Utilities</h1>
+    <p>Build EVE flash images and program SPI flash (BT82X / Legacy)</p>
+  </header>
+
+  <div class="shell-body">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="shell-side" id="shell-side">
+
+      <div class="card" id="conn-card">
+        <div class="card-title"><span>🔗 Connection</span>
+          <button class="btn btn-secondary btn-sm" type="button" onclick="scanDevices(true)"
+                  title="Ask every interface which EVE answers, read its chip ID and select the first device found">🔍 Scan</button>
+        </div>
+
+        <div class="dev-section">
+          <div class="dev-section-title">Detected <span id="dev-detected-count"></span></div>
+          <div class="dev-list" id="dev-detected" role="group" aria-label="Detected devices"></div>
+          <p class="hint dev-empty" id="dev-empty">No device detected yet — press Scan with the board plugged in.</p>
+        </div>
+
+        <details class="dev-supported" id="dev-supported-box">
+          <summary>Supported device list</summary>
+          <div class="dev-list" id="dev-supported" role="group" aria-label="Supported programmers"></div>
+        </details>
+
+        <details class="dev-supported" id="connection-help">
+          <summary>Connection troubleshooting</summary>
+          <p class="hint">Press <b>Scan</b>; the connected EVE chip is detected automatically. FT4222 and MPSSE adapters are supported with any EVE chip supported by the selected flash operation.</p>
+          <p class="hint">If cannot detects the board, check that it is powered, the SPI connections are correct, and the FTDI adapter uses the FTDI D2XX/bus driver (<code>ftdibus.inf</code>, shown as <b>USB Serial Converter</b>). WinUSB or USB COM drivers, often installed with Zadig, are not compatible.</p>
+        </details>
+
+        <p class="hint hidden" id="pico-hint">Pico programming writes the image through <code>uf2conv4eve</code> and the USB drive. Hold <b>BOOTSEL</b> while plugging the Pico in, wait for <b>RPI-RP2</b>, then press <b>Program</b> on the Program tab. The image is built for <b id="pico-chip">—</b>.
+          <b>Program is the only action a Pico can run</b> — <code>uf2conv4eve</code> has no detect, read, verify, erase or NAND command, so the other buttons stay greyed; select an FT4222 or MPSSE adapter for those.
+          <button class="pico-guide-link" type="button" onclick="openPicoGuide()">Open the BOOTSEL guide</button></p>
+        <div class="hint" id="conn-detail"></div>
+      </div>
+
+      <!-- Options: the SPI clock drives FT4222 / MPSSE, the flash chip type is
+           only read on a BT82X board (ui.js syncConnOptions gates both). -->
+      <div class="card" id="conn-options-card">
+        <div class="card-title">⚙ Options</div>
+        <div class="opt-body">
+          <div class="opt-field" id="opt-clock-row">
+            <label class="form-label" for="fp-frequency">SPI clock rate (Mhz)</label>
+            <input id="fp-frequency" type="number" class="input-field form-control input-narrow" value="12" min="1" max="30" step="1"
+                   title="SPI clock frequency in MHz (1-30) — used by the FT4222 and MPSSE adapters">
+          </div>
+          <div class="opt-field" id="opt-flash-type-row">
+            <label class="form-label" for="flash-type">Flash chip type</label>
+            <select id="flash-type" class="form-select" title="Read from the BT82X board by Scan; NAND parts need the NAND Flash Extension">
+              <option value="" selected>Scan to read</option>
+              <option value="NOR">NOR</option>
+              <option value="NAND">NAND</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint" id="opt-hint"></p>
+      </div>
+
+      <!-- Log: the commands handed to the vendor tools, what they printed and
+           what the USB watch saw. Collapsed by default so the sidebar keeps the
+           device cards in view; the dot marks activity that arrived while shut. -->
+      <details class="card" id="conn-log-card">
+        <summary class="card-title">
+          <span>📋 Log</span>
+          <span class="conn-log-dot hidden" id="conn-log-dot" title="New activity">●</span>
+          <button class="btn btn-secondary btn-sm" type="button" onclick="clearConnLog(event)"
+                  title="Clear the log">🗑 Clear</button>
+        </summary>
+        <pre id="conn-log" class="code-block"></pre>
+      </details>
+
+    </aside>
+
+    <div class="shell-divider" id="shell-divider" role="separator" aria-orientation="vertical" tabindex="0"
+         title="Drag to resize the sidebar · double-click to reset"></div>
+
+    <!-- ================= MAIN ================= -->
+    <section class="shell-main" id="shell-main">
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="generator" onclick="switchTab('generator')">📦 Flash Image Generator</button>
+        <button class="tab-btn" data-tab="programmer" data-needs="device" onclick="switchTab('programmer')">🔌 Flash Programmer</button>
+        <button class="tab-btn" data-tab="diagnostic" data-needs="bt82x" onclick="switchTab('diagnostic')">🩺 Flash Diagnostic</button>
+        <button class="tab-btn" data-tab="samplecode" onclick="switchTab('samplecode')">📄 Sample Code</button>
+        <button class="tab-btn" data-tab="devices" onclick="switchTab('devices')">🗂 Supported Devices</button>
+        <button class="tab-btn" data-tab="blobrelease" onclick="switchTab('blobrelease')">📜 Blob Release</button>
+      </div>
+
+      <!-- ---------- Generator ---------- -->
+      <div id="tab-generator" class="tab-content active">
+        <div class="pane-split gen-split">
+
+          <div class="pane gen-side">
+
+            <div class="card" id="chip-card" data-eab-role="chip">
+              <div class="card-title">🔳 EVE Chip</div>
+              <select id="chip-one" class="form-select" aria-label="EVE chip"
+                      title="The part name you have (FT813, BT883…). BT820 builds the EVE 5 asset format; every other part builds the Legacy format.">
+                <option value="">Select chip…</option>
+              </select>
+              <p class="hint">Builds the image for this part. Other tabs follow the device selected in Connection.</p>
+              <!-- Options source for #chip-one: the picker above drives these two boxes.
+                   #fp-chip stays here as a hidden mirror the generator writes the legacy
+                   programmer chip into. -->
+              <div id="chip-sources" hidden>
+                <div class="opt-body">
+                  <div class="opt-field">
+                    <span class="form-label" data-chip-label="gen">Generation</span>
+                    <select id="chip-gen" class="form-select" onchange="onChipPick('gen')">
+                      <option value=""></option>
+                      <option value="FT80X">FT80x · FT800 / FT801</option>
+                      <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                      <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                      <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                      <option value="BT82X" selected>BT82x · BT820</option>
+                    </select>
+                  </div>
+                  <div class="opt-field">
+                    <span class="form-label" data-chip-label="part">Part</span>
+                    <select id="chip-name" class="form-select" onchange="onChipPick('part')">
+                      <option value=""></option>
+                      <option value="FT800">FT800</option>
+                      <option value="FT801">FT801</option>
+                      <option value="FT810">FT810</option>
+                      <option value="FT811">FT811</option>
+                      <option value="FT812">FT812</option>
+                      <option value="FT813">FT813</option>
+                      <option value="BT880">BT880</option>
+                      <option value="BT881">BT881</option>
+                      <option value="BT882">BT882</option>
+                      <option value="BT883">BT883</option>
+                      <option value="BT815">BT815</option>
+                      <option value="BT816">BT816</option>
+                      <option value="BT817">BT817</option>
+                      <option value="BT818">BT818</option>
+                      <option value="BT820" selected>BT820</option>
+                    </select>
+                  </div>
+                  <div class="opt-field">
+                    <span class="form-label">Legacy programmer chip</span>
+                    <select id="fp-chip" class="form-select" disabled
+                            title="Read-only: it follows the EVE part the board reports and is passed as --chip BT815/6 or BT817/8 to the legacy tool">
+                      <option value="BT815/6" selected>BT815/6</option>
+                      <option value="BT817/8">BT817/8</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" id="options-card" data-eab-role="options">
+              <div class="card-title">⚙ Options</div>
+              <div class="opt-body">
+                <label class="opt-check" for="align-check">
+                  <input id="align-check" type="checkbox" class="form-check-input" checked>
+                  <span class="form-check-label">Align assets to 64 bytes, image to 4K</span>
+                </label>
+                <label class="opt-check" for="edf-check">
+                  <input id="edf-check" type="checkbox" class="form-check-input">
+                  <span class="form-check-label">Generate EDF block</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pane-divider" id="gen-divider" role="separator" aria-orientation="vertical" tabindex="0"
+               title="Drag to resize the chip column · double-click to reset"></div>
+
+          <div class="pane">
+
+            <div class="eab-run-bar" id="run-bar">
+              <div class="btn-progress-wrap overflow-hidden position-relative">
+                <div id="progress-fill" class="btn-progress-fill"></div>
+                <button id="btn-convert" class="btn btn-primary" disabled onclick="startBatch()">🔄 Build Flash Image</button>
+              </div>
+              <div id="convert-controls" class="convert-controls hidden"></div>
+            </div>
+
+            <div class="card" id="input-card" data-eab-role="input">
+              <div class="card-title">
+                <span>📂 Input Assets <span id="file-count">(0)</span></span>
+                <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="addAssetFile()">＋ Add files…</button>
+                <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="addAssetFolder()">📁 Add folder</button>
+                <button class="btn btn-secondary btn-sm" type="button" data-sample="generator" onclick="eabUseSample('generator', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+                <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued asset" onclick="clearAllInputs()">🗑 Clear all</button>
+              </div>
+
+              <div class="drop-zone" id="drop-zone" data-for="file-list" data-picker="btn-add-files"
+                   tabindex="0" role="button" aria-label="Drop asset files or browse">
+                <span class="dz-icon">📦</span>
+                <div>Drop one or more assets here</div>
+                <div>or paste a file here from your clipboard</div>
+                <div>or click to browse — BIN, EAB, PKM, ASTC, RAW, PNG, JPG</div>
+                <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+              </div>
+
+              <div id="empty-msg" class="file-list-empty">No assets queued — drop a file above or click "Add files…".</div>
+              <div id="file-list" class="file-list list-group"></div>
+
+              <div class="opt-field">
+                <label class="form-label" for="blob-path">Blob File</label>
+                <select id="blob-path" class="form-select" title="Flash driver blob written into the image. The list is scanned from flash_blob/ and follows the selected chip; Browse… takes any blob on the PC."></select>
+                <button id="btn-blob-browse" class="btn btn-secondary" type="button" onclick="pickBlobFile()">Browse…</button>
+                <button id="btn-input-list" class="btn btn-secondary" type="button" title="Build from a text file listing one asset path per line" onclick="addInputList()">📄 Input list…</button>
+              </div>
+            </div>
+
+            <div class="card" data-eab-role="output">
+              <div class="card-title">📁 Output</div>
+              <div class="opt-body">
+                <div class="opt-field">
+                  <label class="form-label" for="output-dir">Folder</label>
+                  <input id="output-dir" type="text" class="input-field is-path form-control" placeholder="Output folder..." value="." spellcheck="false">
+                  <button id="btn-output-browse" class="btn btn-secondary" type="button" onclick="pickOutputDir()">Browse…</button>
+                  <button id="btn-open-output" class="btn btn-secondary" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
+                </div>
+                <div class="opt-field">
+                  <label class="form-label" for="output-name">Name</label>
+                  <input id="output-name" type="text" class="input-field form-control" value="flash" placeholder="flash">
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-danger error-panel hidden" data-eab-role="alert"></div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ---------- Programmer: rail order == page order ---------- -->
+      <div id="tab-programmer" class="tab-content">
+        <div class="prog-shell h-100">
+          <div class="fp-split h-100">
+
+            <div class="fp-rail">
+              <div class="tab-sub fp-tabs-vert" id="fp-tabs" role="tablist" aria-orientation="vertical" aria-label="Programmer operation"></div>
+            </div>
+
+            <div class="fp-rail-divider" id="fp-rail-divider" role="separator" aria-orientation="vertical" tabindex="0"
+                 title="Drag to resize the tab list · double-click to reset"></div>
+
+            <div class="fp-pages-col">
+              <div class="fp-pages">
+
+                <div class="fp-busy hidden" id="fp-busy" role="status" aria-live="polite">
+                  <span class="fp-busy-spinner" aria-hidden="true"></span>
+                  <span class="fp-busy-text">
+                    <span class="fp-busy-label" id="fp-busy-label">Working…</span>
+                    <span class="fp-busy-sub" id="fp-busy-sub"></span>
+                  </span>
+                  <span class="fp-busy-time" id="fp-busy-time">0.0s</span>
+                  <span class="fp-busy-sweep" aria-hidden="true"></span>
+                </div>
+
+                <div class="alert alert-danger error-panel fp-error hidden" data-eab-role="alert" role="alert"></div>
+
+                <!-- Detect -->
+                <div class="fp-page" data-fp-page="detect">
+                  <div class="card" data-eab-role="input">
+                    <div class="card-title"><span>🔎 Detect</span></div>
+
+                    <div class="fp-modes" role="group" aria-label="Detect mode">
+                      <label class="fp-mode" for="fp-detect-safe">
+                        <input class="form-check-input" type="checkbox" id="fp-detect-safe" checked>
+                        <span class="fp-mode-text">
+                          <span class="fp-mode-title">Safe</span>
+                          <span class="fp-mode-sub">Reads the chip, never writes</span>
+                        </span>
+                      </label>
+                      <label class="fp-mode" for="fp-detect-write">
+                        <input class="form-check-input" type="checkbox" id="fp-detect-write">
+                        <span class="fp-mode-text">
+                          <span class="fp-mode-title">Measure write speed</span>
+                          <span class="fp-mode-sub">Overwrites the flash data</span>
+                        </span>
+                      </label>
+                    </div>
+
+                    <div class="field-row fp-actions fp-detect-actions">
+                      <button class="btn btn-primary" type="button" data-fp-run="--detect" onclick="fpRunAction('--detect')">🔎 Detect</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--readinfo" onclick="fpRunAction('--readinfo')">📖 Read Info</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--readsfdp" onclick="fpRunAction('--readsfdp')">📄 Read SFDP</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--chip-id" onclick="fpRunAction('--chip-id')">🆔 Chip ID</button>
+                    </div>
+
+                    <p class="hint">1. Identify the flash chip size, verify blob driver availability, and confirm FAST mode.<br>2. Measure read speed. Measuring write speed overwrites the data on the flash chip.</p>
+                  </div>
+
+                  <div class="card fp-console fp-detect-result" data-eab-role="result">
+                    <div class="card-title"><span>📋 Detect Result</span>
+                      <button class="btn btn-secondary btn-sm" type="button" onclick="clearDetectOut()">Clear</button>
+                    </div>
+                    <pre id="fp-detect-out" class="code-block code-block-fill"></pre>
+                  </div>
+                </div>
+
+                <!-- Program -->
+                <div class="fp-page hidden" data-fp-page="program">
+                  <div class="card" id="programmer-card" data-eab-role="input">
+                    <div class="card-title"><span>🔌 Flash Programmer</span>
+                      <button class="btn btn-secondary btn-sm" type="button" data-sample="programmer" onclick="eabUseSample('programmer', event)" title="Queue the sample flash image and set the chip">✨ Use Sample</button>
+                    </div>
+
+                    <select id="fp-action" class="hidden" onchange="onFpActionChange()">
+                      <option value="--detect">Detect flash chip</option>
+                      <option value="--check-type" data-chip="bt82x">Check flash chip type</option>
+                      <option value="--readinfo">Read flash info</option>
+                      <option value="--readsfdp">Read SFDP block</option>
+                      <option value="--chip-id" data-chip="legacy">Read chip ID</option>
+                      <option value="--erase">Erase whole chip</option>
+                      <option value="--read">Read flash into file</option>
+                      <option value="--verify">Verify flash against file</option>
+                      <option value="--program">Program factory-state chip</option>
+                      <option value="--program-verify" data-chip="bt82x">Program, then verify</option>
+                      <option value="--update">Update (erase if needed)</option>
+                      <option value="--update-verify">Update, then verify</option>
+                      <option value="--newblob">Install blob</option>
+                      <option value="--tx">Send bytes</option>
+                      <option value="--scan-nand" data-chip="bt82x">Scan for bad blocks</option>
+                      <option value="--sanitize-nand" data-chip="bt82x">Sanitize bad blocks</option>
+                      <option value="--map-nand" data-chip="bt82x">Map bad block to spare</option>
+                    </select>
+
+                    <div class="drop-zone" id="fp-drop-zone" data-for="fp-file-list" data-picker="fp-file-browse"
+                         tabindex="0" role="button" aria-label="Drop one or more flash images or browse">
+                      <span class="dz-icon">🔌</span>
+                      <div>Drop one or more flash images here</div>
+                      <div>or click to browse — BIN, IMG, BLOB, EAB</div>
+                      <div class="dz-progress" aria-hidden="true"><div class="dz-progress-fill"></div></div>
+                    </div>
+
+                    <div class="opt-body">
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-file-browse">Flash Images</label>
+                        <button id="fp-file-browse" class="btn btn-secondary" type="button" onclick="pickFpFile()">＋ Add images…</button>
+                        <button id="fp-file-clear" class="btn btn-secondary" type="button" onclick="clearFpImages()">Clear</button>
+                      </div>
+                      <div id="fp-file-list" class="file-list fp-file-list hidden"></div>
+                      <!-- The vendor tool runs one flash_prog to completion and takes no
+                           pause/stop control, so only the queue clock is shown here. -->
+                      <div class="field-row fp-batch-status" id="fp-controls">
+                        <span class="fp-batch-time" id="fp-batch-time"></span>
+                      </div>
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-pad">Padding bytes</label>
+                        <input id="fp-pad" type="number" class="input-field form-control input-narrow" value="64" min="0" max="65536" step="1"
+                               title="Program writes the images one after another and pads each one up to a multiple of this many bytes before the next image starts (0 = no padding)">
+                      </div>
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-offset">Offset</label>
+                        <input id="fp-offset" type="text" class="input-field form-control" placeholder="0 (optional)"
+                               title="Start address of the first image (decimal or 0x…); every following image starts at the padded end of the one before it">
+                      </div>
+                    </div>
+
+                    <br>
+                    <div class="field-row fp-actions indent">
+                      <button class="btn btn-secondary" type="button" data-fp-run="--newblob" onclick="fpRunAction('--newblob')">💾 Install Blob</button>
+                      <button class="btn btn-primary" type="button" data-fp-run="--program" onclick="fpRunAction('--program')">⬇ Program</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--update" onclick="fpRunAction('--update')">🔄 Update</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--update-verify" onclick="fpRunAction('--update-verify')">✅ Update + Verify</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--verify" onclick="fpRunAction('--verify')">🔍 Verify</button>
+                      <button class="btn btn-secondary" type="button" data-fp-run="--erase" onclick="fpRunAction('--erase')">🗑 Erase</button>
+                    </div>
+
+                    <p class="hint"><b>Program</b> writes each queued image with its own <code>flash_prog</code> run, one after another: image <i>n</i> starts where image <i>n−1</i> ended, padded up to <b>Padding bytes</b> (0 = straight after), so every row reports its own result. The queue stops and marks the rest <i>does not fit</i> when the next image would pass the end of the flash. <b>Program</b> needs a <b>BT817, BT818 or BT82X</b> board. <b>Install Blob</b> writes the flash driver into the first block, <b>Update</b> erases only what it needs (first image), <b>Erase</b> wipes the whole chip including the blob.</p>
+                  </div>
+
+                  <div class="card fp-console prog-result" data-eab-role="result">
+                    <div class="card-title"><span>📋 Programmer Output</span>
+                      <button class="btn btn-secondary btn-sm" type="button" onclick="clearFpOut()">Clear</button>
+                    </div>
+                    <pre id="fp-out" class="code-block code-block-fill"></pre>
+                  </div>
+                </div>
+
+                <!-- Read -->
+                <div class="fp-page hidden" data-fp-page="read">
+                  <div class="card">
+                    <div class="card-title">⬆ Read Flash</div>
+                    <div class="opt-body">
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-read-dir">Output Folder</label>
+                        <input id="fp-read-dir" type="text" class="input-field form-control" placeholder="Select folder…">
+                        <button class="btn btn-secondary" type="button" onclick="pickFpReadDir()">Browse…</button>
+                      </div>
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-read-name">Output Name</label>
+                        <input id="fp-read-name" type="text" class="input-field form-control" placeholder="flash_read_full">
+                      </div>
+                      <div class="opt-field" id="fp-read-range">
+                        <label class="form-label" for="fp-read-start">Start / Length</label>
+                        <input id="fp-read-start" type="text" class="input-field form-control" value="0" title="Start address">
+                        <input id="fp-read-length" type="text" class="input-field form-control" value="4096" title="Read length">
+                      </div>
+                      <div class="opt-field">
+                        <span class="form-label"></span>
+                        <label class="opt-check" for="fp-read-entire">
+                          <input class="form-check-input" type="checkbox" id="fp-read-entire">
+                          <span class="form-check-label">Read Entire Flash</span>
+                        </label>
+                      </div>
+                      <div class="field-row fp-actions indent">
+                        <button class="btn btn-primary" type="button" data-fp-run="--read" onclick="fpRunAction('--read')">⬆ Read</button>
+                        <button class="btn btn-secondary" type="button" onclick="openFpReadDir()">📂 Open Folder</button>
+                      </div>
+                    </div>
+                    <p class="hint">Reads the flash into <b>&lt;Output Folder&gt;/&lt;Output Name&gt;.bin</b>. <b>Read Entire Flash</b> ignores the start address and length.</p>
+                  </div>
+                </div>
+
+                <!-- Scan -->
+                <div class="fp-page hidden" data-fp-page="scan">
+                  <div class="card">
+                    <div class="card-title">🔍 Scan Block</div>
+                    <p class="hint">1. <b>Scan</b> detects bad blocks on non-factory-state flash by reading the BBM marker with <code>CMD_NFLASHISBLOCKBAD</code>.<br>2. The summary reports the total, good and bad block counts.</p>
+                    <div class="field-row fp-actions">
+                      <button class="btn btn-primary" type="button" data-fp-run="--scan-nand" onclick="fpRunAction('--scan-nand')">🔍 Scan</button>
+                    </div>
+                    <p class="hint"><b>Sanitize</b> erases all NAND data (sets every byte to 0xFF) and records each block status in the spare area. It can take over ten minutes.</p>
+                    <div class="field-row fp-actions">
+                      <button class="btn btn-primary" type="button" data-fp-run="--sanitize-nand" onclick="fpRunAction('--sanitize-nand')">🧹 Sanitize</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fix -->
+                <div class="fp-page hidden" data-fp-page="fix">
+                  <div class="card">
+                    <div class="card-title">🛠 Fix Block</div>
+                    <div class="opt-body">
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-map-bad">Bad (logical) block</label>
+                        <input id="fp-map-bad" type="number" class="input-field form-control" min="0" max="1023" value="1023">
+                      </div>
+                      <div class="opt-field">
+                        <label class="form-label" for="fp-map-good">Good (physical) block</label>
+                        <select id="fp-map-good" class="form-select"></select>
+                      </div>
+                    </div>
+                    <div class="field-row fp-actions indent">
+                      <button class="btn btn-secondary" type="button" onclick="fpReadLut()">📋 Read BBM LUT</button>
+                      <button class="btn btn-primary" type="button" data-fp-run="--map-nand" onclick="fpRunAction('--map-nand')">🔗 Connect</button>
+                    </div>
+                    <p class="hint">Remaps one bad block to a good one by updating the Bad Block Management Lookup Table (BBM LUT).</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Diagnostic ---------- -->
+      <div id="tab-diagnostic" class="tab-content">
+        <div class="pane-split">
+
+          <div class="pane">
+            <div class="eab-run-bar" id="diag-run-bar">
+              <div class="btn-progress-wrap">
+                <button id="btn-diag-tx" class="btn btn-primary" disabled onclick="runDiagnostic('--tx')">📡 TX/RX Diagnostic</button>
+              </div>
+              <div class="btn-progress-wrap">
+                <button id="btn-diag-info" class="btn btn-primary" onclick="runDiagnostic('--readinfo')">📖 Read Info</button>
+              </div>
+            </div>
+
+            <div class="card" data-eab-role="input">
+              <div class="card-title">🩺 SPI Diagnostic</div>
+              <div class="opt-body">
+                <div class="opt-field">
+                  <label class="form-label" for="diag-tx">TX bytes</label>
+                  <input id="diag-tx" type="text" class="input-field form-control" placeholder="e.g. 9F 00 00 00">
+                </div>
+                <div class="opt-field">
+                  <label class="form-label" for="diag-rx">Expected RX</label>
+                  <input id="diag-rx" type="number" class="input-field form-control input-narrow" value="1" min="0">
+                </div>
+              </div>
+              <p class="hint">Both buttons keep the same CLI path as the Programmer tab: <b>TX/RX</b> sends the bytes you typed and prints the answer, <b>Read Info</b> asks the flash chip for its identification. Neither writes to flash.</p>
+            </div>
+
+            <div class="alert alert-danger error-panel hidden" data-eab-role="alert"></div>
+          </div>
+
+          <div class="pane">
+            <div class="card" data-eab-role="result">
+              <div class="card-title">📋 Output</div>
+              <pre id="diag-out" class="code-block code-block-fill"></pre>
+            </div>
+            <div class="card" data-eab-role="options">
+              <div class="card-title">ℹ What the diagnostic does</div>
+              <p class="hint">A diagnostic only reads: <b>TX/RX</b> sends the bytes you typed and prints the answer, <b>Read Info</b> asks the flash chip for its identification. Neither writes to flash.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ---------- Sample code ---------- -->
+      <div id="tab-samplecode" class="tab-content">
+        <div class="pane">
+          <div class="card" data-eab-role="result">
+            <div class="card-title"><span>📄 Sample Code</span>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="copySample()">📋 Copy</button>
+            </div>
+            <div class="sample-scope" role="tablist" aria-label="Sample code chip group">
+              <button class="sample-scope-btn active" type="button" role="tab" aria-selected="true"
+                      data-scope="bt82x" onclick="setFlashSampleScope('bt82x')">BT82X</button>
+              <button class="sample-scope-btn" type="button" role="tab" aria-selected="false"
+                      data-scope="legacy" onclick="setFlashSampleScope('legacy')">BT88X / BT81X / FT8XX</button>
+              <span class="sample-scope-note" id="sample-scope-note">NAND flash extension samples</span>
+            </div>
+            <div class="tab-sub" id="sample-tabs" role="tablist" aria-label="Sample pages"></div>
+            <p id="sample-hint" class="hint"></p>
+            <pre id="sample-code" class="code-block code-block-fill"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Supported devices ---------- -->
+      <div id="tab-devices" class="tab-content">
+        <div class="pane">
+          <div class="card card-wide" data-eab-role="result">
+            <div class="card-title">🗂 Supported Devices</div>
+            <p class="hint">The parts the bundled blob drivers support: the device prefix the blob matches, the memory technology, who makes it, and its density in Mbits and MBytes. NAND parts need no blob — the NAND Flash Extension handles them on BT82X.</p>
+            <div class="table-wrap table-responsive">
+              <table class="dev-table">
+                <thead>
+                  <tr><th>Device Prefix</th><th>Technology</th><th>Manufacturer</th><th class="num">Size (Mbits)</th><th class="num">Size (MBytes)</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>AS5F31G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">1024</td><td class="num">128</td></tr>
+                  <tr><td><code>AS5F12G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">2048</td><td class="num">256</td></tr>
+                  <tr><td><code>AS5F32G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">2048</td><td class="num">256</td></tr>
+                  <tr><td><code>AS5F14G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">4096</td><td class="num">512</td></tr>
+                  <tr><td><code>AS5F34G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">4096</td><td class="num">512</td></tr>
+                  <tr><td><code>AS5F18G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">8192</td><td class="num">1024</td></tr>
+                  <tr><td><code>AS5F38G04SND</code></td><td>NAND</td><td>Alliance</td><td class="num">8192</td><td class="num">1024</td></tr>
+                  <tr><td><code>MX35LF2</code></td><td>NAND</td><td>Macronix</td><td class="num">2048</td><td class="num">256</td></tr>
+                  <tr><td><code>MX35LF4</code></td><td>NAND</td><td>Macronix</td><td class="num">4096</td><td class="num">512</td></tr>
+                  <tr><td><code>MT29F2G01</code></td><td>NAND</td><td>Micron</td><td class="num">2048</td><td class="num">256</td></tr>
+                  <tr><td><code>W25N01GV</code></td><td>NAND</td><td>Winbond</td><td class="num">1024</td><td class="num">128</td></tr>
+                  <tr><td><code>S25FL064L</code></td><td>NOR</td><td>Cypress</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>S25FL1</code></td><td>NOR</td><td>Cypress</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>GD25Q64C</code></td><td>NOR</td><td>Gigadevice</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>IS25WP064</code></td><td>NOR</td><td>ISSI</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>IS25LP256</code></td><td>NOR</td><td>ISSI</td><td class="num">256</td><td class="num">32</td></tr>
+                  <tr><td><code>MX25</code></td><td>NOR</td><td>Macronix</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>MX25L64</code></td><td>NOR</td><td>Macronix</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>MX25L256</code></td><td>NOR</td><td>Macronix</td><td class="num">256</td><td class="num">32</td></tr>
+                  <tr><td><code>MT25QL128</code></td><td>NOR</td><td>Micron</td><td class="num">128</td><td class="num">16</td></tr>
+                  <tr><td><code>W25Q</code></td><td>NOR</td><td>Winbond</td><td class="num">64</td><td class="num">8</td></tr>
+                  <tr><td><code>W25Q128J</code></td><td>NOR</td><td>Winbond</td><td class="num">128</td><td class="num">16</td></tr>
+                  <tr><td><code>W25M512</code></td><td>NOR</td><td>Winbond</td><td class="num">256</td><td class="num">32</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Blob release ---------- -->
+      <div id="tab-blobrelease" class="tab-content">
+        <div class="pane blob-release-pane">
+          <div class="card" data-eab-role="result">
+            <div class="card-title"><span>📜 Blob Release</span>
+              <button class="btn btn-secondary btn-sm" type="button" onclick="openBlobFolder()">📂 Open blob folder</button>
+            </div>
+            <div class="opt-field">
+              <label class="form-label" for="blob-release-chip">EVE Chip</label>
+              <select id="blob-release-chip" class="form-select" onchange="onBlobReleaseChip()"
+                      title="The blob folder shown below follows this chip"></select>
+            </div>
+            <p class="hint" id="blob-folder-line">Bundled flash driver blobs and their release notes.</p>
+            <div class="blob-files" id="blob-files"></div>
+            <pre id="blob-notes" class="code-block blob-notes"></pre>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- ================= DEVICE TOASTS ================= -->
+  <div class="dev-toast-wrap" id="dev-toast-wrap" role="status" aria-live="polite"></div>
+
+  <!-- ================= PICO BOOTSEL GUIDE ================= -->
+  <div class="pico-modal hidden" id="pico-guide" role="dialog" aria-modal="true" aria-labelledby="pico-guide-title">
+    <div class="pico-guide">
+      <div class="pico-guide-head">
+        <h2 id="pico-guide-title">🍓 Program through a Raspberry Pi Pico</h2>
+        <button class="btn btn-secondary btn-sm" type="button" data-pico-close="1" aria-label="Close guide">✕</button>
+      </div>
+
+      <div class="pico-guide-body">
+        <section class="pico-sec">
+          <h3>Shipped with this extension — nothing to download</h3>
+          <ul class="pico-files">
+            <li><code>native/uf2conv4eve.exe</code><span>converts the image to UF2 and copies it to the Pico drive</span></li>
+            <li><code>pico/eve_flash_pico.uf2</code><span>Pico program that runs from RAM and turns the board into an EVE flash programmer</span></li>
+            <li><code>flash_blob/</code><span>BT815/6 and BT817/8 flash firmware blobs baked into that UF2</span></li>
+          </ul>
+          <p class="hint">No Python, no Pico SDK and no separate uf2conv install is needed. The only requirement is a USB <b>data</b> cable (a charge-only cable never shows the drive).</p>
+        </section>
+
+        <section class="pico-sec">
+          <h3>1 · Wire the Pico to the EVE board</h3>
+          <table class="pico-wiring">
+            <thead><tr><th>Pico pin</th><th></th><th>EVE</th></tr></thead>
+            <tbody>
+              <tr><td>GP2</td><td>→</td><td>SCK</td></tr>
+              <tr><td>GP3</td><td>→</td><td>MOSI</td></tr>
+              <tr><td>GP4</td><td>→</td><td>MISO</td></tr>
+              <tr><td>GP5</td><td>→</td><td>CS#</td></tr>
+              <tr><td>3V3 / VSYS</td><td>→</td><td>board power</td></tr>
+              <tr><td>GND</td><td>→</td><td>GND</td></tr>
+            </tbody>
+          </table>
+          <p class="hint">This is the pin map of the BridgeTek MM2040EV board and the GD3X dazzler.</p>
+        </section>
+
+        <section class="pico-sec">
+          <h3>2 · Put the Pico in BOOTSEL mode</h3>
+          <ol class="pico-steps">
+            <li>Unplug the Pico.</li>
+            <li>Press and <b>hold BOOTSEL</b> on the Pico.</li>
+            <li>Plug the Pico into the PC while still holding BOOTSEL.</li>
+            <li>Release BOOTSEL once the <b>RPI-RP2</b> drive appears in Explorer.</li>
+            <li>Press <b>Check connection</b> below — the Pico row turns Connected and is selected automatically.</li>
+            <li>Go to <b>🔌 Flash Programmer → Program</b> and pick your <code>.bin</code>; the extension builds the UF2 and writes it to the drive.</li>
+          </ol>
+          <p class="hint"><code>eve_flash_pico.uf2</code> runs from RAM: after the first write the drive reappears as <b>BTEVE-FLASH</b>, which is the Pico programming your EVE flash. Unplugging the Pico clears that state.</p>
+        </section>
+
+        <div class="pico-status" id="pico-guide-status" role="status">
+          <span class="dev-dot" aria-hidden="true"></span>
+          <span class="pico-status-text">Not checked yet.</span>
+        </div>
+      </div>
+
+      <div class="pico-guide-foot">
+        <span class="hint">A Pico is only “Connected” when its USB drive is mounted — the check reads the real device list.</span>
+        <div class="pico-guide-btns">
+          <button class="btn btn-secondary" type="button" data-pico-close="1">Close</button>
+          <button class="btn btn-primary" type="button" data-pico-act="check">🔍 Check connection</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="ui.js"></script>
+<script src="shell_bridge_late.js"></script>
+<script src="workbench.js"></script>
+<script src="dropzone.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="tab_nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="eab-results.js"></script>
+</body>
+</html>

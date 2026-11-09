@@ -1,0 +1,114 @@
+# CMake template for {{ config.platform }} platform
+
+# Example command to run CMake:
+# cmake --fresh -G "Visual Studio 17 2022" -S . -B build -DCMAKE_BUILD_TYPE=Debug
+# cmake --build build
+
+cmake_minimum_required(VERSION 3.15)
+
+###################################################################################################################
+# Project global settings
+###################################################################################################################
+
+# You can set the project name here, but it will be overridden by the EXCUTABLE variable later
+project({{ config.projectName }})
+
+set(CMAKE_GENERATOR_PLATFORM x64)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
+
+set(EXCUTABLE ${CMAKE_PROJECT_NAME})
+
+###################################################################################################################
+# Project build settings
+###################################################################################################################
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_definitions(-D_DEBUG)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_definitions(-D_RELEASE)
+else()
+    message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}. Please set it to Debug or Release.")
+endif()
+
+add_definitions(
+{% if config.platform == "FT4222" %}
+    -DUSE_FT4222=0
+{% elif config.platform == "MPSSE" %}
+    -DUSE_MPSSE=0
+{% endif %}
+    -DFTDIMPSSE_STATIC
+    -DFT_VER_MAJOR=1
+    -DFT_VER_MINOR=0
+    -DFT_VER_BUILD=5
+    -DWIN32
+    -D_CONSOLE
+    -D_LIB
+    -D_UNICODE
+    -DUNICODE
+)
+
+###################################################################################################################
+# Project source/header settings
+###################################################################################################################
+
+file(GLOB_RECURSE SOURCE_FILES_LIST
+    ${CMAKE_CURRENT_SOURCE_DIR}/Src/*.c
+
+    # EVE HAL
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/EVE_HAL/src/*.c
+    {% if config.platform == "FT4222" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/EVE_HAL/ports/eve_libft4222/*.c
+    {% elif config.platform == "MPSSE" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/EVE_HAL/ports/eve_libmpsse/*.c
+    {% endif %}
+)
+
+add_executable(${EXCUTABLE} ${SOURCE_FILES_LIST})
+
+target_include_directories(${EXCUTABLE} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Includes
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/EVE_HAL/include
+    {% if config.platform == "FT4222" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/ft4222
+    {% elif config.platform == "MPSSE" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/mpsse
+    {% endif %}
+)
+
+target_link_directories(${EXCUTABLE} PRIVATE
+    {% if config.platform == "FT4222" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/ft4222
+    {% elif config.platform == "MPSSE" %}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libs/mpsse
+    {% endif %}
+)
+
+target_link_libraries(${EXCUTABLE}
+    {% if config.platform == "FT4222" %}
+    ftd2xx.lib
+    LibFT4222-64.lib
+    {% elif config.platform == "MPSSE" %}
+    libMPSSE.lib
+    {% endif %}
+)
+
+###################################################################################################################
+# Post build settings according to the platform
+###################################################################################################################
+
+add_custom_command(TARGET ${EXCUTABLE} POST_BUILD
+    {% if config.platform == "FT4222" %}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/Libs/ft4222/ftd2xx.dll
+        $<TARGET_FILE_DIR:${EXCUTABLE}>/ftd2xx.dll
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/Libs/ft4222/LibFT4222-64.dll
+        $<TARGET_FILE_DIR:${EXCUTABLE}>/LibFT4222-64.dll
+    {% elif config.platform == "MPSSE" %}
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_CURRENT_SOURCE_DIR}/Libs/mpsse/libmpsse.dll
+        $<TARGET_FILE_DIR:${EXCUTABLE}>/libMPSSE.dll
+    {% endif %}
+)
+

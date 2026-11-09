@@ -7,8 +7,13 @@ Utilities" tab (`audcvt.cpp` = BT82X, `audcvt_2x.cpp` = Legacy,
 
 The converters invoke **ffmpeg** (the reference-bundled `ffmpeg\ffmpeg.exe`)
 with the exact same command line as the reference, so the generated
-`.wav`/`.raw`/`.mov` files and the metadata `.json` are byte-identical. The
-validator spawns `AudioVerify.exe`.
+`.wav`/`.raw`/`.mov` files and the metadata `.json` are byte-identical.
+
+Validation is no longer done here. The reference spawned `AudioVerify.exe`, which
+needed its own `eve_hal.dll` + `bt8xxemu.dll`; this extension now asks the
+**Emulator Provider** extension to play the file on the shared emulator instead
+(`API_EAB_callService` → `eve.emulator` → `audioValidate`). That removed the
+`eve-emu` and `ftdi` dependencies and the two emulator DLLs from `native/`.
 
 ## Commands
 
@@ -16,14 +21,12 @@ validator spawns `AudioVerify.exe`.
 |---------|------|-------------|
 | `bt82x audio` | BT82X | Convert audio (ffmpeg) — formats LINEAR/ULAW/ADPCM/S16/S16S |
 | `bt81x audio` | Legacy | Convert audio (ffmpeg) — PCM/uLaw/ADPCM, optional .mov |
-| `audio_validate` | Both | Validate audio via `AudioVerify.exe` |
 
 ## CLI Usage
 
 ```bash
 eab_tools.exe bt82x audio -i <in> -o <dir> [-f 0..4] [-s rate] [-c wav|raw] [-m mix|left|right] [-r] [-p opts]
 eab_tools.exe bt81x audio -i <in> -o <dir> -f 0..2 -s <rate> [-w] [-p opts]
-eab_tools.exe audio_validate <file>
 ```
 
 | Arg (bt82x) | Default | Description |
@@ -61,7 +64,9 @@ offers PCM/uLaw/ADPCM, sample rate, write-header and ffmpeg options.
   generator / a 105-file SampleApp template clone). Passing `-g` returns an
   error.
 - The validator has no reference CLI sub-command; it is compared against
-  running `AudioVerify.exe <file>` directly.
+  running `AudioVerify.exe <file>` directly. In this port the Validator tab calls
+  the `eve.emulator` service's `audioValidate` method instead, so the comparison
+  is against the emulator's own audio engine.
 
 ## Building
 

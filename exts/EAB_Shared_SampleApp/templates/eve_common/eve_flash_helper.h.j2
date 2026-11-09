@@ -1,0 +1,155 @@
+/**
+ @file eve_flash_helper.c
+ */
+
+#ifndef EVE_FLASH_HELPER_H
+#define EVE_FLASH_HELPER_H
+
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define MAX_ASSET_NAME_LENGTH 256
+#define FONT_CUSTOM_HANDLE 8
+
+typedef enum FLASH_Compression_t
+{
+    FLASH_COMPRESS_RAW = 0,   // No compression
+    FLASH_COMPRESS_ZLIB = 1,  // ZLIB compression
+    FLASH_COMPRESS_RELOC = 2, // Relocatable compression
+    FLASH_COMPRESS_LAST
+} FLASH_Compression_t;
+
+typedef enum FLASH_AssetType_t
+{
+    FLASH_ASSET_TYPE_NONE = 0x00,                  // No asset type
+    FLASH_ASSET_TYPE_FLASH_DRIVER = 0x01,          // Flash Driver (Blob)
+    FLASH_ASSET_TYPE_BITMAP = 0x02,                // Bitmap
+    FLASH_ASSET_TYPE_BITMAP_PALETTED_INDEX = 0x03, // Bitmap Paletted Index
+    FLASH_ASSET_TYPE_BITMAP_PALETTED_LUT = 0x04,   // Bitmap Paletted Lut
+    FLASH_ASSET_TYPE_DXT1 = 0x05,                  // Table 7 DXT1
+    FLASH_ASSET_TYPE_PNG_JPEG = 0x07,              // PNG/JPEG File
+    FLASH_ASSET_TYPE_ANIMATION_BT82X = 0x21,       // Animation BT82X
+    FLASH_ASSET_TYPE_AUDIO_BT82X = 0x31,           // Table 9 Audio BT82X
+    FLASH_ASSET_TYPE_VIDEO_BT82X = 0x51,           // Video BT82X
+#ifdef __SUPPORT_PRE_82X__
+    FLASH_ASSET_TYPE_ANIMATION_PRE82X = 0x20,      // Animation Pre82X
+    FLASH_ASSET_TYPE_VIDEO_PRE82X = 0x50,          // Video Pre82X
+    FLASH_ASSET_TYPE_AUDIO_PRE82X = 0x30,          // Table 9 Audio Pre82X
+    FLASH_ASSET_TYPE_FONT_LEGACY_PRE82X = 0x70,    // Legacy Font (Pre-BT82X)
+    FLASH_ASSET_TYPE_FONT_EXTENDED_PRE82X = 0x71,  // Extended Font (Pre-BT82X)
+#endif // __SUPPORT_PRE_82X__
+    FLASH_ASSET_TYPE_FONT_LEGACY_BT82X = 0x80,     // Legacy Font (BT82X)
+    FLASH_ASSET_TYPE_FONT_EXTENDED1_BT82X = 0x81,  // Extended Font 1 (BT82X)
+    FLASH_ASSET_TYPE_FONT_EXTENDED2_BT82X = 0x82,  // Extended Font 2 (BT82X)
+    FLASH_ASSET_TYPE_PADDING_DATA = 0xFC,          // Padding Data
+    FLASH_ASSET_TYPE_EDF_BLOCK = 0xFD,             // EDF Block
+    FLASH_ASSET_TYPE_USER_DATA = 0xFE,             // User Data
+    FLASH_ASSET_TYPE_LAST = 0xFF
+} FLASH_AssetType_t;
+
+typedef enum FLASH_AssetSubType_Bitmap_t
+{
+    FLASH_ASSET_SUBTYPE_NONE = 0,           // No subtype
+    FLASH_ASSET_SUBTYPE_ARGB1555 = 0,       // ARGB1555 format
+    FLASH_ASSET_SUBTYPE_L1 = 1,             // L1 format
+    FLASH_ASSET_SUBTYPE_L4 = 2,             // L4 format
+    FLASH_ASSET_SUBTYPE_L8 = 3,             // L8 format
+    FLASH_ASSET_SUBTYPE_RGB332 = 4,         // RGB332 format
+    FLASH_ASSET_SUBTYPE_ARGB2 = 5,          // ARGB2 format
+    FLASH_ASSET_SUBTYPE_ARGB4 = 6,          // ARGB4 format
+    FLASH_ASSET_SUBTYPE_RGB565 = 7,         // RGB565 format
+    FLASH_ASSET_SUBTYPE_L2 = 17,            // L2 format
+    FLASH_ASSET_SUBTYPE_RGB8 = 19,          // RGB8 format
+    FLASH_ASSET_SUBTYPE_ARGB8 = 20,         // ARGB8 format
+    FLASH_ASSET_SUBTYPE_PALETTEDARGB8 = 21, // PALETTEDARGB8 format
+    FLASH_ASSET_SUBTYPE_RGB6 = 22,          // RGB6 format
+    FLASH_ASSET_SUBTYPE_ARGB6 = 23,         // ARGB6 format
+    FLASH_ASSET_SUBTYPE_LA1 = 24,           // LA1 format
+    FLASH_ASSET_SUBTYPE_LA2 = 25,           // LA2 format
+    FLASH_ASSET_SUBTYPE_LA4 = 26,           // LA4 format
+    FLASH_ASSET_SUBTYPE_LA8 = 27,           // LA8 format
+    FLASH_ASSET_SUBTYPE_YCBCR = 28,         // YCBCR format
+    FLASH_ASSET_SUBTYPE_ASTC_4x4 = 37808,   // ASTC 4x4 format
+    FLASH_ASSET_SUBTYPE_ASTC_5x4 = 37809,   // ASTC 5x4 format
+    FLASH_ASSET_SUBTYPE_ASTC_5x5 = 37810,   // ASTC 5x5 format
+    FLASH_ASSET_SUBTYPE_ASTC_6x5 = 37811,   // ASTC 6x5 format
+    FLASH_ASSET_SUBTYPE_ASTC_6x6 = 37812,   // ASTC 6x6 format
+    FLASH_ASSET_SUBTYPE_ASTC_8x5 = 37813,   // ASTC 8x5 format
+    FLASH_ASSET_SUBTYPE_ASTC_8x6 = 37814,   // ASTC 8x6 format
+    FLASH_ASSET_SUBTYPE_ASTC_8x8 = 37815,   // ASTC 8x8 format
+    FLASH_ASSET_SUBTYPE_ASTC_10x5 = 37816,  // ASTC 10x5 format
+    FLASH_ASSET_SUBTYPE_ASTC_10x6 = 37817,  // ASTC 10x6 format
+    FLASH_ASSET_SUBTYPE_ASTC_10x8 = 37818,  // ASTC 10x8 format
+    FLASH_ASSET_SUBTYPE_ASTC_10x10 = 37819, // ASTC 10x10 format
+    FLASH_ASSET_SUBTYPE_ASTC_12x10 = 37820, // ASTC 12x10 format
+    FLASH_ASSET_SUBTYPE_ASTC_12x12 = 37821, // ASTC 12x12 format
+    FLASH_ASSET_SUBTYPE_LAST
+} FLASH_AssetSubType_Bitmap_t;
+
+typedef enum FLASH_AssetSubType_DXT1_t
+{
+    FLASH_ASSET_SUBTYPE_DXT1_L1_RGB565 = 0xdd00,      // L1_RGB565 format
+    FLASH_ASSET_SUBTYPE_DXT1_L1_PALETTED565 = 0xdd01, // L1_PALETTED565 format
+    FLASH_ASSET_SUBTYPE_DXT1_L2_RGB565 = 0xdd02,      // L2_RGB565 format
+    FLASH_ASSET_SUBTYPE_DXT1_L2_PALETTED565 = 0xdd03, // L2_PALETTED565 format
+    FLASH_ASSET_SUBTYPE_DXT1_LAST
+} FLASH_AssetSubType_DXT1_t;
+
+typedef enum FLASH_AssetSubType_Animation_t
+{
+    FLASH_ASSET_SUBTYPE_ANIMATION_FLASH_PRE82X = 0xaa00, // Animation address in Flash (Pre-BT82X)
+    FLASH_ASSET_SUBTYPE_ANIMATION_RAMG_PRE82X = 0xaa01,  // Animation address in RAM_G (Pre-BT82X)
+    FLASH_ASSET_SUBTYPE_ANIMATION_LAST
+} FLASH_AssetSubType_Animation_t;
+
+typedef enum FLASH_AssetSubType_Audio_t
+{
+    FLASH_ASSET_SUBTYPE_AUDIO_RAW_LINEAR = 0xad00,    // RAW Linear Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_RAW_ULAW = 0xad01,      // RAW uLaw Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_RAW_IMA_ADPCM = 0xad02, // RAW 4-bit IMA ADPCM Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_RAW_S16 = 0xad03,       // RAW S16 Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_RAW_S16S = 0xad04,      // RAW S16S Sample Format (stereo)
+    FLASH_ASSET_SUBTYPE_AUDIO_WAV_LINEAR = 0xad10,    // WAV Linear Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_WAV_ULAW = 0xad11,      // WAV uLaw Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_WAV_IMA_ADPCM = 0xad12, // WAV 4-bit IMA ADPCM Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_WAV_S16 = 0xad13,       // WAV S16 Sample Format
+    FLASH_ASSET_SUBTYPE_AUDIO_WAV_S16S = 0xad14,      // WAV S16S Sample Format (stereo)
+    FLASH_ASSET_SUBTYPE_AUDIO_LAST
+} FLASH_AssetSubType_Audio_t;
+
+typedef struct EVE_Flash_Asset_Info
+{
+    uint16_t assetID;      // The sequential ID of the asset
+    uint32_t startAddress; // The offset of the asset
+    uint32_t size;         // The size of the asset, in byte
+    uint8_t compression;   // The compression type of the asset
+    uint8_t type;          // The type of the asset, see below
+    uint16_t subType;      // The subtype of the asset, see below
+    uint16_t width;        // The width of bitmap/video/animation
+    uint16_t height;       // The height of bitmap/video/animation
+} EVE_Flash_Asset_Info;
+
+typedef struct eve_flash_asset_info_t
+{
+    EVE_Flash_Asset_Info *info;                   // The asset information
+    uint8_t name[MAX_ASSET_NAME_LENGTH];          // Asset name
+    uint32_t padding;                             // Padding size for alignment and loading from flash
+} eve_flash_asset_info_t;
+
+typedef struct eve_flash_block_t
+{
+    size_t size;          // Size of the image file
+    const char *name;     // Name of the image file
+    uint8_t *pData;       // Pointer hold the raw data
+} eve_flash_block_t;
+
+/**********************************************************************************************************************/
+/* Functions declarations                                                                                             */
+/**********************************************************************************************************************/
+
+int eve_flash_helper_load_asset(const EVE_Flash_Asset_Info *asset, const uint32_t ramg_addr);
+
+#endif // EVE_FLASH_HELPER_H

@@ -15,8 +15,7 @@
     "ft80x audio",
     "ft81x audio",
     "bt88x audio",
-    "bt81x audio",
-    "audio_validate"
+    "bt81x audio"
   ],
   "permissions": [
     "gui.render",
@@ -30,9 +29,7 @@
   ],
   "dependencies": {
     "ffmpeg": "^4.3",
-    "zlib": "^1.2",
-    "eve-emu": "^5.0",
-    "ftdi": "^3.2"
+    "zlib": "^1.2"
   },
   "app_dlls": [
     "native/audio_cvt.dll"

@@ -1,0 +1,46 @@
+/**
+ @file eve_flash_list.c
+ */
+
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "EVE.h"
+#include "eve_example.h"
+#include "eve_flash_helper.h"
+
+// Warning: This file is auto-generated from EAB configuration. Do not edit manually.
+// This is the flash asset information generated from EAB
+// It contains the asset ID, start address, size, compression type, asset type, subtype, width, and height
+// The asset ID is sequential, starting from 0
+static EVE_Flash_Asset_Info eve_flash_list[] = {
+    {% for asset in fileCfg.assets %}
+    {
+        .assetID = {{ asset.id }},
+        .startAddress = {{ asset.offset }},
+        .size = {{ asset.size }},
+        .compression = {{ get_compression_enum_string(asset.compression) }},
+        .type = {{ get_asset_type_enum_string(asset.type) }},
+        .subType = {{ get_asset_subtype_enum_string(asset.type, asset.sub_type) }},
+        .width = {{ asset.width }},
+        .height = {{ asset.height }}
+    },
+    {% endfor %}
+};
+
+eve_flash_asset_info_t eve_asset_info[] = {
+    {% for asset in fileCfg.assets %}
+    {
+        .info = &eve_flash_list[{{ asset.id }}],
+        .name = "{{ asset.asset_name }}",
+        .padding = {{ asset.padding }}
+    },
+    {% endfor %}
+};
+
+// Number of assets in the flash list are generated from EAB configuration
+int number_of_assets = sizeof(eve_flash_list) / sizeof(EVE_Flash_Asset_Info);
+

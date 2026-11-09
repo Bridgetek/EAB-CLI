@@ -59,6 +59,10 @@
   "app_dlls": [
     "native/img_cvt.dll"
   ],
+  "native_payloads": [
+    "native/pngquant/pngquant.exe",
+    "native/turbojpeg/turbojpeg.dll"
+  ],
   "api_version": "2.0",
   "start_with_eab": "yes"
 }

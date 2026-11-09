@@ -373,10 +373,6 @@ function syncValidatorGate() {
 function setValProgress(pct) {
   $('#val-progress-fill').css('width', Math.max(0, Math.min(100, pct)) + '%');
 }
-function valReason(result) {
-  const lines = String((result && result.log_text) || '').split('\n').map(l => l.trim()).filter(Boolean);
-  return lines.filter(l => /error|invalid|fail/i.test(l)).join(' | ').slice(0, 120);
-}
 async function startValidate() {
   const files = state.validatorFiles.slice();
   if (files.length === 0) return;
@@ -391,15 +387,18 @@ async function startValidate() {
     let ok = false;
     let why = '';
     try {
-      const result = JSON.parse(await invokeHost('execute_extension_command', {
-        extensionId: 'audio_converter',
-        cliCommand: 'audio_validate',
-        cliArgs: [file],
-      }));
-      ok = result.valid === true;
-      if (!ok) why = valReason(result) || 'invalid audio';
+      // Validation plays the file on the shared emulator, so the audio engine
+      // itself decides whether the buffer is loadable.
+      const resp = await API_EAB_callService({
+        service: 'eve.emulator',
+        method: 'audioValidate',
+        args: { path: file, waitMs: 500 },
+      });
+      if (!resp || !resp.ok) throw new Error((resp && resp.error) || 'the emulator service is unavailable');
+      ok = resp.result && resp.result.valid === true;
+      if (!ok) why = (resp.result && resp.result.reason) || 'invalid audio';
     } catch (err) {
-      why = String(err);
+      why = String(err && err.message ? err.message : err);
     }
     if (ok) {
       pass++;

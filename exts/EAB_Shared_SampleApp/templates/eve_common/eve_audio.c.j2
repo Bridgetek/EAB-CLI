@@ -1,0 +1,82 @@
+/**
+ @file eve_audios.c
+ */
+
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include "EVE.h"
+#include "eve_example.h"
+
+typedef struct eve_audio_t
+{
+    size_t fileSize;
+    const char *fileName;
+    uint8_t *pData;
+    uint32_t frequency;
+    uint32_t codec;
+    const char *format;
+} eve_audio_t;
+
+eve_audio_t audio_info = {
+    .fileSize = {{ fileCfg.fileSize }},
+    .fileName = "{{ fileCfg.fileName }}",
+    .pData    = NULL,
+    .frequency = {{ fileCfg.frequency }},
+    .format   = "{{ fileCfg.format }}",
+    .codec = {{ fileCfg.codec }}
+};
+
+void eve_load_audio(void)
+{
+    if (!EVE_LIB_LoadAssetFromFile(&audio_info))
+    {
+        printf("Error loading audio data\n");
+        return;
+    }
+    printf("Audio data loaded successfully...\n");
+
+    printf("Loading %s audio data to RAM_G...\n", audio_info.format);
+    EVE_LIB_BeginCoProList();
+    EVE_LIB_WriteDataToRAMG(audio_info.pData, audio_info.fileSize, EVE_RAM_G);
+    EVE_LIB_AwaitCoProEmpty();
+    printf("Loading %s audio data to RAM_G successfully...\n", audio_info.format);
+
+    EVE_LIB_BeginCoProList();
+    EVE_CMD_DLSTART();
+    EVE_CLEAR_COLOR_RGB(0, 0, 0);
+    EVE_CLEAR(1, 1, 1);
+
+    HAL_MemWrite32(EVE_REG_PLAYBACK_START, EVE_RAM_G);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_LENGTH, audio_info.fileSize);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_FREQ, audio_info.frequency);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_FORMAT, audio_info.codec);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_LOOP, 0);
+    HAL_MemWrite32(EVE_REG_VOL_L_PB, 155);
+    HAL_MemWrite32(EVE_REG_VOL_R_PB, 155);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_PLAY, 1);
+
+    uint32_t result = HAL_MemRead32(EVE_REG_PLAYBACK_PLAY);
+    while (result != 0) {
+        result = HAL_MemRead32(EVE_REG_PLAYBACK_PLAY);
+    };
+    printf("Audio playback finished...\n");
+
+    HAL_MemWrite32(EVE_REG_PLAYBACK_LENGTH, 0);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_LOOP, 0);
+    HAL_MemWrite32(EVE_REG_VOL_L_PB, 0);
+    HAL_MemWrite32(EVE_REG_VOL_R_PB, 0);
+    HAL_MemWrite32(EVE_REG_PLAYBACK_PLAY, 1);
+
+    EVE_LIB_EndCoProList();
+    EVE_LIB_AwaitCoProEmpty();
+
+    if (audio_info.pData)
+    {
+        free(audio_info.pData);
+        audio_info.pData = NULL;
+    }
+}

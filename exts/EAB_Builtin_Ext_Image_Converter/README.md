@@ -75,6 +75,7 @@ you can build and use external DLLs.
 | L8 / L4 / L2 / L1 / LA8 / LA4 / LA2 / LA1 | ✅ | ✅ | — |
 | YCbCr | ✅ | ✅ | — |
 | PALETTEDARGB8 | ✅ | ✅ | — |
+| PALETTED / PALETTED565 / PALETTED4444 / PALETTED8 (pre-BT82x) | ✅ | ✅ | — |
 | ASTC (all block sizes) | ⚠️ Approximate | — | ✅ Proper |
 | PNG input | ✅ | ✅ | — |
 | JPEG input | ✅ | ✅ | — |
@@ -201,6 +202,17 @@ cmake --install . --config Release
 ```
 
 Copy `turbojpeg.dll` alongside `img_cvt.dll` or add to PATH.
+
+### pngquant Palette Quantizer
+
+The paletted formats (`PALETTED`, `PALETTED565`, `PALETTED4444`, `PALETTED8`,
+`PALETTEDARGB8`) need `pngquant.exe` to build the palette when the input is not
+already an 8-bit palette PNG. It is shipped at `native/pngquant/pngquant.exe`
+and spawned as a child process by `src/png_quant_exe.rs`.
+
+If the payload is missing, paletted conversion of RGB/RGBA/JPEG input fails with
+`Unable to quantize the image to a palette`. An input PNG that is already
+palette-based is passed through without invoking pngquant.
 
 ### FFmpeg JPEG Decoder
 

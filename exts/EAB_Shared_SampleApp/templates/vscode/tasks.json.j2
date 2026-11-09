@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "cmake configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--fresh", "-G", "Visual Studio 17 2022", "-S", ".", "-B", "build", "-DCMAKE_BUILD_TYPE=Debug"],
+            "options": {
+                "shell": {
+                    "executable": "powershell.exe"
+                }
+            },
+            "group": "build",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "cmake build",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["--build", "build"],
+            "group": "build",
+            "options": {
+                "shell": {
+                    "executable": "powershell.exe"
+                }
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Copy EAB generated file to Debug folder",
+            "type": "shell",
+            "command": "powershell.exe",
+            "args": [
+                "-Command",
+                {% if fileCfg.isPalletedARGB8 %}
+                {{ fileCfg.generatedFilePath }}
+                {% else %}
+                "Copy-Item -Path \"{{ fileCfg.generatedFilePath }}\" -Destination \"${workspaceRoot}/build/Debug/\" -Force"
+                {% endif %}
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "CMake configure and build",
+            "dependsOn": ["cmake configure", "cmake build", "Copy EAB generated file to Debug folder"],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "options": {
+                "shell": {
+                    "executable": "powershell.exe"
+                }
+            },
+        }
+    ]
+}

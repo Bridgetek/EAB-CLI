@@ -1,0 +1,49 @@
+﻿/**
+  @file main.c
+ */
+
+/* INCLUDES ************************************************************************/
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#include "eve_example.h"
+
+/* CONSTANTS ***********************************************************************/
+
+/* LOCAL FUNCTIONS / INLINE ********************************************************/
+
+/* FUNCTIONS ***********************************************************************/
+
+int main(void)
+{
+    EVE_Init();
+
+{% if exampleType == "image" or exampleType == "image_flash"%}
+    printf("Loading images...\n");
+    eve_load_image();
+{% elif exampleType == "font" %}
+    printf("Loading fonts...\n");
+    eve_load_fonts();
+{% elif exampleType == "video" %}
+    printf("Loading video...\n");
+    eve_load_video();
+{% elif exampleType == "audio" %}
+    printf("Loading audio...\n");
+    eve_load_audio();
+{% elif exampleType == "animation" %}
+    printf("Loading animation...\n");
+    eve_load_animation();
+{% elif exampleType == "flash_block" %}
+    printf("Loading flash block...\n");
+    eve_load_flash_block();
+{% else %}
+    printf("Invalid example project type specified.\n");
+{% endif %}
+
+    EVE_Deinit();
+
+    return 0;
+}

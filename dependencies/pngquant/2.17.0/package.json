@@ -1,0 +1,18 @@
+{
+  "name": "pngquant",
+  "version": "2.17.0",
+  "license": "GPL-3.0-or-later (pngquant dual licence: GPL-3 / commercial)",
+  "source": "https://pngquant.org",
+  "description": "pngquant palette quantizer used by the image converter for every paletted output format.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": ".",
+          "dst": "native/pngquant",
+          "kind": "dir"
+        }
+      ]
+    }
+  }
+}

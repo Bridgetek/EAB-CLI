@@ -3,7 +3,7 @@
   "date_install": "2026-10-15_08:00:00:009",
   "category": "eve_custom",
   "name": "Register Validator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "extension_type": "app",
   "engine": "native",
   "author": "EAB User",

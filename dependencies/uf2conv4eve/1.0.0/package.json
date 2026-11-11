@@ -1,0 +1,18 @@
+{
+  "name": "uf2conv4eve",
+  "version": "1.0.0",
+  "license": "Bridgetek (reference bundle)",
+  "source": "EVE Asset Builder 4.5.0 reference install",
+  "description": "UF2 converter used to flash Raspberry Pi Pico boards over the mass-storage bootloader.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "uf2conv4eve.exe",
+          "dst": "native/uf2conv4eve.exe",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

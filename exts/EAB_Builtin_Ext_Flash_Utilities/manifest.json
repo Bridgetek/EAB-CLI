@@ -3,7 +3,7 @@
   "date_install": "2026-10-15_08:00:00:007",
   "category": "flashing",
   "name": "Flash Utilities",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "extension_type": "app",
   "engine": "native",
   "author": "EAB User",
@@ -35,7 +35,9 @@
   "dependencies": {
     "ftdi": "^3.2",
     "zlib": "^1.2",
-    "eve-emu": "^5.0"
+    "eve-emu": "^5.0",
+    "flash-tools": "^4.5",
+    "uf2conv4eve": "^1.0"
   },
   "app_dlls": [
     "native/flash_cvt.dll"

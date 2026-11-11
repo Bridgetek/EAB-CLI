@@ -57,6 +57,7 @@ async function createSession(force) {
     log('Session created: ' + r.session.path);
     showWarnings(r.warnings);
     setActiveSessionPath(r.session.path);
+    clearRestorePending();
     renderResult('Session created', [
       ['Size', r.size + ' bytes'],
       ['Session File', r.session.path],

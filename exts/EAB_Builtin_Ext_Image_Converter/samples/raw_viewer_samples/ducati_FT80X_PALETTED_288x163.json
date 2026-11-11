@@ -1,0 +1,20 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "Pre82x",
+  "input_name": "tmp-fs8.png",
+  "output_name": [
+    "ducati_FT80X_PALETTED_288x163.index.raw",
+    "ducati_FT80X_PALETTED_288x163.lut.raw"
+  ],
+  "output_size": [
+    46944,
+    1024
+  ],
+  "type": "bitmap",
+  "format": "PALETTED",
+  "compressed": "no",
+  "width": 288,
+  "height": 163,
+  "stride": 288,
+  "dither_algorithm": "NONE"
+}

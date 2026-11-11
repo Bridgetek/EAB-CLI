@@ -1754,9 +1754,11 @@
     var isLut   = LUT_RE.test(rawPath);
     if (!isIndex && !isLut) return;
     var $fmtSelect = $('#raw-format');
-    for (var i = 0; i < PALETTED_FORMATS.length; i++) {
-      var $pal = $fmtSelect.find('option[value="' + PALETTED_FORMATS[i] + '"]').eq(0);
-      if ($pal.length) $fmtSelect.prop('selectedIndex', $pal.index());
+    if (PALETTED_FORMATS.indexOf(String($fmtSelect.val() || '')) < 0) {
+      for (var i = 0; i < PALETTED_FORMATS.length; i++) {
+        var $pal = $fmtSelect.find('option[value="' + PALETTED_FORMATS[i] + '"]').eq(0);
+        if ($pal.length) { $fmtSelect.val(PALETTED_FORMATS[i]); break; }
+      }
     }
     var dimMatch = rawPath.match(/[_.](\d+)x(\d+)[_.]/i);
     if (dimMatch) {
@@ -1938,10 +1940,79 @@
   }
   var rawPreviewGeneration = 0;
   var RAW_BT82X_FORMATS = ['ARGB6', 'ARGB8', 'RGB6', 'RGB8', 'LA1', 'LA2', 'LA4', 'LA8', 'PALETTEDARGB8', 'YCBCR'];
+  var RAW_ASTC_BLOCKS = ['4x4', '5x4', '5x5', '6x5', '6x6', '8x5', '8x6', '8x8', '10x5', '10x6', '10x8', '10x10', '12x10', '12x12'];
+  // Pre-BT82x raw formats (mirrors raw_viewer::LEGACY_FORMATS).
+  var RAW_LEGACY_FORMATS = [
+    'ARGB1555', 'L1', 'L4', 'L8', 'RGB332', 'ARGB2', 'ARGB4', 'RGB565',
+    'PALETTED', 'L2', 'PALETTED565', 'PALETTED4444', 'PALETTED8',
+    'DXT1_L2_RGB565', 'DXT1_L1_RGB565', 'DXT1_L2_PALETTED565', 'DXT1_L1_PALETTED565'
+  ].concat(RAW_ASTC_BLOCKS.map(function (b) { return 'ASTC_' + b.toUpperCase(); }));
+  function rawChipGeneration() {
+    // A single part picker (BT820, FT813…); chipRow() maps it to the lower-case
+    // generation key used everywhere else.
+    var part = String($('#raw-chip-name').val() || '').toUpperCase();
+    var row = part ? chipRow(part) : null;
+    return row ? row[1] : '';
+  }
+  function rawIsBt82x() {
+    return rawChipGeneration() === 'bt82x';
+  }
+  function rawFormatsForChip() {
+    if (!rawIsBt82x()) return RAW_LEGACY_FORMATS;
+    return RAW_BT82X_FORMATS
+      .concat(RAW_ASTC_BLOCKS.map(function (b) { return 'ASTC_' + b.toUpperCase(); }))
+      .sort();
+  }
+  function populateRawFormats(preferred) {
+    var $sel = $('#raw-format');
+    if (!$sel.length) return;
+    var current = String(preferred || $sel.val() || '');
+    var list = rawFormatsForChip();
+    $sel.html('');
+    for (var i = 0; i < list.length; i++) {
+      $('<option>').val(list[i]).text(list[i]).appendTo($sel);
+    }
+    var pick = list.indexOf(current) >= 0 ? current : (rawIsBt82x() ? 'ARGB8' : 'RGB565');
+    $sel.val(pick);
+  }
+  window.onRawChipPick = function () {
+    populateRawFormats();
+    var meta = tabMetaById('rawviewer');
+    if (meta) { syncTabRun(meta); renderTabQueue(meta); }
+    if ($('#raw-input').val()) onRawFileInput();
+  };
   function rawViewerCommand() {
+    return rawIsBt82x() ? 'raw_viewer' : 'ft81x raw_viewer';
+  }
+  // DXT1 raw viewing needs companion layers next to the queued gradient file:
+  //   <base>_DXT1_RGB565.raw                          (color layer)
+  //   <base>_DXT1_PAL565.index.raw + .lut.raw         (paletted variant)
+  function dxt1Sidecars(path) {
+    // Only DXT1 formats consume the companion layers; a file that merely looks
+    // like a DXT1 gradient must not get -c/-x/-t when another format is picked.
     var fmt = String($('#raw-format').val() || '').toUpperCase();
-    if (/^ASTC_/.test(fmt) || RAW_BT82X_FORMATS.indexOf(fmt) >= 0) return 'raw_viewer';
-    return 'ft81x raw_viewer';
+    if (fmt.indexOf('DXT1') !== 0) return null;
+    var m = String(path).match(/^(.*)_DXT1_(?:L1|L2)\.raw$/i);
+    if (!m) return null;
+    var base = m[1];
+    var isPal = fmt.indexOf('PALETTED') >= 0;
+    return isPal
+      ? { index: base + '_DXT1_PAL565.index.raw', lut: base + '_DXT1_PAL565.lut.raw' }
+      : { color: base + '_DXT1_RGB565.raw' };
+  }
+  function rawCliArgs(path, width, height, outputDir) {
+    var fmt = String($('#raw-format').val() || '');
+    var args = ['-i', path, '-f', fmt, '-s', String(width) + 'x' + String(height)];
+    if (outputDir) args.push('-o', outputDir);
+    var pair = rawPairFor(path);
+    if (pair && pair.lut) args.push('-l', pair.lut);
+    var dxt = dxt1Sidecars(path);
+    if (dxt) {
+      if (dxt.color) args.push('-c', dxt.color);
+      if (dxt.index) args.push('-x', dxt.index);
+      if (dxt.lut) args.push('-t', dxt.lut);
+    }
+    return args;
   }
   function onRawFileInput() {
     var path = $('#raw-input').val();
@@ -1966,9 +2037,7 @@
       if (!temp || !temp.ok || !temp.path) throw new Error((temp && temp.error) || 'Could not create a temporary preview file.');
       outputPath = temp.path;
       var outputDir = outputPath.replace(/[\\/][^\\/]*$/, '');
-      var pair = rawPairFor(path);
-      var args = ['-i', path, '-f', $('#raw-format').val(), '-s', String(width) + 'x' + String(height), '-o', outputDir];
-      if (pair && pair.lut) args.push('-l', pair.lut);
+      var args = rawCliArgs(path, width, height, outputDir);
       return API_EAB_runCli({ command: rawViewerCommand(), args: args });
     }).then(function (resp) {
       if (generation !== rawPreviewGeneration || !resp) return;
@@ -2326,10 +2395,7 @@
     var height = parseInt($('#raw-height').val()) || 0;
     if (!width || !height) { showError('Please enter width and height.'); return; }
     runTabQueue(TAB_META[2], function (path) {
-      var pair = rawPairFor(path);
-      var args = ['-i', path, '-f', $('#raw-format').val(), '-s', String(width) + 'x' + String(height)];
-      args.push('-o', $('#raw-output').val() || '.');
-      if (pair && pair.lut) args.push('-l', pair.lut);
+      var args = rawCliArgs(path, width, height, $('#raw-output').val() || '.');
       if (!$('#raw-save-png').prop('checked')) args.push('--no-save-png');
       return API_EAB_runCli({ command: rawViewerCommand(), args: args });
     }, function (resp) {
@@ -2345,6 +2411,7 @@
     });
   };
   for (var mi = 0; mi < TAB_META.length; mi++) renderTabQueue(TAB_META[mi]);
+  populateRawFormats();
   $('#raw-format').on('change', function () {
     var meta = tabMetaById('rawviewer');
     if (meta) renderTabQueue(meta);
@@ -2426,6 +2493,19 @@
     }, function () { return ''; });
   }
   function loadSamples(tab) {
+    if (tab === 'rawviewer') {
+      var rawKey = rawIsBt82x() ? 'bt82x' : 'legacy';
+      var rawSpec = RAW_SAMPLE_SETS[rawKey];
+      loadRawSample(rawKey).then(function (path) {
+        if (!path) { showError('Could not load the sample raw bitmap.'); markSampleFail(tab); return; }
+        populateRawFormats(rawSpec.format);
+        $('#raw-width').val(String(rawSpec.width)).trigger('input');
+        $('#raw-height').val(String(rawSpec.height)).trigger('input');
+        addTabFiles(tabMetaById('rawviewer'), [path]);
+        $('#raw-input').val(path).trigger('input');
+      });
+      return;
+    }
     sampleSet().then(function (set) {
       if (!set) {
         showError('Sample files are missing — expected samples/' + SAMPLE_SETS.legacy.folder + ' next to the extension.');
@@ -2444,16 +2524,6 @@
         }));
         return;
       }
-      if (tab !== 'rawviewer') return;
-      var spec = RAW_SAMPLE_SETS[set.key] || RAW_SAMPLE_SETS.legacy;
-      loadRawSample(set.key).then(function (path) {
-        if (!path) { showError('Could not load the sample raw bitmap.'); markSampleFail(tab); return; }
-        $('#raw-format').val(spec.format).trigger('change');
-        $('#raw-width').val(String(spec.width)).trigger('input');
-        $('#raw-height').val(String(spec.height)).trigger('input');
-        addTabFiles(tabMetaById('rawviewer'), [path]);
-        $('#raw-input').val(path).trigger('input');
-      });
     });
   }
   function syncSampleButtons() {

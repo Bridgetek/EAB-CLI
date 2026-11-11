@@ -3,7 +3,7 @@
   "date_install": "2026-10-15_08:00:00:001",
   "category": "converter",
   "name": "Image Converter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "extension_type": "app",
   "engine": "native",
   "author": "EAB User",
@@ -54,14 +54,14 @@
     "cli.legacy raw_viewer"
   ],
   "dependencies": {
-    "astc": "^5.5"
+    "astc": "^5.5",
+    "pngquant": "^2.17",
+    "squish": "^1.15",
+    "turbojpeg": "^3.2",
+    "zlib": "^1.2"
   },
   "app_dlls": [
     "native/img_cvt.dll"
-  ],
-  "native_payloads": [
-    "native/pngquant/pngquant.exe",
-    "native/turbojpeg/turbojpeg.dll"
   ],
   "api_version": "2.0",
   "start_with_eab": "yes"

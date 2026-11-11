@@ -14,21 +14,21 @@
         "font_converter",
         "image_converter"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
     },
     "eve-emu@5.0.25": {
       "name": "eve-emu",
       "version": "5.0.25",
       "variant": "windows-x64",
       "dir": "eve-emu/5.0.25/windows-x64",
-      "digest": "sha256:eda64a8f7d0f4b2b8b601e3c4d78169556ef8238b582fe2d76c4633425dd399b",
-      "size": 5507808,
+      "digest": "sha256:0a6fc4cc8534cd42b55c3b528763660cd3e6d9faa291be6badf8616683ca1489",
+      "size": 5541200,
       "required_by": [
         "custom_touch",
         "emulator_provider",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
     },
     "ffmpeg@4.3": {
       "name": "ffmpeg",
@@ -41,20 +41,32 @@
         "audio_converter",
         "video_converter"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
+    },
+    "flash-tools@4.5.0": {
+      "name": "flash-tools",
+      "version": "4.5.0",
+      "variant": "windows-x64",
+      "dir": "flash-tools/4.5.0/windows-x64",
+      "digest": "sha256:e78c6b5a85f74934b59b18852453fb14fb27bf6f588313dfb577a9148e0cc0e4",
+      "size": 157460,
+      "required_by": [
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-11T05:12:37Z"
     },
     "ftdi@3.2.14": {
       "name": "ftdi",
       "version": "3.2.14",
       "variant": "windows-x64",
       "dir": "ftdi/3.2.14/windows-x64",
-      "digest": "sha256:e230736e500507951ee40a277c993a20a0c693a57d211412c3ee328338189eec",
-      "size": 1062272,
+      "digest": "sha256:267cb6a02a07c200c310dde26598ae9fddc96876c8b3c7de63acfa9a5ccc21cd",
+      "size": 1376824,
       "required_by": [
         "custom_touch",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
     },
     "jtc@4.5": {
       "name": "jtc",
@@ -66,7 +78,7 @@
       "required_by": [
         "custom_touch"
       ],
-      "installed_at": "2026-11-09T01:14:07Z"
+      "installed_at": "2026-11-11T05:12:37Z"
     },
     "msvc-runtime@14.40.33816": {
       "name": "msvc-runtime",
@@ -80,7 +92,68 @@
         "emulator_provider",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
+    },
+    "pngquant@2.17.0": {
+      "name": "pngquant",
+      "version": "2.17.0",
+      "variant": "windows-x64",
+      "dir": "pngquant/2.17.0/windows-x64",
+      "digest": "sha256:0ef9c41228eb98d34c7119824f32112053de18b4740f470f5919addc7f606354",
+      "size": 301374,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-11T05:12:37Z"
+    },
+    "sampleapp@4.5.0": {
+      "name": "sampleapp",
+      "version": "4.5.0",
+      "variant": "windows-x64",
+      "dir": "sampleapp/4.5.0/windows-x64",
+      "digest": "sha256:2978238f5fc2a3418abdec8fc21c42b3da240f02e740ed77c1666c9c611cf1ae",
+      "size": 7561085,
+      "required_by": [
+        "font_converter"
+      ],
+      "installed_at": "2026-11-11T05:12:37Z"
+    },
+    "squish@1.15.1": {
+      "name": "squish",
+      "version": "1.15.1",
+      "variant": "windows-x64",
+      "dir": "squish/1.15.1/windows-x64",
+      "digest": "sha256:131c21df25d48fcc1b7f9418636f3a59d125b650807d1ac8944a0afccfb57d85",
+      "size": 284160,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-11T05:12:37Z"
+    },
+    "turbojpeg@3.2.0": {
+      "name": "turbojpeg",
+      "version": "3.2.0",
+      "variant": "windows-x64",
+      "dir": "turbojpeg/3.2.0/windows-x64",
+      "digest": "sha256:c3d348c06fae22a02f8e4218e6b4fdc8185de8f6d26af3bca3d87868938880b2",
+      "size": 1259519,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-11T05:12:37Z"
+    },
+    "uf2conv4eve@1.0.0": {
+      "name": "uf2conv4eve",
+      "version": "1.0.0",
+      "variant": "windows-x64",
+      "dir": "uf2conv4eve/1.0.0/windows-x64",
+      "digest": "sha256:c3675240db7237a150d437132b435256917e382812d4de022e067087af6236cb",
+      "size": 5606000,
+      "required_by": [
+        "custom_touch",
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-11T05:05:57Z"
     },
     "zlib@1.2.11": {
       "name": "zlib",
@@ -93,259 +166,12 @@
         "audio_converter",
         "custom_touch",
         "emulator_provider",
-        "flash_utilities"
+        "flash_utilities",
+        "image_converter"
       ],
-      "installed_at": "2026-11-08T09:43:02Z"
+      "installed_at": "2026-11-11T05:05:57Z"
     }
   },
-  "links": {
-    "animation_converter": [
-      {
-        "dep": "astc",
-        "version": "5.5.0",
-        "dst": "native/astcenc.exe",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "audio_converter": [
-      {
-        "dep": "zlib",
-        "version": "1.2.11",
-        "dst": "native/zlib.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "ffmpeg",
-        "version": "4.3",
-        "dst": "native/ffmpeg",
-        "kind": "dir",
-        "mode": "present"
-      }
-    ],
-    "custom_touch": [
-      {
-        "dep": "zlib",
-        "version": "1.2.11",
-        "dst": "native/zlib.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/msvcp140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140_1.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/concrt140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "jtc",
-        "version": "4.5",
-        "dst": "native/jtc.exe",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "jtc",
-        "version": "4.5",
-        "dst": "native/jtc_FT81X_BT88X.exe",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "ftdi",
-        "version": "3.2.14",
-        "dst": "native/libMPSSE.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "ftdi",
-        "version": "3.2.14",
-        "dst": "native/LibFT4222-64.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/bt8xxemu.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/eve_hal.dll",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "emulator_provider": [
-      {
-        "dep": "zlib",
-        "version": "1.2.11",
-        "dst": "native/zlib.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/msvcp140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140_1.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/concrt140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/bt8xxemu.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/eve_hal.dll",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "flash_utilities": [
-      {
-        "dep": "zlib",
-        "version": "1.2.11",
-        "dst": "native/zlib.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "ftdi",
-        "version": "3.2.14",
-        "dst": "native/libMPSSE.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "ftdi",
-        "version": "3.2.14",
-        "dst": "native/LibFT4222-64.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/bt8xxemu.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "eve-emu",
-        "version": "5.0.25",
-        "dst": "native/eve_hal.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/msvcp140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/vcruntime140_1.dll",
-        "kind": "file",
-        "mode": "present"
-      },
-      {
-        "dep": "msvc-runtime",
-        "version": "14.40.33816",
-        "dst": "native/concrt140.dll",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "font_converter": [
-      {
-        "dep": "astc",
-        "version": "5.5.0",
-        "dst": "native/astcenc.exe",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "image_converter": [
-      {
-        "dep": "astc",
-        "version": "5.5.0",
-        "dst": "native/astcenc.exe",
-        "kind": "file",
-        "mode": "present"
-      }
-    ],
-    "video_converter": [
-      {
-        "dep": "ffmpeg",
-        "version": "4.3",
-        "dst": "native/ffmpeg",
-        "kind": "dir",
-        "mode": "present"
-      }
-    ]
-  },
-  "updated": "2026-11-09T01:14:07Z"
+  "links": {},
+  "updated": "2026-11-11T05:12:37Z"
 }

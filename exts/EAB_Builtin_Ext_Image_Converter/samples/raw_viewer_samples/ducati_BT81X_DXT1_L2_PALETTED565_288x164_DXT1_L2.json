@@ -1,0 +1,22 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "Pre82x",
+  "input_name": "ducati.png",
+  "output_name": [
+    "ducati_BT81X_DXT1_L2_PALETTED565_288x164_DXT1_L2.raw",
+    "ducati_BT81X_DXT1_L2_PALETTED565_288x164_DXT1_PAL565.index.raw",
+    "ducati_BT81X_DXT1_L2_PALETTED565_288x164_DXT1_PAL565.lut.raw"
+  ],
+  "output_size": [
+    11808,
+    5904,
+    512
+  ],
+  "type": "bitmap",
+  "format": "DXT1_L2_PALETTED565",
+  "compressed": "no",
+  "width": 288,
+  "height": 164,
+  "color_layer_width": 72,
+  "color_layer_height": 41
+}

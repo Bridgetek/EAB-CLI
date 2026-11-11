@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated": "2026-11-09T01:06:33Z",
+  "generated": "2026-11-11T05:00:54Z",
   "generatedBy": "eab_tools deps catalog",
   "dependencies": {
     "astc": {
@@ -47,9 +47,9 @@
           "variants": {
             "windows-x64": {
               "path": "eve-emu/5.0.25/windows-x64",
-              "size": 5507808,
-              "fileCount": 2,
-              "digest": "sha256:eda64a8f7d0f4b2b8b601e3c4d78169556ef8238b582fe2d76c4633425dd399b",
+              "size": 5541200,
+              "fileCount": 3,
+              "digest": "sha256:0a6fc4cc8534cd42b55c3b528763660cd3e6d9faa291be6badf8616683ca1489",
               "depends_on": {
                 "msvc-runtime": "^14.40"
               },
@@ -75,6 +75,11 @@
                   "path": "eve_hal.dll",
                   "size": 100464,
                   "sha256": "ca30722b9a8ac504f0e452216a012e5514b193ba868f7906ac462a6e8502d839"
+                },
+                {
+                  "path": "mx25lemu.dll",
+                  "size": 33392,
+                  "sha256": "eb9edf016a9a3fd56208bd46dadbf805d83f0930ede114e422bebad8cf712cb2"
                 }
               ]
             }
@@ -165,6 +170,59 @@
         }
       }
     },
+    "flash-tools": {
+      "description": "SPI flash programmers for BT82X (flash.exe) and pre-BT82X (flash_2x.exe), plus the NAND patch blob flash.exe loads at start-up.",
+      "versions": {
+        "4.5.0": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "SPI flash programmers for BT82X (flash.exe) and pre-BT82X (flash_2x.exe), plus the NAND patch blob flash.exe loads at start-up.",
+          "variants": {
+            "windows-x64": {
+              "path": "flash-tools/4.5.0/windows-x64",
+              "size": 157460,
+              "fileCount": 3,
+              "digest": "sha256:e78c6b5a85f74934b59b18852453fb14fb27bf6f588313dfb577a9148e0cc0e4",
+              "provides": [
+                {
+                  "src": "flash.exe",
+                  "dst": "native/flash.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "flash_2x.exe",
+                  "dst": "native/flash_2x.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "patch_nand.bin",
+                  "dst": "native/patch_nand.bin",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "flash.exe",
+                  "size": 86640,
+                  "sha256": "c908682157178102786f43d9d8be9118fc952490180f87cc97ba8aaa55eefb60"
+                },
+                {
+                  "path": "flash_2x.exe",
+                  "size": 68208,
+                  "sha256": "2fe7a9f20fa0097f123e3f8d277f1682aab42c147b9bdca47a99a073529e1760"
+                },
+                {
+                  "path": "patch_nand.bin",
+                  "size": 2612,
+                  "sha256": "fe58733a8d2fca4a595156969b93f7167f3a9f4ed3c62e3a3aefe4642183f506"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
     "ftdi": {
       "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
       "versions": {
@@ -176,9 +234,9 @@
           "variants": {
             "windows-x64": {
               "path": "ftdi/3.2.14/windows-x64",
-              "size": 1062272,
-              "fileCount": 2,
-              "digest": "sha256:e230736e500507951ee40a277c993a20a0c693a57d211412c3ee328338189eec",
+              "size": 1376824,
+              "fileCount": 3,
+              "digest": "sha256:267cb6a02a07c200c310dde26598ae9fddc96876c8b3c7de63acfa9a5ccc21cd",
               "provides": [
                 {
                   "src": "libMPSSE.dll",
@@ -196,6 +254,11 @@
                   "path": "LibFT4222-64.dll",
                   "size": 504704,
                   "sha256": "54f25f6741bb1962ffeb01e20d844cf05fd6dde575bd896da599e27dbfd54a56"
+                },
+                {
+                  "path": "ftd2xx.dll",
+                  "size": 314552,
+                  "sha256": "9c282c4580aac9388adadf8c2d9794cca2f953af36331aedf814e936cfed97ad"
                 },
                 {
                   "path": "libMPSSE.dll",
@@ -307,6 +370,731 @@
                   "path": "vcruntime140_1.dll",
                   "size": 37256,
                   "sha256": "34048abaa070ecc13b318cea31425f4ca3edd133d350318ac65259e6058c8b32"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "pngquant": {
+      "description": "pngquant palette quantizer used by the image converter for every paletted output format.",
+      "versions": {
+        "2.17.0": {
+          "revision": null,
+          "license": "GPL-3.0-or-later (pngquant dual licence: GPL-3 / commercial)",
+          "source": "https://pngquant.org",
+          "description": "pngquant palette quantizer used by the image converter for every paletted output format.",
+          "variants": {
+            "windows-x64": {
+              "path": "pngquant/2.17.0/windows-x64",
+              "size": 301374,
+              "fileCount": 3,
+              "digest": "sha256:0ef9c41228eb98d34c7119824f32112053de18b4740f470f5919addc7f606354",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/pngquant",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "COPYRIGHT",
+                  "size": 35621,
+                  "sha256": "e4f467f7abf860b4e620f5f60fdd88bc3a63a0fdb98a481fb002b5e511c9b826"
+                },
+                {
+                  "path": "notice.md",
+                  "size": 438,
+                  "sha256": "68714f69f2cd6b2622ac80572ca9440a23dacf9d92d4e7fc032f57baffb87c8a"
+                },
+                {
+                  "path": "pngquant.exe",
+                  "size": 265315,
+                  "sha256": "33c3e9de690a5a8347318c815e8279d7c1007991be72cbc4e098fbf1a9279975"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "sampleapp": {
+      "description": "SampleApp MSVC/emulator project tree cloned by the Pre-BT82X font converter when --gen-source is given.",
+      "versions": {
+        "4.5.0": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "SampleApp MSVC/emulator project tree cloned by the Pre-BT82X font converter when --gen-source is given.",
+          "variants": {
+            "windows-x64": {
+              "path": "sampleapp/4.5.0/windows-x64",
+              "size": 7561085,
+              "fileCount": 105,
+              "digest": "sha256:2978238f5fc2a3418abdec8fc21c42b3da240f02e740ed77c1666c9c611cf1ae",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/sampleapp",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "Flash/flash.bin",
+                  "size": 81408,
+                  "sha256": "78b9fa6f174f4ca0299c7e3e4deb800b513a48b3b70e86ba1be15e2bce1bc9be"
+                },
+                {
+                  "path": "Hdr/App.h",
+                  "size": 5772,
+                  "sha256": "aa75bea6e9d19a2bf990627e5099bc6172d5e009371a740b56e6ff5cd4e52716"
+                },
+                {
+                  "path": "Hdr/eab.h",
+                  "size": 130,
+                  "sha256": "c3a09753507c7fd7cde6647ec850778c2690a56ce5503c081a7fffc568416ef8"
+                },
+                {
+                  "path": "Project/Msvc/SampleApp_MSVC.sln",
+                  "size": 1085,
+                  "sha256": "6c5d0d57ede10596768b9395f4b0c0a46b56d0383c8ddbb04596532fe9631183"
+                },
+                {
+                  "path": "Project/Msvc/SampleApp_MSVC.vcxproj",
+                  "size": 10208,
+                  "sha256": "9e52087eb88ee293541cd08f18593a56cbae30f93cadea51076b9e1103920b4a"
+                },
+                {
+                  "path": "Project/Msvc/SampleApp_MSVC.vcxproj.filters",
+                  "size": 10777,
+                  "sha256": "b21473d164bdf2343c8bace6c3e54f18203cd3bbe2be3605aca764214ad045d4"
+                },
+                {
+                  "path": "Project/Msvc_Emulator/SampleApp_Emulator.sln",
+                  "size": 1093,
+                  "sha256": "d2aa63f725ae80ea0bf630d6826bc6c759e12629b69a82f702b334da484c5335"
+                },
+                {
+                  "path": "Project/Msvc_Emulator/SampleApp_Emulator.vcxproj",
+                  "size": 10158,
+                  "sha256": "82e81c27c80373512df0336d1b7b059c0afd10c103233472a93bc85f5c929024"
+                },
+                {
+                  "path": "Project/Msvc_Emulator/SampleApp_Emulator.vcxproj.filters",
+                  "size": 10705,
+                  "sha256": "9283844c9aff853ea60155607cd5c28fe2055557ffb027dba5f0e1425becf035"
+                },
+                {
+                  "path": "ReadMe.txt",
+                  "size": 3559,
+                  "sha256": "c3526cca4670ac2bb590e088ad4cbbc3f77e40d673774aecc54d718683010457"
+                },
+                {
+                  "path": "Src/App.c",
+                  "size": 1787,
+                  "sha256": "e36ac4f3d1d31df04fbf0a09f70b9d554e96e29867acd01351ba2df4e9ccf746"
+                },
+                {
+                  "path": "Src/eab.c",
+                  "size": 131,
+                  "sha256": "9c0a506358c64a8a7dab2a079fc23e8f9943743d36bfc09592580bdeb200fc64"
+                },
+                {
+                  "path": "common/Readme.txt",
+                  "size": 3657,
+                  "sha256": "3b8197c207c03732f92477fe0e205eba4aafee057c95129a55acb47b51c90ed7"
+                },
+                {
+                  "path": "common/application/Common.c",
+                  "size": 31670,
+                  "sha256": "cafc613faac90f106b264b67de55ebda384c52de8e9717ff483b69f6c0385b9f"
+                },
+                {
+                  "path": "common/application/Common.h",
+                  "size": 5015,
+                  "sha256": "bedd8e93f6d624f4fcb5971aa72a17b039fa6799200f050045b7e8f38cae0176"
+                },
+                {
+                  "path": "common/application/FileIo.c",
+                  "size": 12872,
+                  "sha256": "17899074d3b87a4472b4281d7ecafb8c5c092688db221316932b6f0f0719af27"
+                },
+                {
+                  "path": "common/application/FileIo.h",
+                  "size": 2376,
+                  "sha256": "b89f200058b8bde11f4433e530f4633a3cf1be5145f06dfff31db6439b7dc4be"
+                },
+                {
+                  "path": "common/application/FileTransfer.c",
+                  "size": 22470,
+                  "sha256": "1de29eefd6244366b6370c0b49b30fc382702cdd92e518abccbd2d14e64f0d57"
+                },
+                {
+                  "path": "common/application/FileTransfer.h",
+                  "size": 3904,
+                  "sha256": "b7e6411b18b245fd173b3a6e86105edc6c37be6777acbd5592e18a64c2c1b01e"
+                },
+                {
+                  "path": "common/application/FlashHelper.c",
+                  "size": 21379,
+                  "sha256": "b4db7da0d44d28c82392621cacc7829f26241f9e2344fddf968d10e4f9768915"
+                },
+                {
+                  "path": "common/application/FlashHelper.h",
+                  "size": 2292,
+                  "sha256": "5825ec62d5793f3fe73adac27e31e23aa4a90412ac616ba40d43afde7aab696e"
+                },
+                {
+                  "path": "common/application/Gesture.c",
+                  "size": 4735,
+                  "sha256": "642a42c5835b8a52d8a613658721814366d5ca5fd09ecc9713d4916dca8d67c1"
+                },
+                {
+                  "path": "common/application/Gesture.h",
+                  "size": 444,
+                  "sha256": "1a892d2061e7beb13ae8aa749031301a4d49e37c0c6a96058463ea12120b0e1a"
+                },
+                {
+                  "path": "common/application/Image.c",
+                  "size": 6687,
+                  "sha256": "a8b796ba210f29bd9285047739cdb08cbf6bb13d214bc3829fc40d4253549bed"
+                },
+                {
+                  "path": "common/application/Image.h",
+                  "size": 1077,
+                  "sha256": "e56a632216b9d90cd719d5c63d8909282360845caa47b486e7cc65567f4f34e3"
+                },
+                {
+                  "path": "common/application/Logo.c",
+                  "size": 28959,
+                  "sha256": "de1106db14277101934d4d6564912acd70ff5e9664b410bb89853f2675edba58"
+                },
+                {
+                  "path": "common/application/Logo.h",
+                  "size": 131,
+                  "sha256": "998ce45224ded569d7f7dac3876959ad27c6590911217ecb2a846b0c3179e818"
+                },
+                {
+                  "path": "common/application/Maths.c",
+                  "size": 7661,
+                  "sha256": "e7fb0566e2e37cceac600b7b24d4b42646e53854b14ccdeb87b5dd4ae384f5c3"
+                },
+                {
+                  "path": "common/application/Maths.h",
+                  "size": 971,
+                  "sha256": "e0b9497e0740a61d3900f0cbc77ccda599304852defac8fbdb83fb183271a145"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/LibFT4222-64.dll",
+                  "size": 209008,
+                  "sha256": "8aeaafd82fe01bff1d8a79dc3d946824049c515bb9c167a0327eac9c6320eb9a"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/LibFT4222.def",
+                  "size": 1107,
+                  "sha256": "e0638eb2f4fb96b4ae2933162e3de33b10f83e4a089ec189fa3e50c6e665963b"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/LibFT4222.lib",
+                  "size": 13778,
+                  "sha256": "5da45f122b448f2840d29536d184098a6dd5fe0f52fd23db65e38440af2baec7"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/LibMPSSE.def",
+                  "size": 205,
+                  "sha256": "0015fffa17c74947d6224bfd5f6dac2517813ad7ee172af25fa3d657dad81f8e"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/ftd2xx.def",
+                  "size": 1509,
+                  "sha256": "e999ab7b7a39fc5b1f9291a73bc2116a7548c0f880ac58c0062dfb8030dc90b0"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/ftd2xx.dll",
+                  "size": 314552,
+                  "sha256": "9c282c4580aac9388adadf8c2d9794cca2f953af36331aedf814e936cfed97ad"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/ftd2xx.lib",
+                  "size": 20260,
+                  "sha256": "260a37aa3966aeee901dc8819c98e47bf47e61d5f724472559d33b55f4f9c271"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/libMPSSE.dll",
+                  "size": 557568,
+                  "sha256": "a2a81cd035f68e37d55fe94592839062440dab713660fe10c0a0165b991905a2"
+                },
+                {
+                  "path": "common/eve_hal/Bin/MSVC/x64/libMPSSE.lib",
+                  "size": 6090,
+                  "sha256": "7fd3484769f2607b518f263f09aaa51bc311bd4d506e61af737523a751859221"
+                },
+                {
+                  "path": "common/eve_hal/Bin/Simulation/x64/bt8xxemu.def",
+                  "size": 643,
+                  "sha256": "18e9c72a1756f14477aa355ee89b87ff91fce89a8c1d331807a0f92984726f40"
+                },
+                {
+                  "path": "common/eve_hal/Bin/Simulation/x64/bt8xxemu.dll",
+                  "size": 5315376,
+                  "sha256": "a81d37bdcc562831d5e0335b33298d965d760803df34ba03d83abccf841ce347"
+                },
+                {
+                  "path": "common/eve_hal/Bin/Simulation/x64/bt8xxemu.lib",
+                  "size": 7848,
+                  "sha256": "c5ad1ca87c3d7d6d02f9a20d89b3e3c62b1be80aed7bdef4286b387ec7b25e41"
+                },
+                {
+                  "path": "common/eve_hal/Bin/Simulation/x64/bt8xxemus.exe",
+                  "size": 31024,
+                  "sha256": "ac69390120fcbbde1188458e438f3f323b051fc32773c7d7add5a61f0e5617de"
+                },
+                {
+                  "path": "common/eve_hal/Bin/Simulation/x64/mx25lemu.dll",
+                  "size": 34608,
+                  "sha256": "9e56a0bff3ad6a0b537af2ccfadab32d169018892a736dadec141b6e84bd3317"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Cmd.c",
+                  "size": 16982,
+                  "sha256": "a41fac596e12fc5d919a885103ceae20dfa3f16e7689991f44105bc1898edfec"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Cmd.h",
+                  "size": 5889,
+                  "sha256": "ba300800cbdb89a0af6f3484b04c58f76ce513bd0e8d4e77834010d7a900f99c"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoCmd.c",
+                  "size": 16484,
+                  "sha256": "120787e51552a2752b6d2c73a3f138c76744f4d18f17764f2e0ed974443822d9"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoCmd.h",
+                  "size": 70224,
+                  "sha256": "9424b1e6128f159ab78247985750401684bbb7ad8828ce89525128c509134c18"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoCmd_IO.c",
+                  "size": 11291,
+                  "sha256": "b3fd0c157e7364ece8d50d2ddd48a7e13c63ba2eb375d78d416eb5a8015e4be3"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoCmd_State.c",
+                  "size": 2894,
+                  "sha256": "31d0fe2213658a2cc6e55d2d73591c0deae9ee0b66b0353266780a7d7aca021b"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoCmd_Widgets.c",
+                  "size": 8608,
+                  "sha256": "7766e35f5a438836bf18104dd188f2f3d569b64e21349afbd0a0cb85ad99f8b6"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoDl.c",
+                  "size": 4528,
+                  "sha256": "3f2c7de812d268d0a7bc64d56eb7709a6b2e78987b41bffe01c0ac381e43bdfe"
+                },
+                {
+                  "path": "common/eve_hal/EVE_CoDl.h",
+                  "size": 25564,
+                  "sha256": "d0f8231b7f6e31306204853b44deae360b83165765e0b3a753cde3a9c634a58f"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Config.h",
+                  "size": 47747,
+                  "sha256": "c9c61a455d299450629bd8f2379bafbe696f37d529d7efa26358917823eaec2a"
+                },
+                {
+                  "path": "common/eve_hal/EVE_GpuDefs.h",
+                  "size": 29268,
+                  "sha256": "a4a5903ffb2c828b0fa4bfd6089b92f68b22b3f15f3a36431fd1efd1eb366da7"
+                },
+                {
+                  "path": "common/eve_hal/EVE_GpuDefs_BT81X.c",
+                  "size": 2048,
+                  "sha256": "b5e4fada4420b41f217df9bc2a88b195c0f52aa54e59bf195ff5455383c8794b"
+                },
+                {
+                  "path": "common/eve_hal/EVE_GpuDefs_FT80X.c",
+                  "size": 2048,
+                  "sha256": "c2ad6ba83303867d39320fd3ada7ba7ba06c04a72c0ae4bfe0ec0711a396d0e6"
+                },
+                {
+                  "path": "common/eve_hal/EVE_GpuDefs_FT81X.c",
+                  "size": 2048,
+                  "sha256": "7866fc3bddabf2ea027fda251424721fec31fac20bca7084d4424e9e853aed00"
+                },
+                {
+                  "path": "common/eve_hal/EVE_GpuTypes.h",
+                  "size": 5596,
+                  "sha256": "7b5ae6b2c8629a40a46f741e907264e17878b3c915ce11489d97aae580034671"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Hal.c",
+                  "size": 15205,
+                  "sha256": "b0f9b90cf6bc21da6084a994beeb6f96814d687e777059e877ad20f48bf119e2"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Hal.h",
+                  "size": 1950,
+                  "sha256": "605e1bb97c5baef631ba4a247a82a8fac2ffbab550c62ff35971e082ec1b548f"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Hal.md",
+                  "size": 7160,
+                  "sha256": "9d1e37009c45200ed954aa72ee38e5897e2e6f9e269c9ec1dc24457022f3daa5"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalDefs.h",
+                  "size": 19008,
+                  "sha256": "609e35005ab8d058058ffe2fe8aa3ea0e038caf890ae6156b0f7df4c945e10fc"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl.h",
+                  "size": 3797,
+                  "sha256": "8aa80fe24d3e2f3537e170ae788efa64c42d192811f7499a91a1225e8198e186"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_BT8XXEMU.c",
+                  "size": 16938,
+                  "sha256": "ce479d0acce17916e17568f4afadf2a28a9529a88ddb273da0770626e4f80851"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_BT8XXEMUC.c",
+                  "size": 20415,
+                  "sha256": "61df66e7623b606cf75684c078c5c4fdc1cdb4d9edc205ab8826ddd3ad791665"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_FT4222.c",
+                  "size": 38384,
+                  "sha256": "d62c8fd5a669e26c94d43b0ca36a5fb26773cb085f94baa5ef78c884b0fc146e"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_FT9XX.c",
+                  "size": 23206,
+                  "sha256": "61f7e8e1e671d0487e9962faaa43a0178bec8ac339d77a064c361fa4dfa554db"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_MPSSE.c",
+                  "size": 30567,
+                  "sha256": "0fe31d8c679ca3eb3000b4ce62da3c88373d280cee01f15829954af8cb8ad6ba"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_MULTI.c",
+                  "size": 17509,
+                  "sha256": "eea9a6aec6160a33519d4c363e690172e254c4eb4df3a514e8401a3637e37ade"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_RP2040.c",
+                  "size": 18892,
+                  "sha256": "b21cf3f9dee68d16df91ac8c3297ea2ad89f49ad77da61ca75ac8b0003d79048"
+                },
+                {
+                  "path": "common/eve_hal/EVE_HalImpl_WIN32.c",
+                  "size": 3760,
+                  "sha256": "1b974f4bdf0bf209d05214b7c41de6ac9f4f8f5c7869205723224edef913268c"
+                },
+                {
+                  "path": "common/eve_hal/EVE_ILI9488.h",
+                  "size": 5252,
+                  "sha256": "e75366a6fb2efabb3d7911380d6ac7fbfb553e8332899c9fbbf7de238390e395"
+                },
+                {
+                  "path": "common/eve_hal/EVE_ILI9488_FT9XX.c",
+                  "size": 8220,
+                  "sha256": "75e44e56e41fa9d1117a9610b4c7df679c478af21f1ad49babcc24b107bf9389"
+                },
+                {
+                  "path": "common/eve_hal/EVE_IntTypes.h",
+                  "size": 2180,
+                  "sha256": "3da0f1ca740be8a803fbce7074b48e06974d74c0e56e117b0817b625b005d4f3"
+                },
+                {
+                  "path": "common/eve_hal/EVE_IntTypes_MSVC12.h",
+                  "size": 4142,
+                  "sha256": "4499ae0970956fc0db45d997c7396589f984fc2d9e9a30bf9070fa85bb597234"
+                },
+                {
+                  "path": "common/eve_hal/EVE_LoadFile.h",
+                  "size": 5622,
+                  "sha256": "1764c7454f56634a24d906826a8ac67131aa306d6d6dd354fbca89380dc75b24"
+                },
+                {
+                  "path": "common/eve_hal/EVE_LoadFile_FATFS.c",
+                  "size": 13186,
+                  "sha256": "a058a8f88600e7cb0e1fd79309b4f6ab98900f4a17498ee853c4319890cde29f"
+                },
+                {
+                  "path": "common/eve_hal/EVE_LoadFile_STDIO.c",
+                  "size": 13412,
+                  "sha256": "b31cbe785fa176ce5f82329e09ecaf9ef8d363e22b0e5bda29bfae6f9a26a623"
+                },
+                {
+                  "path": "common/eve_hal/EVE_MediaFifo.c",
+                  "size": 11343,
+                  "sha256": "3880ac46d5c3d677b775f74e6a9629fd48940c41d299fe331796a6ab51801f07"
+                },
+                {
+                  "path": "common/eve_hal/EVE_MediaFifo.h",
+                  "size": 4384,
+                  "sha256": "751761a399ba79447f9a46505f92bad5fc9b8ca9fdc51cd7cf9c12c0f8d3f140"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform.h",
+                  "size": 8795,
+                  "sha256": "f4d081d682f078f0fbb1805c43493c6f4b552803a06359efc3ae3e4ccae6cb69"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_BT8XXEMU.h",
+                  "size": 2016,
+                  "sha256": "f89022b9cad035262eeb7127f95d04175804c47a8c8b1a42e28fac84f09c5758"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_FT4222.h",
+                  "size": 2030,
+                  "sha256": "5a078d69acc705c495e93fbd89280df45ad07934b87fdd2a749df09fcd3c053e"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_FT9XX.h",
+                  "size": 5613,
+                  "sha256": "95bb109e0281afab54c6a51c3be7bea7a0cb8ee0671dd713bc39ebc0ecd64a6c"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_MPSSE.h",
+                  "size": 2029,
+                  "sha256": "9c399b39e1afa3983517957c39f0c92ba9cf57a0a90022f615d9fac968ad4903"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_RP2040.h",
+                  "size": 3569,
+                  "sha256": "96b538a85f18150d011675d8782352a1d24c4338181ad2bd3fd5d30591578d5f"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Platform_WIN32.h",
+                  "size": 3036,
+                  "sha256": "0ef783ed12377d63ae862e29257830cedf345ca6e54d66f67a186deeb1ddb7f2"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Util.c",
+                  "size": 62283,
+                  "sha256": "1641cab13a23c64e9a67852a6a5b352ce8433cfccda1decdd716ff048a438c1c"
+                },
+                {
+                  "path": "common/eve_hal/EVE_Util.h",
+                  "size": 8295,
+                  "sha256": "84f7cfdf04e921aa4d98347fd52a4daa98f95361ebc551cdf48ecc2b8b862dda"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/FT_DataTypes.h",
+                  "size": 52,
+                  "sha256": "e3f1dfc3a4278fd48d723f6534589b0d3edca36948ee7d8d882f37176ac99ea4"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/FT_Gpu.h",
+                  "size": 52,
+                  "sha256": "e3f1dfc3a4278fd48d723f6534589b0d3edca36948ee7d8d882f37176ac99ea4"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/FT_Gpu_Hal.h",
+                  "size": 12562,
+                  "sha256": "5f0a2474bf489155273175c7e237d67b60f93bf4b624aa64d49bdba7772f6466"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/FT_LoadFile.h",
+                  "size": 276,
+                  "sha256": "33082d399c28f681249e75997115142580a9b9f96de49d488edb1dc760bfa9ce"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/FT_Platform.h",
+                  "size": 52,
+                  "sha256": "e3f1dfc3a4278fd48d723f6534589b0d3edca36948ee7d8d882f37176ac99ea4"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/Gpu.h",
+                  "size": 49,
+                  "sha256": "a94e440724ee3aab007684e562c569818baa673915bdc1a439e397bfe59e9030"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/Gpu_CoCmd.h",
+                  "size": 11258,
+                  "sha256": "d9f4c8cf73afab97d93b87f1e4a0e93351fafd9a9f3fc01619f8147351c9b595"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/Gpu_Hal.h",
+                  "size": 18279,
+                  "sha256": "1c543b91cec9723f427dfe37bcd19c29501f07d0f1ee5d81c4247189300c6636"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/Hal_Config.h",
+                  "size": 49,
+                  "sha256": "a94e440724ee3aab007684e562c569818baa673915bdc1a439e397bfe59e9030"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/LibFT4222.h",
+                  "size": 12844,
+                  "sha256": "a45055bf42d8a1d975a46bdd35c2c44901c22cdcdc2b5179332fb9a57b37c3e0"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/Platform.h",
+                  "size": 47,
+                  "sha256": "0e4d7e1fb5c0d851e910f6fb946b5e56c17a539270075c3b209765eae4434c0e"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/WinTypes.h",
+                  "size": 2136,
+                  "sha256": "ea0a9fdeac9fe0780bafa572be1881f51213a8d5e16a14c78e45f2099924b088"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/bt8xxemu.h",
+                  "size": 12590,
+                  "sha256": "367c0a313d72c4dd3c8a54ed8700e26332ad2fcd6e355bae373ae6ccf5afe972"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/bt8xxemu_inttypes.h",
+                  "size": 4551,
+                  "sha256": "a8e979e9645ddba8ea64c0d54df431a963a62f6785a8f01bd5114cfbd826a255"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/ftd2xx.h",
+                  "size": 39382,
+                  "sha256": "63f1a0e5f6841dafc4ae13d51a41e15aed4e62c590468c445eb9286a2f8948b0"
+                },
+                {
+                  "path": "common/eve_hal/Hdr/libMPSSE_spi.h",
+                  "size": 6800,
+                  "sha256": "1f342d7877c66e56f025fc3d2e4837133e7710d66b2c74480e26a40c0b36b5c0"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "squish": {
+      "description": "DXT1 (S3TC/BC1) encoder used by the image converter for the DXT1_* legacy formats. squishpng.exe reads the tile PNG and writes raw DXT1 blocks; libpng16.dll is required to decode that PNG.",
+      "versions": {
+        "1.15.1": {
+          "revision": null,
+          "license": "MIT (libsquish) / libpng zlib-like licence",
+          "source": "https://github.com/oblivioncth/libsquish/releases/tag/v1.15.1.4",
+          "description": "DXT1 (S3TC/BC1) encoder used by the image converter for the DXT1_* legacy formats. squishpng.exe reads the tile PNG and writes raw DXT1 blocks; libpng16.dll is required to decode that PNG.",
+          "variants": {
+            "windows-x64": {
+              "path": "squish/1.15.1/windows-x64",
+              "size": 284160,
+              "fileCount": 3,
+              "digest": "sha256:131c21df25d48fcc1b7f9418636f3a59d125b650807d1ac8944a0afccfb57d85",
+              "provides": [
+                {
+                  "src": "squishpng.exe",
+                  "dst": "native/squishpng.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "libpng16.dll",
+                  "dst": "native/libpng16.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "Squish.dll",
+                  "dst": "native/Squish.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "Squish.dll",
+                  "size": 44032,
+                  "sha256": "5ccd79f182de68f7ff1f5d83513351b86552d05f60c8852391b012e175093c39"
+                },
+                {
+                  "path": "libpng16.dll",
+                  "size": 195072,
+                  "sha256": "a84302e0f79f8635ced01d21bc204269e78188b26013ec4f1d90f6d6c5c8ec4c"
+                },
+                {
+                  "path": "squishpng.exe",
+                  "size": 45056,
+                  "sha256": "e0d87c765aaf03151de61940a847e226eccacde3d7ca6aefc146fc9a45363713"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "turbojpeg": {
+      "description": "libjpeg-turbo runtime used by the image converter for JPEG decode/encode.",
+      "versions": {
+        "3.2.0": {
+          "revision": null,
+          "license": "BSD-3-Clause / IJG (libjpeg-turbo)",
+          "source": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/tag/3.2.0",
+          "description": "libjpeg-turbo runtime used by the image converter for JPEG decode/encode.",
+          "variants": {
+            "windows-x64": {
+              "path": "turbojpeg/3.2.0/windows-x64",
+              "size": 1259519,
+              "fileCount": 3,
+              "digest": "sha256:c3d348c06fae22a02f8e4218e6b4fdc8185de8f6d26af3bca3d87868938880b2",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/turbojpeg",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "LICENSE.md",
+                  "size": 6077,
+                  "sha256": "ba6bceebcba0fdd35488477c2cca8c4632ce82c74dbfbc87d886ce6fc4433579"
+                },
+                {
+                  "path": "notice.md",
+                  "size": 578,
+                  "sha256": "dfc14a3ba652ef518be11910311f9b4ef8a10469bd4f19adf9d7890baaa494fb"
+                },
+                {
+                  "path": "turbojpeg.dll",
+                  "size": 1252864,
+                  "sha256": "d472792fec8afcf0adad4e41a3e671885a07fcca47e7b5cb07d50b812293274a"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "uf2conv4eve": {
+      "description": "UF2 converter used to flash Raspberry Pi Pico boards over the mass-storage bootloader.",
+      "versions": {
+        "1.0.0": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "UF2 converter used to flash Raspberry Pi Pico boards over the mass-storage bootloader.",
+          "variants": {
+            "windows-x64": {
+              "path": "uf2conv4eve/1.0.0/windows-x64",
+              "size": 5606000,
+              "fileCount": 1,
+              "digest": "sha256:c3675240db7237a150d437132b435256917e382812d4de022e067087af6236cb",
+              "provides": [
+                {
+                  "src": "uf2conv4eve.exe",
+                  "dst": "native/uf2conv4eve.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "uf2conv4eve.exe",
+                  "size": 5606000,
+                  "sha256": "edc97bcbb5ea4b2aba6a2cf937729251648b20ee980bebb91376c420a03cdaf3"
                 }
               ]
             }

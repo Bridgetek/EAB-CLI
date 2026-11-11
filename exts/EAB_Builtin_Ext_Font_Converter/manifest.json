@@ -3,7 +3,7 @@
   "date_install": "2026-10-15_08:00:00:004",
   "category": "converter",
   "name": "Font Converter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "extension_type": "app",
   "engine": "native",
   "author": "EAB User",
@@ -35,7 +35,8 @@
     "cli.both"
   ],
   "dependencies": {
-    "astc": "^5.5"
+    "astc": "^5.5",
+    "sampleapp": "^4.5"
   },
   "app_dlls": [
     "native/font_cvt.dll"

@@ -3,7 +3,7 @@
   "date_install": "2026-10-15_08:00:00:013",
   "category": "eve_custom",
   "name": "Custom Touch",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "extension_type": "app",
   "engine": "native",
   "author": "EAB User",
@@ -51,7 +51,8 @@
     "ftdi": "^3.2",
     "eve-emu": "^5.0",
     "zlib": "^1.2",
-    "msvc-runtime": "^14.40"
+    "msvc-runtime": "^14.40",
+    "uf2conv4eve": "^1.0"
   },
   "app_dlls": [
     "native/touch_cvt.dll"

@@ -1,0 +1,28 @@
+{
+  "name": "flash-tools",
+  "version": "4.5.0",
+  "license": "Bridgetek (reference bundle)",
+  "source": "EVE Asset Builder 4.5.0 reference install",
+  "description": "SPI flash programmers for BT82X (flash.exe) and pre-BT82X (flash_2x.exe), plus the NAND patch blob flash.exe loads at start-up.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "flash.exe",
+          "dst": "native/flash.exe",
+          "kind": "file"
+        },
+        {
+          "src": "flash_2x.exe",
+          "dst": "native/flash_2x.exe",
+          "kind": "file"
+        },
+        {
+          "src": "patch_nand.bin",
+          "dst": "native/patch_nand.bin",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

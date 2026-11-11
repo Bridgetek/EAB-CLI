@@ -11,6 +11,7 @@ async function loadSession(path) {
     ], [r.session.path]);
     showWarnings(r.warnings);
     setActiveSessionPath(r.session.path);
+    clearRestorePending();
     state.current = r.session;
     renderCurrent();
     await refresh();

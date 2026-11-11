@@ -1,6 +1,10 @@
 const EXT_ID = 'session';
 const SESSION_UI_STORAGE_PREFIX = 'eab.session.ui.v1:';
 const ACTIVE_SESSION_PATH_KEY = 'eab.session.active-path.v1';
+// Written only by an explicit Open / Restore Session…; the host's injected
+// session-state script replays saved UI state (file queues included) only while
+// this marker is present, so opening an extension never restores on its own.
+const RESTORE_PENDING_KEY = 'eab.session.restore.pending.v1';
 const AUTO_SAVE_KEY = 'eab.session.autosave.v1';
 const AUTO_SAVE_AT_KEY = 'eab.session.autosave-at.v1';
 const PENDING_MENU_ACTION_KEY = 'eab.menu.pending.session';
@@ -156,6 +160,20 @@ function setActiveSessionPath(path) {
     throw new Error('Cannot set the active session: ' + err.message);
   }
 }
+function markRestorePending(path) {
+  try {
+    localStorage.setItem(RESTORE_PENDING_KEY, JSON.stringify({ path: path, at: Date.now() }));
+  } catch (err) {
+    throw new Error('Cannot mark the session for restore: ' + err.message);
+  }
+}
+function clearRestorePending() {
+  try {
+    localStorage.removeItem(RESTORE_PENDING_KEY);
+  } catch (err) {
+    /* a stale marker expires on its own */
+  }
+}
 function readSessionSnapshots(path) {
   const snapshots = {};
   const prefix = SESSION_UI_STORAGE_PREFIX + encodeURIComponent(path) + ':';
@@ -189,7 +207,12 @@ function mergeSessionUtilityInfo(current, path) {
   return utilityInfo;
 }
 function restoreSessionSnapshots(path, utilityInfo) {
-  const snapshots = utilityInfo && utilityInfo[SESSION_UI_UTILITY_KEY];
+  const snapshots = utilityInfo && typeof utilityInfo === 'object' && !Array.isArray(utilityInfo)
+    ? utilityInfo[SESSION_UI_UTILITY_KEY]
+    : null;
+  // The marker goes first: the host's storage listeners in the other extension
+  // documents fire asynchronously and must already see the restore request.
+  markRestorePending(path);
   if (!snapshots || typeof snapshots !== 'object' || Array.isArray(snapshots)) {
     setActiveSessionPath(path);
     return 0;

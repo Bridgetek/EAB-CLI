@@ -1,0 +1,19 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "Pre82x",
+  "input_name": "ducati.png",
+  "output_name": [
+    "ducati_BT81X_ASTC_6X6_288x168.raw"
+  ],
+  "output_size": [
+    21504
+  ],
+  "type": "bitmap",
+  "format": "ASTC_6X6",
+  "compressed": "no",
+  "width": 288,
+  "height": 168,
+  "stride": 96,
+  "astc_preset": "fastest",
+  "dither_algorithm": "NONE"
+}

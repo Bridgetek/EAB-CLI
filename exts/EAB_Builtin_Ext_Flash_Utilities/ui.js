@@ -175,11 +175,13 @@ window.eabAddFiles = function (paths) {
   return addAssetFiles(paths);
 };
 function removeFile(index) {
+  $('#file-list').closest('.app-row').addClass('is-options-shown');
   state.assetFiles.splice(index, 1);
   renderFileList();
   updateBatchState();
 }
 function clearAllInputs() {
+  $('#file-list').closest('.app-row').addClass('is-options-shown');
   state.assetFiles.length = 0;
   renderFileList();
   updateBatchState();
@@ -289,7 +291,12 @@ function defaultFpAction() {
 /* Program writes a factory-state chip, which the vendor tools only offer for
    BT817, BT818 and BT82X. A Pico deploys the image built for the chip the board
    reported, so it follows the same rule. */
-const PROGRAM_PARTS = { BT817: true, BT818: true, BT820: true };
+const PROGRAM_PARTS = {
+  BT817: true,
+  BT818: true,
+  BT819: typeof window.API_EAB_hasCliFlag === 'function' && window.API_EAB_hasCliFlag('--enable-bt819'),
+  BT820: true,
+};
 function canProgram(info) {
   if (!info || !info.gen) return false;
   const target = runTarget(info);
@@ -306,7 +313,7 @@ function programOff(action) {
 /* Why this action is greyed out, in the same order syncFpRun gates it, so the
    tooltip never names a condition that is already met. */
 function fpOptionHint(action) {
-  if (programOff(action)) return 'Program needs a BT817, BT818 or BT82X board';
+  if (programOff(action)) return 'Program needs a BT817, BT818, BT819 or BT82X board';
   const $opt = $('#fp-action option[value="' + action + '"]');
   const only = $opt.attr('data-chip');
   if (!only || anyDeviceFamily(only)) return '';
@@ -439,8 +446,8 @@ function queueNoPreviewSync() {
 }
 const FP_FILE_OPS = ['--program', '--program-verify', '--verify',
                      '--newblob', '--update', '--update-verify'];
-/* These write the flash, so they run once per queued image. */
-const FP_PROGRAM_OPS = ['--program', '--program-verify'];
+/* These operate on the queued flash images, so they run once per image with per-row progress. */
+const FP_PROGRAM_OPS = ['--program', '--program-verify', '--update', '--update-verify', '--newblob', '--verify'];
 function currentChip() {
   return chipGroup();
 }
@@ -452,6 +459,7 @@ var CHIP_TABLE = {
   BT882: ['FT81X/BT88X', 'bt88x', ''], BT883: ['FT81X/BT88X', 'bt88x', ''],
   BT815: ['BT81X', 'bt81x', 'BT815/6'], BT816: ['BT81X', 'bt81x', 'BT815/6'],
   BT817: ['BT81X', 'bt81x', 'BT817/8'], BT818: ['BT81X', 'bt81x', 'BT817/8'],
+  BT819: ['BT81X', 'bt81x', 'BT817/8'],
   BT820: ['BT82X', 'bt82x', '']
 };
 var CHIP_GEN = {
@@ -530,9 +538,9 @@ function fpPageForAction(action) {
   }
   return 'detect';
 }
-/* Detect, Read, Scan Block and Fix Block belong to the BT82X toolchain; the
-   legacy part is only programmed, updated, verified and erased. */
-const FP_BT82X_PAGES = { detect: true, read: true, scan: true, fix: true };
+/* Scan Block and Fix Block belong to the BT82X NAND toolchain; Detect and Read
+   work on both BT82X and pre-BT82X boards (for MPSSE and FT4222). */
+const FP_BT82X_PAGES = { scan: true, fix: true };
 function targetChipLabel() {
   const t = targetDevice();
   if (!t) return '';
@@ -547,8 +555,8 @@ function fpPageHint(key) {
   if (actions.length && actions.every(a => picoBlocksAction(a))) return PICO_WHY;
   if (FP_BT82X_PAGES[key] && !anyDeviceFamily('bt82x')) {
     const chip = targetChipLabel();
-    return 'Detect, Read, Scan Block and Fix Block need a BT82X chip — ' +
-      (chip ? chip + ' is not one, so use Program, Update, Verify or Erase'
+    return 'Scan Block and Fix Block need a BT82X chip — ' +
+      (chip ? chip + ' is not one, so use Detect, Program, Update, Verify, Read or Erase'
             : 'no BT82X board is selected');
   }
   if (actions.every(a => fpOptionOff(a))) return 'NAND operations — BT82X only';
@@ -710,13 +718,18 @@ function setFpImages(paths) {
   if (typeof window.eabSyncQueueChrome === 'function') window.eabSyncQueueChrome();
 }
 function addFpImages(paths) { setFpImages(state.fpFiles.concat(paths || [])); }
-function clearFpImages() { setFpImages([]); }
+function clearFpImages() {
+  $('#fp-file-list').closest('.app-row').addClass('is-options-shown');
+  setFpImages([]);
+}
 function removeFpImage(index) {
+  $('#fp-file-list').closest('.app-row').addClass('is-options-shown');
   const rest = state.fpFiles.slice();
   rest.splice(index, 1);
   setFpImages(rest);
 }
 const fpRowState = {};
+const fpLastOffset = {};
 /* Every row keeps its own clock, so the bar can report the time like the other
    progress bars do (label while writing, total once it settles). */
 function fpFmtSecs(ms) {
@@ -744,10 +757,11 @@ function fpPaintRows() {
     const m = fpRowState[path] || {};
     const converting = m.state === 'converting';
     const secs = converting && m.t0 ? Date.now() - m.t0 : (m.secs || 0);
-    $el.removeClass('converting done failed cancelled');
+    $el.removeClass('converting indeterminate done failed cancelled');
     if (m.state) $el.addClass(m.state);
-    $el.find('.file-item-status').first().text(
-      m.text ? m.text + (m.state === 'converting' ? '' : (secs ? ' · ' + fpFmtSecs(secs) : '')) : '');
+    if (converting) $el.addClass('indeterminate');
+    const statusText = m.text || '';
+    $el.find('.file-item-status').first().text(statusText).attr('title', statusText);
     $el.find('.file-item-bar-label').first().text(converting
       ? (m.label || 'programming…') + ' · ' + fpFmtSecs(secs) : '');
     $el.find('.file-item-progress-fill').first().css('width', m.state ? '100%' : '0%');
@@ -952,7 +966,7 @@ function flashProgArgs(action, dev, info, file, offsetAt) {
   }
   if (action === '--read') {
     if ($('#fp-read-entire').prop('checked')) {
-      cliArgs.push('--offset', '0', '--length', '0');
+      cliArgs.push('--offset', '0', '--length', 'end');
     } else {
       cliArgs.push('--offset', $.trim(String($('#fp-read-start').val() || '')) || '0');
       cliArgs.push('--length', $.trim(String($('#fp-read-length').val() || '')) || '4096');
@@ -996,7 +1010,11 @@ function selectedChipPart() {
   const part = String($('#chip-name').val() || '');
   return CHIP_TABLE[part] ? part : '';
 }
+let fpLastError = '';
+let fpLastOutput = '';
 async function runFlashCommand(cliArgs, $out, opts) {
+  fpLastError = '';
+  fpLastOutput = '';
   const append = !!(opts && opts.append);
   const gen = (opts && opts.gen) || 'ft80x';
   const command = (opts && opts.command) || gen + ' flash_prog';
@@ -1016,9 +1034,10 @@ async function runFlashCommand(cliArgs, $out, opts) {
       extensionId: 'flash_utilities',
       cliCommand: command,
       cliArgs: cliArgs,
-    });
+    }, opts && opts.onProgress);
     const result = JSON.parse(resultJson);
     const body = result && typeof result.output === 'string' ? result.output.replace(/\s+$/, '') : '';
+    fpLastOutput = body;
     if (body !== '') {
       $out.text(prev + header + '\n' + body);
       fpFlash($out);
@@ -1026,10 +1045,12 @@ async function runFlashCommand(cliArgs, $out, opts) {
       if (opts && opts.device) recordFlashSize(opts.device, body);
     }
     if (result && result.success === false) {
-      const msg = 'flash_prog failed: ' + fpFailure(
+      const reason = fpFailure(
         typeof result.exit_code === 'number' ? result.exit_code : null,
         result.error || '',
         result.output || '');
+      fpLastError = reason;
+      const msg = 'flash_prog failed: ' + reason;
       showError(msg);
       $out.text($out.text().replace(/\s+$/, '') + '\n✗ ' + msg);
       fpFlash($out);
@@ -1039,9 +1060,12 @@ async function runFlashCommand(cliArgs, $out, opts) {
       // The vendor tool can finish silently, so the console always ends on a
       // result line instead of leaving the user with only the command echo.
       const ms = result && typeof result.elapsed_ms === 'number' ? result.elapsed_ms : 0;
-      $out.text($out.text().replace(/\s+$/, '') + '\n✓ done' + (ms ? ' in ' + (ms / 1000).toFixed(1) + 's' : ''));
+      const written = opts && typeof opts.bytesWritten === 'number' ? opts.bytesWritten : null;
+      const writtenNote = written != null ? ' · ' + written.toLocaleString() + ' bytes written' : '';
+      $out.text($out.text().replace(/\s+$/, '') + '\n✓ done' +
+        (ms ? ' in ' + (ms / 1000).toFixed(1) + 's' : '') + writtenNote);
       fpFlash($out);
-      log('✓ flash_prog finished');
+      log('✓ flash_prog finished' + writtenNote);
     }
   } catch (err) {
     const cancelled = String(err) === 'cancelled';
@@ -1051,6 +1075,7 @@ async function runFlashCommand(cliArgs, $out, opts) {
       log('■ flash_prog cancelled');
       ok = 'cancelled';
     } else {
+      fpLastError = String(err);
       const msg = 'flash_prog failed: ' + err;
       showError(msg);
       $out.text($out.text().replace(/\s+$/, '') + '\n✗ ' + msg);
@@ -1065,6 +1090,91 @@ async function runFlashCommand(cliArgs, $out, opts) {
     syncDiagnosticGate();
   }
   return ok;
+}
+function fpParseAddr(raw, fallback) {
+  const s = $.trim(String(raw || ''));
+  if (!s) return fallback;
+  const n = /^0x/i.test(s) ? parseInt(s, 16) : parseInt(s, 10);
+  return isNaN(n) || n < 0 ? fallback : n;
+}
+function fpSetReadStatus(stateName, text, pct) {
+  const $box = $('#fp-read-status');
+  if (!$box.length) return;
+  $box.removeClass('hidden is-running is-done is-failed');
+  if (stateName) $box.addClass('is-' + stateName);
+  const $fill = $box.find('.fp-read-bar-fill');
+  if (stateName === 'running') {
+    if (typeof pct === 'number' && pct > 0 && pct <= 100) {
+      $fill.removeClass('is-indeterminate').css('width', pct + '%');
+    } else {
+      $fill.addClass('is-indeterminate').css('width', '');
+    }
+  } else {
+    $fill.removeClass('is-indeterminate').css('width', stateName ? '100%' : '0%');
+  }
+  $('#fp-read-text').text(text || '');
+}
+async function runFlashRead(dev, info, $out, append) {
+  const outPath = fpReadPath();
+  const entire = $('#fp-read-entire').prop('checked');
+  const startOffset = entire ? 0 : fpParseAddr($('#fp-read-start').val(), 0);
+  const expectedBytes = entire ? flashSizeOf(dev) : fpParseAddr($('#fp-read-length').val(), 4096);
+  const totalLabel = expectedBytes > 0 ? expectedBytes.toLocaleString() + ' bytes' : 'unknown size';
+  let lastPct = 0;
+  let polling = false;
+  const paintProgress = function (bytesRead, pctHint) {
+    let pct = typeof pctHint === 'number' ? Math.round(pctHint) : 0;
+    if (expectedBytes > 0 && typeof bytesRead === 'number' && bytesRead >= 0) {
+      pct = Math.min(100, Math.round((bytesRead / expectedBytes) * 100));
+    }
+    pct = Math.max(lastPct, pct);
+    lastPct = pct;
+    const shownBytes = typeof bytesRead === 'number' && bytesRead >= 0
+      ? bytesRead.toLocaleString()
+      : (expectedBytes > 0 ? Math.round((pct / 100) * expectedBytes).toLocaleString() : '0');
+    const msg = expectedBytes > 0
+      ? 'In progress (' + pct + '% · ' + shownBytes + ' bytes / ' + totalLabel + ')'
+      : 'In progress (' + pct + '% · ' + shownBytes + ' bytes)';
+    fpSetReadStatus('running', msg, pct);
+  };
+  paintProgress(0, 0);
+  const timer = (expectedBytes > 0 && expectedBytes <= 8 * 1024 * 1024)
+    ? setInterval(function () {
+        if (polling) return;
+        polling = true;
+        fpFileSize(outPath).then(function (sz) {
+          paintProgress(sz, null);
+        }, function () { }).finally(function () { polling = false; });
+      }, 700)
+    : null;
+  let res;
+  try {
+    res = await runFlashCommand(flashProgArgs('--read', dev, info, ''), $out, {
+      append: append,
+      label: dev,
+      gen: info.gen,
+      command: runTarget(info).command,
+      device: dev,
+      onProgress: function (_st, pct) {
+        if (typeof pct === 'number' && pct > 0) paintProgress(null, pct);
+      },
+    });
+  } finally {
+    if (timer) clearInterval(timer);
+  }
+  if (res === true) {
+    let actualBytes = expectedBytes;
+    try { actualBytes = await fpFileSize(outPath); } catch (_e) { }
+    const bytesText = actualBytes > 0 ? actualBytes.toLocaleString() : String(actualBytes || 0);
+    fpSetReadStatus('done',
+      'Done reading ' + bytesText + ' bytes from ' + addrHex(startOffset) + ' (' + assetName(outPath) + ')',
+      100);
+  } else if (res === 'cancelled') {
+    fpSetReadStatus('failed', 'Cancelled reading from ' + addrHex(startOffset));
+  } else {
+    fpSetReadStatus('failed', 'Failed to read: ' + (fpLastError || 'read failed'));
+  }
+  return res;
 }
 async function runFlashProg(logTo) {
   const action = String($('#fp-action').val() || '');
@@ -1107,18 +1217,42 @@ async function runFlashProg(logTo) {
       continue;
     }
     if (action === '--program' && !canProgram(info)) {
-      log('skip ' + dev + ': Program is only available on BT817, BT818 and BT82X');
+      log('skip ' + dev + ': Program is only available on BT817, BT818, BT819 and BT82X');
       continue;
     }
-    await runFlashCommand(flashProgArgs(action, dev, info, file), $out, {
-      append: ran > 0,
-      label: devices.length > 1 ? dev + ' (' + (i + 1) + '/' + devices.length + ')' : dev,
-      gen: info.gen,
-      command: runTarget(info).command,
-    });
+    if (action === '--read') {
+      await runFlashRead(dev, info, $out, ran > 0);
+    } else {
+      await runFlashCommand(flashProgArgs(action, dev, info, file), $out, {
+        append: ran > 0,
+        label: devices.length > 1 ? dev + ' (' + (i + 1) + '/' + devices.length + ')' : dev,
+        gen: info.gen,
+        command: runTarget(info).command,
+      });
+    }
     ran++;
   }
   if (!ran) showError('No selected device can run this action.');
+}
+function verifyReadArgs(dev, info, files, startOffset, pad) {
+  const target = runTarget(info);
+  const cliArgs = [];
+  (files || []).forEach(function (f) { cliArgs.push('--verify-read', f); });
+  if (dev) cliArgs.push('--module', dev);
+  const frequency = devFreq(dev);
+  if (frequency) cliArgs.push('--frequency', String(frequency));
+  if (target.gen !== 'bt82x' && target.prog) cliArgs.push('--chip', target.prog);
+  cliArgs.push('--offset', String(startOffset), '--pad', String(pad));
+  return cliArgs;
+}
+function parseVerifyReadStatus(output) {
+  const byPath = {};
+  String(output || '').split(/\r?\n/).forEach(function (line) {
+    const m = line.match(/^\[(PASS|FAIL)\]\s+(.+?)\s+\|\s+path=(.+)$/);
+    if (!m) return;
+    byPath[m[3].trim()] = { ok: m[1] === 'PASS', detail: m[2].trim() };
+  });
+  return byPath;
 }
 /* Program runs once per queued image, one after the other: image n starts where
    image n-1 ended (padded to #fp-pad), so every image keeps its own flash_prog
@@ -1129,6 +1263,16 @@ async function runFlashImages(action, devices, $out) {
   const start = fpStartOffset();
   const runs = devices.length * files.length;
   const sizes = {};
+  const isWriteAction = ['--program', '--program-verify', '--update', '--update-verify', '--newblob'].indexOf(action) >= 0;
+  const isVerifyAction = ['--verify', '--program-verify', '--update-verify'].indexOf(action) >= 0;
+  const runningStatus = {
+    '--verify': 'verifying…',
+    '--update': 'updating…',
+    '--update-verify': 'updating & verifying…',
+    '--program-verify': 'programming & verifying…',
+  }[action] || 'programming…';
+  if (isWriteAction) $('#fp-offset-note').addClass('hidden').text('');
+  let totalBytesWritten = 0;
   let done = 0;
   let ran = 0;
   let unreadable = false;
@@ -1163,9 +1307,82 @@ async function runFlashImages(action, devices, $out) {
         continue;
       }
       if (action === '--program' && !canProgram(info)) {
-        log('skip ' + dev + ': Program is only available on BT817, BT818 and BT82X');
+        log('skip ' + dev + ': Program is only available on BT817, BT818, BT819 and BT82X');
         continue;
       }
+      if (action === '--verify') {
+        const validFiles = files.filter(function (p) { return sizes[p] >= 0; });
+        if (!validFiles.length) {
+          done += files.length;
+          fpBatch.done = done;
+          fpDropProgress(runs ? done / runs * 100 : 0);
+          continue;
+        }
+        let verifyStart = start;
+        if (verifyStart === 0 && typeof fpLastOffset[validFiles[0]] === 'number') {
+          verifyStart = fpLastOffset[validFiles[0]];
+        }
+        const capacity = flashSizeOf(dev);
+        const plan = [];
+        let cursor = verifyStart;
+        let fits = true;
+        for (let i = 0; i < validFiles.length; i++) {
+          const p = validFiles[i];
+          const sz = sizes[p];
+          if (capacity && cursor + sz > capacity) {
+            overrun = true;
+            log('✗ ' + dev + ': ' + assetName(p) + ' at ' + addrHex(cursor) + ' + ' + sz +
+              ' B does not fit in ' + mbText(capacity));
+            fpPaintRest(validFiles.slice(i), '', 'does not fit · beyond ' + mbText(capacity));
+            fits = false;
+            break;
+          }
+          plan.push({ path: p, at: cursor, size: sz, step: validFiles.length > 1 ? (i + 1) + '/' + validFiles.length + ' · ' : '' });
+          cursor += padLength(sz, pad);
+        }
+        if (!fits || !plan.length) continue;
+        plan.forEach(function (item) {
+          fpPaintRow(item.path, 'converting', 'verifying…', item.step + addrHex(item.at));
+        });
+        fpBatch.current = validFiles[0];
+        const res = await runFlashCommand(
+          verifyReadArgs(dev, info, validFiles, verifyStart, pad), $out, {
+            append: ran > 0,
+            label: (devices.length > 1 ? dev + ' · ' : '') + addrHex(verifyStart),
+            gen: info.gen,
+            command: runTarget(info).command,
+            device: dev,
+            bytesWritten: null,
+          });
+        fpBatch.current = '';
+        done += validFiles.length;
+        fpBatch.done = done;
+        fpDropProgress(runs ? done / runs * 100 : 0);
+        if (res === 'cancelled') {
+          plan.forEach(function (item) { fpPaintRow(item.path, 'cancelled', 'cancelled · ' + addrHex(item.at)); });
+          continue;
+        }
+        const byPath = parseVerifyReadStatus(fpLastOutput);
+        plan.forEach(function (item) {
+          const st = byPath[item.path];
+          if (st) {
+            fpPaintRow(item.path, st.ok ? 'done' : 'failed',
+              st.ok
+                ? 'Success (PASS): Verified byte-to-byte at ' + addrHex(item.at) + ' (' + item.size + ' bytes)'
+                : 'Failed (FAIL): ' + st.detail);
+          } else {
+            fpPaintRow(item.path, res ? 'done' : 'failed',
+              res === true
+                ? 'Success (PASS): Verified byte-to-byte at ' + addrHex(item.at) + ' (' + item.size + ' bytes)'
+                : 'Failed (FAIL): ' + (fpLastError || 'verify failed'));
+          }
+        });
+        ran++;
+        continue;
+      }
+      const writeAction = action === '--update-verify' ? '--update'
+        : action === '--program-verify' ? '--program' : action;
+      const writtenEntries = [];
       let offset = start;
       for (let i = 0; i < files.length; i++) {
         const path = files[i];
@@ -1188,19 +1405,31 @@ async function runFlashImages(action, devices, $out) {
           fpPaintRest(files.slice(i), '', 'does not fit · beyond ' + mbText(capacity));
           break;
         }
-        const at = offset;
+        let at = offset;
         fpBatch.current = path;
-        fpPaintRow(path, 'converting', 'programming…', step + addrHex(at));
+        fpPaintRow(path, 'converting', runningStatus, step + addrHex(at));
         const res = await runFlashCommand(
-          flashProgArgs(action, dev, info, path, at), $out, {
+          flashProgArgs(writeAction, dev, info, path, at), $out, {
             append: ran > 0,
             label: (devices.length > 1 ? dev + ' · ' : '') + (step || '') + addrHex(at),
             gen: info.gen,
             command: runTarget(info).command,
             device: dev,
+            bytesWritten: isWriteAction ? size : null,
           });
+        let offsetCorrected = false;
+        if (res === true && isWriteAction && writeAction !== '--newblob' && at < 4096 &&
+            /WARNING:\s*This flash image has no blob/i.test(fpLastOutput)) {
+          at = 4096;
+          offsetCorrected = true;
+          if (i === 0) $('#fp-offset').val('4096');
+          $('#fp-offset-note')
+            .text('Success (offset corrected to 4096 — image has no blob)')
+            .removeClass('hidden');
+          log('ℹ WARNING: This flash image has no blob — offset corrected to 4096.');
+        }
         fpBatch.current = '';
-        offset += padLength(size, pad);
+        offset = at + padLength(size, pad);
         done++;
         fpBatch.done = done;
         fpDropProgress(runs ? done / runs * 100 : 0);
@@ -1210,14 +1439,64 @@ async function runFlashImages(action, devices, $out) {
           fpPaintRow(path, 'cancelled', 'cancelled · ' + addrHex(at));
           continue;
         }
+        if (res === true && isWriteAction) {
+          totalBytesWritten += size;
+          fpLastOffset[path] = at;
+          if (isVerifyAction) {
+            writtenEntries.push({ path: path, at: at, size: size, step: step, offsetCorrected: offsetCorrected });
+            fpPaintRow(path, 'converting', 'verifying…', step + addrHex(at));
+            ran++;
+            continue;
+          }
+        }
         fpPaintRow(path, res ? 'done' : 'failed',
-          (res ? 'done' : 'failed') + ' · ' + addrHex(at));
+          res === true
+            ? (offsetCorrected
+                ? 'Success (offset corrected to 4096): Flashed at offset ' + at + ' ' + size + ' bytes'
+                : 'Success: Flashed to offset ' + at + ' ' + size + ' bytes')
+            : 'Failed: ' + (fpLastError || 'flash failed'));
         ran++;
+      }
+      if (isVerifyAction && writtenEntries.length > 0) {
+        const verifyPaths = writtenEntries.map(function (e) { return e.path; });
+        const verifyStart = writtenEntries[0].at;
+        fpBatch.current = verifyPaths[0];
+        const vRes = await runFlashCommand(
+          verifyReadArgs(dev, info, verifyPaths, verifyStart, pad), $out, {
+            append: true,
+            label: (devices.length > 1 ? dev + ' · ' : '') + 'verify · ' + addrHex(verifyStart),
+            gen: info.gen,
+            command: runTarget(info).command,
+            device: dev,
+            bytesWritten: null,
+          });
+        fpBatch.current = '';
+        if (vRes === 'cancelled') {
+          writtenEntries.forEach(function (e) {
+            fpPaintRow(e.path, 'cancelled', 'verify cancelled · ' + addrHex(e.at));
+          });
+        } else {
+          const byPath = parseVerifyReadStatus(fpLastOutput);
+          writtenEntries.forEach(function (e) {
+            const st = byPath[e.path];
+            const ok = st ? st.ok : vRes === true;
+            const prefix = e.offsetCorrected ? 'Success (PASS, offset corrected to 4096)' : 'Success (PASS)';
+            fpPaintRow(e.path, ok ? 'done' : 'failed',
+              ok
+                ? prefix + ': Flashed & verified byte-to-byte at ' + addrHex(e.at) + ' (' + e.size + ' bytes)'
+                : 'Failed (FAIL): ' + (st ? st.detail : (fpLastError || 'verify failed')));
+          });
+        }
       }
     }
   } finally {
     fpBatch.done = done;
     fpBatchEnd();
+  }
+  if (isWriteAction && totalBytesWritten > 0 && ran > 1) {
+    const summary = 'Total written to flash: ' + totalBytesWritten.toLocaleString() + ' bytes';
+    $out.text($out.text().replace(/\s+$/, '') + '\n' + summary);
+    log(summary);
   }
   if (!ran && !unreadable && !overrun) showError('No selected device can run this action.');
 }
@@ -2156,7 +2435,7 @@ function scanAnswered(res) {
 var CHIP_IDS = {
   0x0810: 'FT810', 0x0811: 'FT811', 0x0812: 'FT812', 0x0813: 'FT813',
   0x0880: 'BT880', 0x0881: 'BT881', 0x0882: 'BT882', 0x0883: 'BT883',
-  0x0815: 'BT815', 0x0816: 'BT816', 0x0817: 'BT817', 0x0818: 'BT818',
+  0x0815: 'BT815', 0x0816: 'BT816', 0x0817: 'BT817', 0x0818: 'BT818', 0x0819: 'BT819',
   0x0820: 'BT820'
 };
 function scanBoardName(text) {
@@ -3031,6 +3310,7 @@ function eabSampleChip(group) {
 }
 function eabSampleQueue(tab, paths) {
   if (tab === 'programmer') {
+    if (typeof clearFpImages === 'function') clearFpImages();
     var file = paths[0];
     if (/BT817/.test(String($('#fp-chip').val() || ''))) {
       var want817 = paths.filter(function (p) { return /817/.test(p); });
@@ -3050,6 +3330,7 @@ function eabSampleQueue(tab, paths) {
     if (typeof window.eabSyncQueueChrome === 'function') window.eabSyncQueueChrome();
     return;
   }
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -3096,6 +3377,11 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (tab === 'programmer') {
+    if (typeof clearFpImages === 'function') clearFpImages();
+  } else {
+    if (typeof clearAllInputs === 'function') clearAllInputs();
+  }
   var group = eabSampleGroup() === 'bt82x' ? 'bt82x' : SAMPLE_DEFAULT_GROUP;
   var folder = conf.folders[group] || SAMPLE_FOLDERS[SAMPLE_DEFAULT_GROUP];
   var base = 'samples/' + folder + '/';

@@ -29,7 +29,7 @@ var CHIP_TABLE = {
   BT880: ['FT81X/BT88X', 'bt88x'], BT881: ['FT81X/BT88X', 'bt88x'],
   BT882: ['FT81X/BT88X', 'bt88x'], BT883: ['FT81X/BT88X', 'bt88x'],
   BT815: ['BT81X', 'bt81x'], BT816: ['BT81X', 'bt81x'],
-  BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'],
+  BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'], BT819: ['BT81X', 'bt81x'],
   BT820: ['BT82X', 'bt82x']
 };
 var CHIP_GEN = {
@@ -332,10 +332,12 @@ function addValidatorFile() {
   pickValidatorFiles();
 }
 function clearValidatorFiles() {
+  $('#val-files').closest('.app-main').addClass('is-options-shown');
   state.validatorFiles = [];
   renderValidatorFiles();
 }
 function removeValidatorFile(idx) {
+  $('#val-files').closest('.app-main').addClass('is-options-shown');
   state.validatorFiles.splice(idx, 1);
   renderValidatorFiles();
 }
@@ -378,45 +380,93 @@ async function startValidate() {
   if (files.length === 0) return;
   state.running = true;
   syncValidatorGate();
-  $('#error-panel-val').addClass('hidden').text('');
+  $('#error-panel-val').addClass('hidden').removeClass('alert-warning').addClass('alert-danger').text('');
   setValProgress(0);
   let pass = 0;
-  for (let n = 0; n < files.length; n++) {
-    const file = files[n];
-    valPaint(file, 'converting', 'validating…');
-    let ok = false;
-    let why = '';
+  const warnings = [];
+  let startedEmulator = false;
+  try {
     try {
-      // Validation plays the file on the shared emulator, so the audio engine
-      // itself decides whether the buffer is loadable.
-      const resp = await API_EAB_callService({
+      const st = await API_EAB_callService({
         service: 'eve.emulator',
-        method: 'audioValidate',
-        args: { path: file, waitMs: 500 },
+        method: 'status',
+        args: {},
       });
-      if (!resp || !resp.ok) throw new Error((resp && resp.error) || 'the emulator service is unavailable');
-      ok = resp.result && resp.result.valid === true;
-      if (!ok) why = (resp.result && resp.result.reason) || 'invalid audio';
+      if (!st || !st.ok) throw new Error((st && st.error) || 'the emulator service is unavailable');
+      if (!st.result || !st.result.running) {
+        const chip = $('#chip-name').val() || $('#chip-gen').val() || 'BT817';
+        const started = await API_EAB_callService({
+          service: 'eve.emulator',
+          method: 'start',
+          args: { chip, audio: true },
+        });
+        if (!started || !started.ok) {
+          throw new Error((started && started.error) || 'could not start the emulator session');
+        }
+        startedEmulator = true;
+      }
     } catch (err) {
-      why = String(err && err.message ? err.message : err);
+      const why = String(err && err.message ? err.message : err);
+      files.forEach(file => {
+        valPaint(file, 'failed', '✗ ' + why);
+        log('log-val', 'FAIL ' + baseName(file) + ' — ' + why);
+      });
+      $('#error-panel-val').removeClass('hidden').text(why);
+      log('log-val', `Summary: PASS: 0  FAIL: ${files.length}`);
+      return;
     }
-    if (ok) {
-      pass++;
-      valPaint(file, 'done', '✓ valid');
-    } else {
-      valPaint(file, 'failed', '✗ ' + why);
+
+    for (let n = 0; n < files.length; n++) {
+      const file = files[n];
+      valPaint(file, 'converting', 'validating…');
+      let ok = false;
+      let why = '';
+      let warning = '';
+      try {
+        // Validation plays the file on the shared emulator, so the audio engine
+        // itself decides whether the buffer is loadable.
+        const resp = await API_EAB_callService({
+          service: 'eve.emulator',
+          method: 'audioValidate',
+          args: { path: file, waitMs: 500 },
+        });
+        if (!resp || !resp.ok) throw new Error((resp && resp.error) || 'the emulator service is unavailable');
+        ok = resp.result && resp.result.valid === true;
+        warning = (resp.result && resp.result.warning) || '';
+        if (!ok) why = (resp.result && resp.result.reason) || 'invalid audio';
+      } catch (err) {
+        why = String(err && err.message ? err.message : err);
+      }
+      if (warning) warnings.push(baseName(file) + ': ' + warning);
+      if (ok) {
+        pass++;
+        valPaint(file, 'done', warning ? '✓ valid (⚠ ' + warning + ')' : '✓ valid');
+      } else {
+        valPaint(file, 'failed', '✗ ' + why + (warning ? ' (⚠ ' + warning + ')' : ''));
+      }
+      log('log-val', (ok ? 'PASS ' : 'FAIL ') + baseName(file) + (ok ? '' : ' — ' + why) + (warning ? ' [WARN: ' + warning + ']' : ''));
+      setValProgress(((n + 1) / files.length) * 100);
     }
-    log('log-val', (ok ? 'PASS ' : 'FAIL ') + baseName(file) + (ok ? '' : ' — ' + why));
-    setValProgress(((n + 1) / files.length) * 100);
+    const fail = files.length - pass;
+    if (fail) {
+      $('#error-panel-val').removeClass('hidden alert-warning').addClass('alert-danger')
+        .text(fail + ' of ' + files.length + ' file(s) failed validation — see the reason in each row.');
+    } else if (warnings.length) {
+      $('#error-panel-val').removeClass('hidden alert-danger').addClass('alert-warning')
+        .text('Warning: ' + warnings.join('; '));
+    }
+    log('log-val', `Summary: PASS: ${pass}  FAIL: ${fail}`);
+  } finally {
+    if (startedEmulator) {
+      API_EAB_callService({
+        service: 'eve.emulator',
+        method: 'stop',
+        args: {},
+      }).catch(function () {});
+    }
+    state.running = false;
+    syncValidatorGate();
   }
-  const fail = files.length - pass;
-  if (fail) {
-    $('#error-panel-val').removeClass('hidden')
-      .text(fail + ' of ' + files.length + ' file(s) failed validation — see the reason in each row.');
-  }
-  log('log-val', `Summary: PASS: ${pass}  FAIL: ${fail}`);
-  state.running = false;
-  syncValidatorGate();
 }
 function openFile(path) {
   invokeHost('open_in_explorer', { path });
@@ -427,6 +477,7 @@ $(function () {
   renderValidatorFiles();
 });
 function clearAllInputs() {
+  $('#input-list').closest('.app-main').addClass('is-options-shown');
   inputFiles.length = 0;
   setCurrentInput(0);
   updateBatchState();
@@ -705,6 +756,11 @@ function eabSampleFail(ev) {
   setTimeout(function () { $btn.text(text); }, 6000);
 }
 function eabSampleQueue(tab, paths) {
+  if (tab === 'validator') {
+    if (typeof clearValidatorFiles === 'function') clearValidatorFiles();
+  } else {
+    if (typeof clearAllInputs === 'function') clearAllInputs();
+  }
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -717,6 +773,11 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (tab === 'validator') {
+    if (typeof clearValidatorFiles === 'function') clearValidatorFiles();
+  } else {
+    if (typeof clearAllInputs === 'function') clearAllInputs();
+  }
   var group = eabSampleGroup();
   var folder = conf.folders[group] || SAMPLE_FOLDERS[SAMPLE_DEFAULT_GROUP];
   var base = 'samples/' + folder + '/';

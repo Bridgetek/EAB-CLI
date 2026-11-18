@@ -71,6 +71,7 @@ function addInputFiles(paths) {
   updateBatchState();
 }
 function removeInputFile(index) {
+  $('.app-row.app-main').first().addClass('is-options-shown');
   inputFiles.splice(index, 1);
   setCurrentInput(index >= inputFiles.length ? inputFiles.length - 1 : index);
   updateBatchState();
@@ -203,6 +204,7 @@ async function startBatch() {
 }
 window.eabCancelBatch = function () { batchRunning = false; };
 function clearAllInputs() {
+  $('.app-row.app-main').first().addClass('is-options-shown');
   inputFiles.length = 0;
   setCurrentInput(0);
   updateBatchState();

@@ -11,6 +11,7 @@ function addFontFiles(paths) {
   updateBatchState();
 }
 function removeFontFile(index) {
+  $('#tab-converter .app-row').addClass('is-options-shown');
   fontFiles.splice(index, 1);
   setCurrentFont(index >= fontFiles.length ? fontFiles.length - 1 : index);
   updateBatchState();

@@ -57,6 +57,30 @@
       { "name": "DXT1_L1_PALETTED565", "options": {} }
     ]
   },
+  "BT819": {
+    "formats": [
+      { "name": "ASTC", "options": { "block": { "type": "enum", "enum": ["4x4", "5x4", "5x5", "6x5", "6x6", "8x5", "8x6", "8x8", "10x5", "10x6", "10x8", "10x10", "12x10", "12x12"], "default": "8x8" }, "efforts": { "type": "enum", "enum": ["fastest", "fast", "medium", "thorough", "exhaustive"], "default": "fastest" }, "extra_params": { "type": "input_text", "default": "-j <threads>" }, "multi_cell_height": { "type": "spinbox", "min": 0, "max": 9999, "default": 0 } } },
+      { "name": "YCBCR", "options": {} },
+      { "name": "ARGB8", "options": {} },
+      { "name": "RGB8", "options": {} },
+      { "name": "ARGB1555", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "ARGB4", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "ARGB2", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "RGB565", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "RGB332", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "PALETTED565", "options": {} },
+      { "name": "PALETTED4444", "options": {} },
+      { "name": "PALETTED8", "options": {} },
+      { "name": "L8", "options": {} },
+      { "name": "L4", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "L2", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "L1", "options": { "dithering": { "enabled": { "type": "checkbox", "default": true }, "mode": { "type": "enum", "enum": ["FLOYD_STEINBERG_SERPENTINE", "JARVIS_JUDICE_NINKE", "STUCKI", "ATKINSON", "BAYER_8x8", "BLUE_NOISE", "HALFTONE", "VOID_AND_CLUSTER", "DBS"], "default": "FLOYD_STEINBERG_SERPENTINE" } } } },
+      { "name": "DXT1_L2_RGB565", "options": {} },
+      { "name": "DXT1_L2_PALETTED565", "options": {} },
+      { "name": "DXT1_L1_RGB565", "options": {} },
+      { "name": "DXT1_L1_PALETTED565", "options": {} }
+    ]
+  },
   "BT82X": {
     "formats": [
       { "name": "ASTC", "options": { "block": { "type": "enum", "enum": ["4x4", "5x4", "5x5", "6x5", "6x6", "8x5", "8x6", "8x8", "10x5", "10x6", "10x8", "10x10", "12x10", "12x12"], "default": "8x8" }, "efforts": { "type": "enum", "enum": ["fastest", "fast", "medium", "thorough", "exhaustive"], "default": "fastest" }, "extra_params": { "type": "input_text", "default": "-j <threads>" }, "multi_cell_height": { "type": "spinbox", "min": 0, "max": 9999, "default": 0 }, "zorder": { "enabled": { "type": "checkbox", "default": false }, "value": { "type": "spinbox", "min": 0, "max": 255, "default": 170 } } } },
@@ -141,24 +165,24 @@
       chipDitherDefault[chip] = ditherDefault || 'FLOYD_STEINBERG';
     }
     var fallbackDefs = {
-      'RGB565': { family: 'color', r:5, g:6, b:5 },
-      'RGB8':   { family: 'color', r:8, g:8, b:8 },
-      'RGB6':   { family: 'color', r:6, g:6, b:6 },
-      'ARGB8':  { family: 'color', a:8, r:8, g:8, b:8 },
-      'ARGB6':  { family: 'color', a:6, r:6, g:6, b:6 },
-      'ARGB4':  { family: 'color', a:4, r:4, g:4, b:4 },
-      'ARGB2':  { family: 'color', a:2, r:2, g:2, b:2 },
-      'ARGB1555': { family: 'color', a:1, r:5, g:5, b:5 },
-      'RGB332': { family: 'color', r:3, g:3, b:2 },
-      'LA8':    { family: 'luma', l:8, a:8 },
-      'LA4':    { family: 'luma', l:4, a:4 },
-      'LA2':    { family: 'luma', l:2, a:2 },
-      'LA1':    { family: 'luma', l:1, a:1 },
-      'L8':     { family: 'luma', l:8 },
-      'L4':     { family: 'luma', l:4 },
-      'L2':     { family: 'luma', l:2 },
-      'L1':     { family: 'luma', l:1 },
-      'YCBCR':  { family: 'ycbcr' },
+      'RGB565': { family: 'color', r: 5, g: 6, b: 5 },
+      'RGB8': { family: 'color', r: 8, g: 8, b: 8 },
+      'RGB6': { family: 'color', r: 6, g: 6, b: 6 },
+      'ARGB8': { family: 'color', a: 8, r: 8, g: 8, b: 8 },
+      'ARGB6': { family: 'color', a: 6, r: 6, g: 6, b: 6 },
+      'ARGB4': { family: 'color', a: 4, r: 4, g: 4, b: 4 },
+      'ARGB2': { family: 'color', a: 2, r: 2, g: 2, b: 2 },
+      'ARGB1555': { family: 'color', a: 1, r: 5, g: 5, b: 5 },
+      'RGB332': { family: 'color', r: 3, g: 3, b: 2 },
+      'LA8': { family: 'luma', l: 8, a: 8 },
+      'LA4': { family: 'luma', l: 4, a: 4 },
+      'LA2': { family: 'luma', l: 2, a: 2 },
+      'LA1': { family: 'luma', l: 1, a: 1 },
+      'L8': { family: 'luma', l: 8 },
+      'L4': { family: 'luma', l: 4 },
+      'L2': { family: 'luma', l: 2 },
+      'L1': { family: 'luma', l: 1 },
+      'YCBCR': { family: 'ycbcr' },
       'PALETTED': { family: 'paletted' },
       'PALETTED565': { family: 'paletted' },
       'PALETTED4444': { family: 'paletted' },
@@ -264,281 +288,281 @@
     }
   }
   var DITHER_DEFS = {
-    'NONE':                       { type:'none' },
-    'FLOYD_STEINBERG':            { type:'err-diff', serpentine:false, coeff:[[1,0,7/16],[-1,1,3/16],[0,1,5/16],[1,1,1/16]] },
-    'FLOYD_STEINBERG_SERPENTINE': { type:'err-diff', serpentine:true, coeff:[[1,0,7/16],[-1,1,3/16],[0,1,5/16],[1,1,1/16]] },
-    'JARVIS_JUDICE_NINKE':       { type:'err-diff', serpentine:false, coeff:[[1,0,7/48],[2,0,5/48],[-2,1,3/48],[-1,1,5/48],[0,1,7/48],[1,1,5/48],[2,1,3/48],[-2,2,1/48],[-1,2,3/48],[0,2,5/48],[1,2,3/48],[2,2,1/48]] },
-    'STUCKI':                     { type:'err-diff', serpentine:false, coeff:[[1,0,8/42],[2,0,4/42],[-2,1,2/42],[-1,1,4/42],[0,1,8/42],[1,1,4/42],[2,1,2/42],[-2,2,1/42],[-1,2,2/42],[0,2,4/42],[1,2,2/42],[2,2,1/42]] },
-    'ATKINSON':                   { type:'err-diff', serpentine:false, coeff:[[1,0,1/8],[2,0,1/8],[-1,1,1/8],[0,1,1/8],[1,1,1/8],[0,2,1/8]] },
-    'BURKES':                     { type:'err-diff', serpentine:false, coeff:[[1,0,8/32],[2,0,4/32],[-2,1,2/32],[-1,1,4/32],[0,1,8/32],[1,1,4/32],[2,1,2/32]] },
-    'SIERRA_3':                   { type:'err-diff', serpentine:false, coeff:[[1,0,5/32],[2,0,3/32],[-2,1,2/32],[-1,1,4/32],[0,1,5/32],[1,1,4/32],[2,1,2/32],[-1,2,2/32],[0,2,3/32],[1,2,2/32]] },
-    'SIERRA_2':                   { type:'err-diff', serpentine:false, coeff:[[1,0,4/16],[2,0,3/16],[-2,1,1/16],[-1,1,2/16],[0,1,3/16],[1,1,2/16],[2,1,1/16]] },
-    'SIERRA_LITE':                { type:'err-diff', serpentine:false, coeff:[[1,0,2/4],[-1,1,1/4],[0,1,1/4]] },
-    'BAYER_2x2':                  { type:'ordered', size:2 },
-    'BAYER_4x4':                  { type:'ordered', size:4 },
-    'BAYER_8x8':                  { type:'ordered', size:8 },
-    'WHITE_NOISE':                { type:'noise', noise:'white' },
-    'BLUE_NOISE':                 { type:'noise', noise:'blue' },
-    'VOID_AND_CLUSTER':           { type:'noise', noise:'blue' },
-    'HALFTONE':                   { type:'ordered', size:4 },
-    'DBS':                        { type:'err-diff', serpentine:false, coeff:[] }
+    'NONE': { type: 'none' },
+    'FLOYD_STEINBERG': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 7 / 16], [-1, 1, 3 / 16], [0, 1, 5 / 16], [1, 1, 1 / 16]] },
+    'FLOYD_STEINBERG_SERPENTINE': { type: 'err-diff', serpentine: true, coeff: [[1, 0, 7 / 16], [-1, 1, 3 / 16], [0, 1, 5 / 16], [1, 1, 1 / 16]] },
+    'JARVIS_JUDICE_NINKE': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 7 / 48], [2, 0, 5 / 48], [-2, 1, 3 / 48], [-1, 1, 5 / 48], [0, 1, 7 / 48], [1, 1, 5 / 48], [2, 1, 3 / 48], [-2, 2, 1 / 48], [-1, 2, 3 / 48], [0, 2, 5 / 48], [1, 2, 3 / 48], [2, 2, 1 / 48]] },
+    'STUCKI': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 8 / 42], [2, 0, 4 / 42], [-2, 1, 2 / 42], [-1, 1, 4 / 42], [0, 1, 8 / 42], [1, 1, 4 / 42], [2, 1, 2 / 42], [-2, 2, 1 / 42], [-1, 2, 2 / 42], [0, 2, 4 / 42], [1, 2, 2 / 42], [2, 2, 1 / 42]] },
+    'ATKINSON': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 1 / 8], [2, 0, 1 / 8], [-1, 1, 1 / 8], [0, 1, 1 / 8], [1, 1, 1 / 8], [0, 2, 1 / 8]] },
+    'BURKES': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 8 / 32], [2, 0, 4 / 32], [-2, 1, 2 / 32], [-1, 1, 4 / 32], [0, 1, 8 / 32], [1, 1, 4 / 32], [2, 1, 2 / 32]] },
+    'SIERRA_3': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 5 / 32], [2, 0, 3 / 32], [-2, 1, 2 / 32], [-1, 1, 4 / 32], [0, 1, 5 / 32], [1, 1, 4 / 32], [2, 1, 2 / 32], [-1, 2, 2 / 32], [0, 2, 3 / 32], [1, 2, 2 / 32]] },
+    'SIERRA_2': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 4 / 16], [2, 0, 3 / 16], [-2, 1, 1 / 16], [-1, 1, 2 / 16], [0, 1, 3 / 16], [1, 1, 2 / 16], [2, 1, 1 / 16]] },
+    'SIERRA_LITE': { type: 'err-diff', serpentine: false, coeff: [[1, 0, 2 / 4], [-1, 1, 1 / 4], [0, 1, 1 / 4]] },
+    'BAYER_2x2': { type: 'ordered', size: 2 },
+    'BAYER_4x4': { type: 'ordered', size: 4 },
+    'BAYER_8x8': { type: 'ordered', size: 8 },
+    'WHITE_NOISE': { type: 'noise', noise: 'white' },
+    'BLUE_NOISE': { type: 'noise', noise: 'blue' },
+    'VOID_AND_CLUSTER': { type: 'noise', noise: 'blue' },
+    'HALFTONE': { type: 'ordered', size: 4 },
+    'DBS': { type: 'err-diff', serpentine: false, coeff: [] }
   };
   function genBayer(n) {
-    if (n===1) return [[0]];
-    var p=genBayer(n/2), s=n/2, m=Array(n);
-    for(var y=0;y<n;y++) m[y]=Array(n);
-    for(var y=0;y<s;y++) for(var x=0;x<s;x++){
-      m[y][x]=4*p[y][x]; m[y][x+s]=4*p[y][x]+2;
-      m[y+s][x]=4*p[y][x]+3; m[y+s][x+s]=4*p[y][x]+1;
+    if (n === 1) return [[0]];
+    var p = genBayer(n / 2), s = n / 2, m = Array(n);
+    for (var y = 0; y < n; y++) m[y] = Array(n);
+    for (var y = 0; y < s; y++) for (var x = 0; x < s; x++) {
+      m[y][x] = 4 * p[y][x]; m[y][x + s] = 4 * p[y][x] + 2;
+      m[y + s][x] = 4 * p[y][x] + 3; m[y + s][x + s] = 4 * p[y][x] + 1;
     }
     return m;
   }
-  var BAYER = { 2:genBayer(2), 4:genBayer(4), 8:genBayer(8) };
+  var BAYER = { 2: genBayer(2), 4: genBayer(4), 8: genBayer(8) };
   var _bnMask = null;
   function genBlueNoise() {
-    var S=64, m=new Float32Array(S*S), seed=12345;
-    for(var i=0;i<m.length;i++){seed=(seed*1664525+1013904223)&0xFFFFFFFF;m[i]=(seed>>>0)/4294967296;}
-    for(var it=0;it<8;it++){
-      var n=new Float32Array(S*S), R=12;
-      for(var y=0;y<S;y++) for(var x=0;x<S;x++){
-        var s=0,w=0;
-        for(var dy=-R;dy<=R;dy++) for(var dx=-R;dx<=R;dx++){
-          if(!dx&&!dy) continue;
-          var d=Math.sqrt(dx*dx+dy*dy);
-          if(d>R) continue;
-          var wt=1/(d+0.01);
-          s+=m[((y+dy+S)%S)*S+((x+dx+S)%S)]*wt; w+=wt;
+    var S = 64, m = new Float32Array(S * S), seed = 12345;
+    for (var i = 0; i < m.length; i++) { seed = (seed * 1664525 + 1013904223) & 0xFFFFFFFF; m[i] = (seed >>> 0) / 4294967296; }
+    for (var it = 0; it < 8; it++) {
+      var n = new Float32Array(S * S), R = 12;
+      for (var y = 0; y < S; y++) for (var x = 0; x < S; x++) {
+        var s = 0, w = 0;
+        for (var dy = -R; dy <= R; dy++) for (var dx = -R; dx <= R; dx++) {
+          if (!dx && !dy) continue;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          if (d > R) continue;
+          var wt = 1 / (d + 0.01);
+          s += m[((y + dy + S) % S) * S + ((x + dx + S) % S)] * wt; w += wt;
         }
-        n[y*S+x]=w>0?s/w:m[y*S+x];
+        n[y * S + x] = w > 0 ? s / w : m[y * S + x];
       }
-      m=n; var mn=1,mx=0;
-      for(var i=0;i<m.length;i++){if(m[i]<mn)mn=m[i];if(m[i]>mx)mx=m[i];}
-      var r=mx-mn; if(r>0) for(var i=0;i<m.length;i++) m[i]=(m[i]-mn)/r;
+      m = n; var mn = 1, mx = 0;
+      for (var i = 0; i < m.length; i++) { if (m[i] < mn) mn = m[i]; if (m[i] > mx) mx = m[i]; }
+      var r = mx - mn; if (r > 0) for (var i = 0; i < m.length; i++) m[i] = (m[i] - mn) / r;
     }
     return m;
   }
-  function qCh(v,b){if(b>=8)return v;var l=(1<<b)-1;return Math.round(v/255*l)/l*255;}
-  function cl(v){return v<0?0:v>255?255:v;}
-  function simpleQuantize(d,rB,gB,bB,aB){
-    for(var i=0;i<d.length;i+=4){
-      d[i]=qCh(d[i],rB); d[i+1]=qCh(d[i+1],gB); d[i+2]=qCh(d[i+2],bB);
-      if(aB!==undefined) d[i+3]=qCh(d[i+3],aB);
+  function qCh(v, b) { if (b >= 8) return v; var l = (1 << b) - 1; return Math.round(v / 255 * l) / l * 255; }
+  function cl(v) { return v < 0 ? 0 : v > 255 ? 255 : v; }
+  function simpleQuantize(d, rB, gB, bB, aB) {
+    for (var i = 0; i < d.length; i += 4) {
+      d[i] = qCh(d[i], rB); d[i + 1] = qCh(d[i + 1], gB); d[i + 2] = qCh(d[i + 2], bB);
+      if (aB !== undefined) d[i + 3] = qCh(d[i + 3], aB);
     }
   }
-  function errDiffuse(d,w,h,rB,gB,bB,aB,algo){
-    var c=algo.coeff, s=algo.serpentine, cp=new Uint8ClampedArray(d);
-    for(var y=0;y<h;y++){
-      var ltr=!s||(y%2===0), xs=ltr?0:w-1, xe=ltr?w:-1, xp=ltr?1:-1;
-      for(var x=xs;x!==xe;x+=xp){
-        var i=(y*w+x)*4;
-        var nr=qCh(cp[i],rB), ng=qCh(cp[i+1],gB), nb=qCh(cp[i+2],bB);
-        var na=aB>0&&aB<8?qCh(cp[i+3],aB):cp[i+3];
-        var er=cp[i]-nr, eg=cp[i+1]-ng, eb=cp[i+2]-nb;
-        cp[i]=nr; cp[i+1]=ng; cp[i+2]=nb; cp[i+3]=na;
-        for(var k=0;k<c.length;k++){
-          var dx=ltr?c[k][0]:-c[k][0], dy=c[k][1], wt=c[k][2];
-          var nx=x+dx, ny=y+dy;
-          if(nx<0||nx>=w||ny<0||ny>=h) continue;
-          var ni=(ny*w+nx)*4;
-          cp[ni]=cl(cp[ni]+er*wt); cp[ni+1]=cl(cp[ni+1]+eg*wt); cp[ni+2]=cl(cp[ni+2]+eb*wt);
+  function errDiffuse(d, w, h, rB, gB, bB, aB, algo) {
+    var c = algo.coeff, s = algo.serpentine, cp = new Uint8ClampedArray(d);
+    for (var y = 0; y < h; y++) {
+      var ltr = !s || (y % 2 === 0), xs = ltr ? 0 : w - 1, xe = ltr ? w : -1, xp = ltr ? 1 : -1;
+      for (var x = xs; x !== xe; x += xp) {
+        var i = (y * w + x) * 4;
+        var nr = qCh(cp[i], rB), ng = qCh(cp[i + 1], gB), nb = qCh(cp[i + 2], bB);
+        var na = aB > 0 && aB < 8 ? qCh(cp[i + 3], aB) : cp[i + 3];
+        var er = cp[i] - nr, eg = cp[i + 1] - ng, eb = cp[i + 2] - nb;
+        cp[i] = nr; cp[i + 1] = ng; cp[i + 2] = nb; cp[i + 3] = na;
+        for (var k = 0; k < c.length; k++) {
+          var dx = ltr ? c[k][0] : -c[k][0], dy = c[k][1], wt = c[k][2];
+          var nx = x + dx, ny = y + dy;
+          if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+          var ni = (ny * w + nx) * 4;
+          cp[ni] = cl(cp[ni] + er * wt); cp[ni + 1] = cl(cp[ni + 1] + eg * wt); cp[ni + 2] = cl(cp[ni + 2] + eb * wt);
         }
       }
     }
-    for(var i=0;i<d.length;i++) d[i]=cp[i];
+    for (var i = 0; i < d.length; i++) d[i] = cp[i];
   }
-  function orderedDith(d,w,h,rB,gB,bB,aB,algo){
-    var sz=algo.size, mx=BAYER[sz], tot=sz*sz;
-    for(var y=0;y<h;y++) for(var x=0;x<w;x++){
-      var i=(y*w+x)*4, thr=(mx[y%sz][x%sz]+0.5)/tot;
-      for(var c=0;c<3;c++){
-        var bits=[rB,gB,bB][c]; if(bits>=8) continue;
-        var l=(1<<bits)-1, v=d[i+c]/255, q=Math.floor(v*l), f=v*l-q;
-        d[i+c]=Math.round((f>thr?Math.min(q+1,l):q)/l*255);
+  function orderedDith(d, w, h, rB, gB, bB, aB, algo) {
+    var sz = algo.size, mx = BAYER[sz], tot = sz * sz;
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+      var i = (y * w + x) * 4, thr = (mx[y % sz][x % sz] + 0.5) / tot;
+      for (var c = 0; c < 3; c++) {
+        var bits = [rB, gB, bB][c]; if (bits >= 8) continue;
+        var l = (1 << bits) - 1, v = d[i + c] / 255, q = Math.floor(v * l), f = v * l - q;
+        d[i + c] = Math.round((f > thr ? Math.min(q + 1, l) : q) / l * 255);
       }
-      if(aB!==undefined&&aB<8){
-        var l=(1<<aB)-1, v=d[i+3]/255, q=Math.floor(v*l), f=v*l-q;
-        d[i+3]=Math.round((f>thr?Math.min(q+1,l):q)/l*255);
+      if (aB !== undefined && aB < 8) {
+        var l = (1 << aB) - 1, v = d[i + 3] / 255, q = Math.floor(v * l), f = v * l - q;
+        d[i + 3] = Math.round((f > thr ? Math.min(q + 1, l) : q) / l * 255);
       }
     }
   }
-  function noiseDith(d,w,h,rB,gB,bB,aB,algo){
-    var isBlue=algo.noise==='blue';
-    if(isBlue&&!_bnMask) _bnMask=genBlueNoise();
-    for(var y=0;y<h;y++) for(var x=0;x<w;x++){
-      var i=(y*w+x)*4;
-      var thr=isBlue?_bnMask[(y%64)*64+(x%64)]:Math.random();
-      for(var c=0;c<3;c++){
-        var bits=[rB,gB,bB][c]; if(bits>=8) continue;
-        var l=(1<<bits)-1, v=d[i+c]/255, q=Math.floor(v*l), f=v*l-q;
-        d[i+c]=Math.round((f>thr?Math.min(q+1,l):q)/l*255);
+  function noiseDith(d, w, h, rB, gB, bB, aB, algo) {
+    var isBlue = algo.noise === 'blue';
+    if (isBlue && !_bnMask) _bnMask = genBlueNoise();
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+      var i = (y * w + x) * 4;
+      var thr = isBlue ? _bnMask[(y % 64) * 64 + (x % 64)] : Math.random();
+      for (var c = 0; c < 3; c++) {
+        var bits = [rB, gB, bB][c]; if (bits >= 8) continue;
+        var l = (1 << bits) - 1, v = d[i + c] / 255, q = Math.floor(v * l), f = v * l - q;
+        d[i + c] = Math.round((f > thr ? Math.min(q + 1, l) : q) / l * 255);
       }
-      if(aB!==undefined&&aB<8){
-        var l=(1<<aB)-1, v=d[i+3]/255, q=Math.floor(v*l), f=v*l-q;
-        d[i+3]=Math.round((f>thr?Math.min(q+1,l):q)/l*255);
+      if (aB !== undefined && aB < 8) {
+        var l = (1 << aB) - 1, v = d[i + 3] / 255, q = Math.floor(v * l), f = v * l - q;
+        d[i + 3] = Math.round((f > thr ? Math.min(q + 1, l) : q) / l * 255);
       }
     }
   }
-  function processLuma(d,w,h,lB,aB,da){
-    for(var i=0;i<d.length;i+=4){
-      var l=((d[i]*19595+d[i+1]*38470+d[i+2]*7471+32768)/65536)|0;
-      if(l>255)l=255;if(l<0)l=0;
-      d[i]=d[i+1]=d[i+2]=l;
+  function processLuma(d, w, h, lB, aB, da) {
+    for (var i = 0; i < d.length; i += 4) {
+      var l = ((d[i] * 19595 + d[i + 1] * 38470 + d[i + 2] * 7471 + 32768) / 65536) | 0;
+      if (l > 255) l = 255; if (l < 0) l = 0;
+      d[i] = d[i + 1] = d[i + 2] = l;
     }
-    var algo=DITHER_DEFS[da]||DITHER_DEFS['NONE'];
-    if(algo.type==='none'){
-      for(var i=0;i<d.length;i+=4){
-        var l=qCh(d[i],lB); d[i]=d[i+1]=d[i+2]=l;
-        if(aB>0&&aB<8) d[i+3]=qCh(d[i+3],aB);
+    var algo = DITHER_DEFS[da] || DITHER_DEFS['NONE'];
+    if (algo.type === 'none') {
+      for (var i = 0; i < d.length; i += 4) {
+        var l = qCh(d[i], lB); d[i] = d[i + 1] = d[i + 2] = l;
+        if (aB > 0 && aB < 8) d[i + 3] = qCh(d[i + 3], aB);
       }
-    } else if(algo.type==='err-diff'){
-      var c=algo.coeff, s=algo.serpentine, cp=new Uint8ClampedArray(d);
-      for(var y=0;y<h;y++){
-        var ltr=!s||(y%2===0), xs=ltr?0:w-1, xe=ltr?w:-1, xp=ltr?1:-1;
-        for(var x=xs;x!==xe;x+=xp){
-          var i=(y*w+x)*4, ol=cp[i], nl=qCh(ol,lB), er=ol-nl;
-          cp[i]=cp[i+1]=cp[i+2]=nl;
-          if(aB>0&&aB<8) cp[i+3]=qCh(cp[i+3],aB);
-          for(var k=0;k<c.length;k++){
-            var dx=ltr?c[k][0]:-c[k][0], dy=c[k][1], wt=c[k][2];
-            var nx=x+dx, ny=y+dy;
-            if(nx<0||nx>=w||ny<0||ny>=h) continue;
-            cp[(ny*w+nx)*4]=cl(cp[(ny*w+nx)*4]+er*wt);
+    } else if (algo.type === 'err-diff') {
+      var c = algo.coeff, s = algo.serpentine, cp = new Uint8ClampedArray(d);
+      for (var y = 0; y < h; y++) {
+        var ltr = !s || (y % 2 === 0), xs = ltr ? 0 : w - 1, xe = ltr ? w : -1, xp = ltr ? 1 : -1;
+        for (var x = xs; x !== xe; x += xp) {
+          var i = (y * w + x) * 4, ol = cp[i], nl = qCh(ol, lB), er = ol - nl;
+          cp[i] = cp[i + 1] = cp[i + 2] = nl;
+          if (aB > 0 && aB < 8) cp[i + 3] = qCh(cp[i + 3], aB);
+          for (var k = 0; k < c.length; k++) {
+            var dx = ltr ? c[k][0] : -c[k][0], dy = c[k][1], wt = c[k][2];
+            var nx = x + dx, ny = y + dy;
+            if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+            cp[(ny * w + nx) * 4] = cl(cp[(ny * w + nx) * 4] + er * wt);
           }
         }
       }
-      for(var i=0;i<d.length;i++) d[i]=cp[i];
+      for (var i = 0; i < d.length; i++) d[i] = cp[i];
     } else {
-      var isBlue=algo.noise==='blue';
-      if(isBlue&&!_bnMask) _bnMask=genBlueNoise();
-      for(var y=0;y<h;y++) for(var x=0;x<w;x++){
-        var i=(y*w+x)*4;
+      var isBlue = algo.noise === 'blue';
+      if (isBlue && !_bnMask) _bnMask = genBlueNoise();
+      for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+        var i = (y * w + x) * 4;
         var thr;
-        if(algo.type==='ordered'){
-          var mx=BAYER[algo.size];
-          thr=(mx[y%algo.size][x%algo.size]+0.5)/(algo.size*algo.size);
-        } else thr=isBlue?_bnMask[(y%64)*64+(x%64)]:Math.random();
-        var l=(1<<lB)-1, v=d[i]/255, qq=Math.floor(v*l), f=v*l-qq;
-        d[i]=d[i+1]=d[i+2]=Math.round((f>thr?Math.min(qq+1,l):qq)/l*255);
+        if (algo.type === 'ordered') {
+          var mx = BAYER[algo.size];
+          thr = (mx[y % algo.size][x % algo.size] + 0.5) / (algo.size * algo.size);
+        } else thr = isBlue ? _bnMask[(y % 64) * 64 + (x % 64)] : Math.random();
+        var l = (1 << lB) - 1, v = d[i] / 255, qq = Math.floor(v * l), f = v * l - qq;
+        d[i] = d[i + 1] = d[i + 2] = Math.round((f > thr ? Math.min(qq + 1, l) : qq) / l * 255);
       }
     }
   }
-  function processYCbCr(d){
-    for(var i=0;i<d.length;i+=4){
-      var r=d[i],g=d[i+1],b=d[i+2];
-      var y=((r*19595+g*38470+b*7471+32768)/65536)|0;
-      if(y>255)y=255;if(y<0)y=0;
-      d[i]=d[i+1]=d[i+2]=y;
+  function processYCbCr(d) {
+    for (var i = 0; i < d.length; i += 4) {
+      var r = d[i], g = d[i + 1], b = d[i + 2];
+      var y = ((r * 19595 + g * 38470 + b * 7471 + 32768) / 65536) | 0;
+      if (y > 255) y = 255; if (y < 0) y = 0;
+      d[i] = d[i + 1] = d[i + 2] = y;
     }
   }
-  function processPal(d,w,h){
-    var px=[]; for(var i=0;i<d.length;i+=4) px.push([d[i],d[i+1],d[i+2],d[i+3]]);
-    function makeBox(p){
-      var mn=[255,255,255,255],mx=[0,0,0,0];
-      for(var k=0;k<p.length;k++) for(var c=0;c<4;c++){
-        if(p[k][c]<mn[c])mn[c]=p[k][c]; if(p[k][c]>mx[c])mx[c]=p[k][c];
+  function processPal(d, w, h) {
+    var px = []; for (var i = 0; i < d.length; i += 4) px.push([d[i], d[i + 1], d[i + 2], d[i + 3]]);
+    function makeBox(p) {
+      var mn = [255, 255, 255, 255], mx = [0, 0, 0, 0];
+      for (var k = 0; k < p.length; k++) for (var c = 0; c < 4; c++) {
+        if (p[k][c] < mn[c]) mn[c] = p[k][c]; if (p[k][c] > mx[c]) mx[c] = p[k][c];
       }
-      return {p:p,mn:mn,mx:mx,vol:(mx[0]-mn[0]+1)*(mx[1]-mn[1]+1)*(mx[2]-mn[2]+1)*(mx[3]-mn[3]+1)};
+      return { p: p, mn: mn, mx: mx, vol: (mx[0] - mn[0] + 1) * (mx[1] - mn[1] + 1) * (mx[2] - mn[2] + 1) * (mx[3] - mn[3] + 1) };
     }
-    function bestAxis(box){
-      var r=box.mx[0]-box.mn[0],g=box.mx[1]-box.mn[1],bl=box.mx[2]-box.mn[2],a=box.mx[3]-box.mn[3];
-      if(r>=g&&r>=bl&&r>=a)return 0; if(g>=bl&&g>=a)return 1; if(bl>=a)return 2; return 3;
+    function bestAxis(box) {
+      var r = box.mx[0] - box.mn[0], g = box.mx[1] - box.mn[1], bl = box.mx[2] - box.mn[2], a = box.mx[3] - box.mn[3];
+      if (r >= g && r >= bl && r >= a) return 0; if (g >= bl && g >= a) return 1; if (bl >= a) return 2; return 3;
     }
-    var boxes=[makeBox(px)];
-    while(boxes.length<256){
-      var bi=-1,bv=-1;
-      for(var i=0;i<boxes.length;i++) if(boxes[i].vol>bv){bv=boxes[i].vol;bi=i;}
-      if(bi<0||boxes[bi].p.length<2) break;
-      var box=boxes[bi],axis=bestAxis(box),mid=Math.floor(box.p.length/2);
-      box.p.sort(function(a,b){return a[axis]-b[axis];});
-      var L=box.p.slice(0,mid),R=box.p.slice(mid);
-      boxes.splice(bi,1);
-      if(L.length)boxes.push(makeBox(L)); if(R.length)boxes.push(makeBox(R));
+    var boxes = [makeBox(px)];
+    while (boxes.length < 256) {
+      var bi = -1, bv = -1;
+      for (var i = 0; i < boxes.length; i++) if (boxes[i].vol > bv) { bv = boxes[i].vol; bi = i; }
+      if (bi < 0 || boxes[bi].p.length < 2) break;
+      var box = boxes[bi], axis = bestAxis(box), mid = Math.floor(box.p.length / 2);
+      box.p.sort(function (a, b) { return a[axis] - b[axis]; });
+      var L = box.p.slice(0, mid), R = box.p.slice(mid);
+      boxes.splice(bi, 1);
+      if (L.length) boxes.push(makeBox(L)); if (R.length) boxes.push(makeBox(R));
     }
-    var pal=[]; for(var i=0;i<boxes.length;i++){
-      var s=[0,0,0,0],n=boxes[i].p.length;
-      for(var k=0;k<n;k++)for(var c=0;c<4;c++)s[c]+=boxes[i].p[k][c];
-      pal.push([Math.round(s[0]/n),Math.round(s[1]/n),Math.round(s[2]/n),Math.round(s[3]/n)]);
+    var pal = []; for (var i = 0; i < boxes.length; i++) {
+      var s = [0, 0, 0, 0], n = boxes[i].p.length;
+      for (var k = 0; k < n; k++)for (var c = 0; c < 4; c++)s[c] += boxes[i].p[k][c];
+      pal.push([Math.round(s[0] / n), Math.round(s[1] / n), Math.round(s[2] / n), Math.round(s[3] / n)]);
     }
-    while(pal.length<256)pal.push([0,0,0,0]);
-    pal=pal.slice(0,256);
-    for(var i=0;i<d.length;i+=4){
-      var bi=0,bd=Infinity;
-      for(var j=0;j<pal.length;j++){
-        var dr=d[i]-pal[j][0],dg=d[i+1]-pal[j][1],db=d[i+2]-pal[j][2],da=d[i+3]-pal[j][3];
-        var dist=dr*dr+dg*dg+db*db+da*da;
-        if(dist<bd){bd=dist;bi=j;}
+    while (pal.length < 256) pal.push([0, 0, 0, 0]);
+    pal = pal.slice(0, 256);
+    for (var i = 0; i < d.length; i += 4) {
+      var bi = 0, bd = Infinity;
+      for (var j = 0; j < pal.length; j++) {
+        var dr = d[i] - pal[j][0], dg = d[i + 1] - pal[j][1], db = d[i + 2] - pal[j][2], da = d[i + 3] - pal[j][3];
+        var dist = dr * dr + dg * dg + db * db + da * da;
+        if (dist < bd) { bd = dist; bi = j; }
       }
-      d[i]=pal[bi][0];d[i+1]=pal[bi][1];d[i+2]=pal[bi][2];d[i+3]=pal[bi][3];
+      d[i] = pal[bi][0]; d[i + 1] = pal[bi][1]; d[i + 2] = pal[bi][2]; d[i + 3] = pal[bi][3];
     }
   }
-  var ASTC_EFFORT_MAP = { fastest:0.5, fast:0.7, medium:0.85, thorough:1.0, exhaustive:1.2 };
-  function processASTC(d,w,h,bw,bh,eff){
-    var em=ASTC_EFFORT_MAP[eff]||1, bp=bw*bh;
-    var qb=Math.max(3,Math.min(8,Math.round(8-bp/16*(2-em))));
-    for(var by=0;by<h;by+=bh) for(var bx=0;bx<w;bx+=bw){
-      var rMin=255,gMin=255,bMin=255,rMax=0,gMax=0,bMax=0,cnt=0;
-      for(var dy=0;dy<bh&&by+dy<h;dy++) for(var dx=0;dx<bw&&bx+dx<w;dx++){
-        var i=((by+dy)*w+(bx+dx))*4;
-        var r=d[i],g=d[i+1],b=d[i+2];
-        if(r<rMin)rMin=r;if(g<gMin)gMin=g;if(b<bMin)bMin=b;
-        if(r>rMax)rMax=r;if(g>gMax)gMax=g;if(b>bMax)bMax=b;
+  var ASTC_EFFORT_MAP = { fastest: 0.5, fast: 0.7, medium: 0.85, thorough: 1.0, exhaustive: 1.2 };
+  function processASTC(d, w, h, bw, bh, eff) {
+    var em = ASTC_EFFORT_MAP[eff] || 1, bp = bw * bh;
+    var qb = Math.max(3, Math.min(8, Math.round(8 - bp / 16 * (2 - em))));
+    for (var by = 0; by < h; by += bh) for (var bx = 0; bx < w; bx += bw) {
+      var rMin = 255, gMin = 255, bMin = 255, rMax = 0, gMax = 0, bMax = 0, cnt = 0;
+      for (var dy = 0; dy < bh && by + dy < h; dy++) for (var dx = 0; dx < bw && bx + dx < w; dx++) {
+        var i = ((by + dy) * w + (bx + dx)) * 4;
+        var r = d[i], g = d[i + 1], b = d[i + 2];
+        if (r < rMin) rMin = r; if (g < gMin) gMin = g; if (b < bMin) bMin = b;
+        if (r > rMax) rMax = r; if (g > gMax) gMax = g; if (b > bMax) bMax = b;
         cnt++;
       }
-      if(!cnt) continue;
-      rMin=qCh(rMin,qb);gMin=qCh(gMin,qb);bMin=qCh(bMin,qb);
-      rMax=qCh(rMax,qb);gMax=qCh(gMax,qb);bMax=qCh(bMax,qb);
-      var er=rMax-rMin,eg=gMax-gMin,eb=bMax-bMin;
-      var elen=er*er+eg*eg+eb*eb;
-      for(var dy=0;dy<bh&&by+dy<h;dy++) for(var dx=0;dx<bw&&bx+dx<w;dx++){
-        var i=((by+dy)*w+(bx+dx))*4;
-        var wgt=0.5;
-        if(elen>0){
-          var dot=(d[i]-rMin)*er+(d[i+1]-gMin)*eg+(d[i+2]-bMin)*eb;
-          wgt=Math.max(0,Math.min(1,dot/elen));
+      if (!cnt) continue;
+      rMin = qCh(rMin, qb); gMin = qCh(gMin, qb); bMin = qCh(bMin, qb);
+      rMax = qCh(rMax, qb); gMax = qCh(gMax, qb); bMax = qCh(bMax, qb);
+      var er = rMax - rMin, eg = gMax - gMin, eb = bMax - bMin;
+      var elen = er * er + eg * eg + eb * eb;
+      for (var dy = 0; dy < bh && by + dy < h; dy++) for (var dx = 0; dx < bw && bx + dx < w; dx++) {
+        var i = ((by + dy) * w + (bx + dx)) * 4;
+        var wgt = 0.5;
+        if (elen > 0) {
+          var dot = (d[i] - rMin) * er + (d[i + 1] - gMin) * eg + (d[i + 2] - bMin) * eb;
+          wgt = Math.max(0, Math.min(1, dot / elen));
         }
-        var gridW=Math.max(1,Math.round(16/em));
-        wgt=Math.round(wgt*gridW)/gridW;
-        d[i]=Math.round(rMin+er*wgt);
-        d[i+1]=Math.round(gMin+eg*wgt);
-        d[i+2]=Math.round(bMin+eb*wgt);
+        var gridW = Math.max(1, Math.round(16 / em));
+        wgt = Math.round(wgt * gridW) / gridW;
+        d[i] = Math.round(rMin + er * wgt);
+        d[i + 1] = Math.round(gMin + eg * wgt);
+        d[i + 2] = Math.round(bMin + eb * wgt);
       }
     }
   }
-  function simulateConversion(srcUrl,fmt,da,ae){
-    return new Promise(function(resolve){
-      var img=new Image();
-      img.onload=function(){
-        try{
-          var w=img.width,h=img.height,MAX=3840;
-          if(w>MAX||h>MAX){var sc=Math.min(MAX/w,MAX/h);w=Math.round(w*sc);h=Math.round(h*sc);}
-          var cv=$('<canvas>').get(0);cv.width=w;cv.height=h;
-          var cx=cv.getContext('2d');cx.drawImage(img,0,0,w,h);
-          var id=cx.getImageData(0,0,w,h), d=id.data, def=formatDefs[fmt];
-          if(!def){resolve(null);return;}
-          switch(def.family){
-            case'color':
-              if(da&&da!=='NONE'){
-                var a=DITHER_DEFS[da];
-                if(a.type==='err-diff') errDiffuse(d,w,h,def.r||8,def.g||8,def.b||8,def.a,a);
-                else if(a.type==='ordered') orderedDith(d,w,h,def.r||8,def.g||8,def.b||8,def.a,a);
-                else if(a.type==='noise') noiseDith(d,w,h,def.r||8,def.g||8,def.b||8,def.a,a);
-              } else simpleQuantize(d,def.r||8,def.g||8,def.b||8,def.a);
+  function simulateConversion(srcUrl, fmt, da, ae) {
+    return new Promise(function (resolve) {
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var w = img.width, h = img.height, MAX = 3840;
+          if (w > MAX || h > MAX) { var sc = Math.min(MAX / w, MAX / h); w = Math.round(w * sc); h = Math.round(h * sc); }
+          var cv = $('<canvas>').get(0); cv.width = w; cv.height = h;
+          var cx = cv.getContext('2d'); cx.drawImage(img, 0, 0, w, h);
+          var id = cx.getImageData(0, 0, w, h), d = id.data, def = formatDefs[fmt];
+          if (!def) { resolve(null); return; }
+          switch (def.family) {
+            case 'color':
+              if (da && da !== 'NONE') {
+                var a = DITHER_DEFS[da];
+                if (a.type === 'err-diff') errDiffuse(d, w, h, def.r || 8, def.g || 8, def.b || 8, def.a, a);
+                else if (a.type === 'ordered') orderedDith(d, w, h, def.r || 8, def.g || 8, def.b || 8, def.a, a);
+                else if (a.type === 'noise') noiseDith(d, w, h, def.r || 8, def.g || 8, def.b || 8, def.a, a);
+              } else simpleQuantize(d, def.r || 8, def.g || 8, def.b || 8, def.a);
               break;
-            case'luma': processLuma(d,w,h,def.l||8,def.a||8,da); break;
-            case'ycbcr': processYCbCr(d); break;
-            case'paletted': processPal(d,w,h); break;
-            case'astc': processASTC(d,w,h,def.bw,def.bh,ae); break;
+            case 'luma': processLuma(d, w, h, def.l || 8, def.a || 8, da); break;
+            case 'ycbcr': processYCbCr(d); break;
+            case 'paletted': processPal(d, w, h); break;
+            case 'astc': processASTC(d, w, h, def.bw, def.bh, ae); break;
             default: break;
           }
-          id.data.set(d); cx.putImageData(id,0,0);
-          resolve({dataUrl:cv.toDataURL('image/png'),w:w,h:h,fmt:fmt});
-        }catch(e){console.error('[Sim]',e);resolve(null);}
+          id.data.set(d); cx.putImageData(id, 0, 0);
+          resolve({ dataUrl: cv.toDataURL('image/png'), w: w, h: h, fmt: fmt });
+        } catch (e) { console.error('[Sim]', e); resolve(null); }
       };
-      img.onerror=function(){resolve(null);};
-      img.src=srcUrl;
+      img.onerror = function () { resolve(null); };
+      img.src = srcUrl;
     });
   }
-  function debounce(fn,ms){var t=null;return function(){var a=arguments,ctx=this;if(t)clearTimeout(t);t=setTimeout(function(){t=null;fn.apply(ctx,a);},ms);};}
+  function debounce(fn, ms) { var t = null; return function () { var a = arguments, ctx = this; if (t) clearTimeout(t); t = setTimeout(function () { t = null; fn.apply(ctx, a); }, ms); }; }
   var images = [];
   function truncateLeft(text, maxLen) {
     if (!text) return '';
@@ -550,7 +574,7 @@
   }
   function escAttr(str) {
     if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   function addImages(items) {
     if (!items || items.length === 0) return;
@@ -577,6 +601,7 @@
   }
   function removeImage(path) {
     images = images.filter(function (im) { return im.path !== path; });
+    $('#file-list').closest('.app-main').addClass('is-options-shown');
     renderFileList();
   }
   function renderFileList() {
@@ -585,6 +610,7 @@
     var $emptyMsg = $('#empty-msg');
     var $btnClear = $('#btn-clear-all');
     var $main = $('#file-list').closest('.app-main');
+    if (images.length > 0) $main.addClass('is-options-shown');
     $main.toggleClass('is-queue-empty', images.length === 0 && !$main.hasClass('is-options-shown'));
     if ($fileCount.length) $fileCount.text('(' + images.length + ')');
     if (images.length === 0) {
@@ -660,29 +686,29 @@
       + '</div>');
     $previewContent.addClass('has-image');
   }
-  function formatLabel(fmt){
-    var def=formatDefs[fmt];
-    if(!def) return fmt;
-    if(def.family==='color'){
-      var parts=[];
-      if(def.a) parts.push('A'+def.a);
-      parts.push('R'+def.r); parts.push('G'+def.g); parts.push('B'+def.b);
-      return fmt+' ('+parts.join(':')+')';
+  function formatLabel(fmt) {
+    var def = formatDefs[fmt];
+    if (!def) return fmt;
+    if (def.family === 'color') {
+      var parts = [];
+      if (def.a) parts.push('A' + def.a);
+      parts.push('R' + def.r); parts.push('G' + def.g); parts.push('B' + def.b);
+      return fmt + ' (' + parts.join(':') + ')';
     }
-    if(def.family==='luma') return fmt+' (L'+def.l+(def.a?':A'+def.a:'')+')';
-    if(def.family==='astc') return fmt+' ('+def.bw+'\u00d7'+def.bh+' block)';
-    if(def.family==='paletted') return fmt;
-    if(def.family==='ycbcr') return fmt+' (Y only)';
-    if(def.family==='dxt1') return fmt;
+    if (def.family === 'luma') return fmt + ' (L' + def.l + (def.a ? ':A' + def.a : '') + ')';
+    if (def.family === 'astc') return fmt + ' (' + def.bw + '\u00d7' + def.bh + ' block)';
+    if (def.family === 'paletted') return fmt;
+    if (def.family === 'ycbcr') return fmt + ' (Y only)';
+    if (def.family === 'dxt1') return fmt;
     return fmt;
   }
   var _previewIdx = -1;
   var _previewGen = 0;
-  function updateAfterConvertPreview(idx){
-    var $pa=$('#preview-after-content');
-    if(!$pa.length) return;
-    _previewIdx=idx;
-    if(idx<0||!images[idx]||!images[idx].data){
+  function updateAfterConvertPreview(idx) {
+    var $pa = $('#preview-after-content');
+    if (!$pa.length) return;
+    _previewIdx = idx;
+    if (idx < 0 || !images[idx] || !images[idx].data) {
       $pa.html('<div class="preview-placeholder">No image loaded</div>');
       $pa.removeClass('has-image');
       return;
@@ -693,24 +719,24 @@
     var $overlay = $('<div class="preview-loading-overlay">');
     $overlay.text('preview is loading...');
     $overlay.appendTo($pa);
-    setTimeout(function(){
-      if(_previewIdx!==idx || _previewGen!==gen) return;
-      simulateConversion(images[idx].data,state.format,formatHasDither(state.format)?state.ditherAlgo:'NONE',state.astcEffort).then(function(r){
-        if(_previewIdx!==idx || _previewGen!==gen) return;
+    setTimeout(function () {
+      if (_previewIdx !== idx || _previewGen !== gen) return;
+      simulateConversion(images[idx].data, state.format, formatHasDither(state.format) ? state.ditherAlgo : 'NONE', state.astcEffort).then(function (r) {
+        if (_previewIdx !== idx || _previewGen !== gen) return;
         $pa.find('.preview-loading-overlay').remove();
-        if(!r){$pa.html('<div class="preview-placeholder">Preview unavailable</div>');$pa.removeClass('has-image');return;}
-        var fl=state.format;
-        var dl=(formatHasDither(fl)&&state.ditherAlgo!=='NONE'&&DITHER_DEFS[state.ditherAlgo])?state.ditherAlgo:'';
-        var labels=[formatLabel(fl)];
-        if(dl) labels.push('Dither: '+dl);
-        var infoLine=labels.join(' | ');
+        if (!r) { $pa.html('<div class="preview-placeholder">Preview unavailable</div>'); $pa.removeClass('has-image'); return; }
+        var fl = state.format;
+        var dl = (formatHasDither(fl) && state.ditherAlgo !== 'NONE' && DITHER_DEFS[state.ditherAlgo]) ? state.ditherAlgo : '';
+        var labels = [formatLabel(fl)];
+        if (dl) labels.push('Dither: ' + dl);
+        var infoLine = labels.join(' | ');
         $pa.html('<div style="padding:8px;text-align:left;word-break:break-all;width:100%;">'
-          +'<div style="font-weight:600;font-size:13px;margin-bottom:4px;">'+esc(images[idx].name)+'</div>'
-          +'<img src="'+esc(r.dataUrl)+'" style="max-width:100%;max-height:320px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);">'
-          +'<div class="preview-info">'+esc(infoLine)+'</div>This preview is simulated by Javascript (not by an EVE engine)</div>');
+          + '<div style="font-weight:600;font-size:13px;margin-bottom:4px;">' + esc(images[idx].name) + '</div>'
+          + '<img src="' + esc(r.dataUrl) + '" style="max-width:100%;max-height:320px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);">'
+          + '<div class="preview-info">' + esc(infoLine) + '</div>This preview is simulated by Javascript (not by an EVE engine)</div>');
         $pa.addClass('has-image');
       });
-    },50);
+    }, 50);
   }
   var IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'jpe', 'jfif', 'bmp', 'tif', 'tiff', 'webp', 'gif', 'tga', 'ico', 'pnm', 'dds', 'hdr'];
   var IMAGES_FILTERS = [{ name: 'Images', extensions: IMAGE_EXTENSIONS }];
@@ -830,6 +856,7 @@
   window.addImages = addImages;
   window.clearFiles = function () {
     images = [];
+    $('#file-list').closest('.app-main').addClass('is-options-shown');
     renderFileList();
     showPreview(null);
     var $pa = $('#preview-after-content');
@@ -894,7 +921,7 @@
     BT880: ['FT81X/BT88X', 'bt88x'], BT881: ['FT81X/BT88X', 'bt88x'],
     BT882: ['FT81X/BT88X', 'bt88x'], BT883: ['FT81X/BT88X', 'bt88x'],
     BT815: ['BT81X', 'bt81x'], BT816: ['BT81X', 'bt81x'],
-    BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'],
+    BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'], BT819: ['BT819', 'bt81x'],
     BT820: ['BT82X', 'bt82x']
   };
   var CHIP_GEN = {
@@ -958,7 +985,18 @@
     if (!$hint.length) return;
     $hint.text(CHIP_HINTS[sampleChipKey()] || 'Pick whichever one you know.');
   }
+  function bt819Enabled() {
+    return typeof window.API_EAB_hasCliFlag === 'function' && window.API_EAB_hasCliFlag('--enable-bt819');
+  }
+  function applyBt819Flag() {
+    if (bt819Enabled()) return;
+    $('#chip-name option[value="BT819"], #raw-chip-name option[value="BT819"]').remove();
+    $('#chip-gen option[value="BT81X"], #raw-chip-gen option[value="BT81X"]').each(function () {
+      $(this).text($(this).text().replace(' / BT819', ''));
+    });
+  }
   function buildChipPicker() {
+    applyBt819Flag();
     var $picker = $('#chip-one');
     if (!$picker.length || $picker.find('optgroup').length) return;
     for (var k in CHIP_BOX) {
@@ -1105,7 +1143,7 @@
   }
   function queryFormatCaps(format) {
     var chip = chipGeneration();
-    return API_EAB_getFormatCaps({ format: format, chip: chip }).then(function(resp) {
+    return API_EAB_getFormatCaps({ format: format, chip: chip }).then(function (resp) {
       if (resp.ok && resp.caps) {
         batchState.formatCaps = resp.caps;
         return resp.caps;
@@ -1191,7 +1229,7 @@
       case 'btn-convert':
         if (!chipPicked()) return '#chip-one';
         if (!String($('#format-select').val() || '') ||
-            batchState.formatOk !== true) return '#format-select';
+          batchState.formatOk !== true) return '#format-select';
         if (!images.length) return '#input-card';
         if (!$.trim(String($('#output-dir').val() || ''))) return '#output-dir';
         break;
@@ -1205,6 +1243,7 @@
         break;
       case 'btn-raw-run':
         if (!tabQueues.rawviewer.length) return '#raw-list';
+        if (!rawChipGeneration()) return '#raw-chip-gen';
         if (!String($('#raw-format').val() || '')) return '#raw-format';
         if (!(Number.isInteger(Number($('#raw-width').val())) && Number($('#raw-width').val()) > 0)) return '#raw-width';
         if (!(Number.isInteger(Number($('#raw-height').val())) && Number($('#raw-height').val()) > 0)) return '#raw-height';
@@ -1244,7 +1283,7 @@
       return;
     }
     log('Converting ' + images.length + ' file(s) to ' + state.format +
-        ' (chip ' + state.chip + ', output ' + state.outputDir + ')');
+      ' (chip ' + state.chip + ', output ' + state.outputDir + ')');
     batchState.status = 'running';
     batchState.total = images.length;
     batchState.completed = 0;
@@ -1252,13 +1291,13 @@
     batchState.cancelled = 0;
     batchState.nextIdx = 0;
     batchState.running = 0;
-    batchState.jobs = images.map(function(im) {
+    batchState.jobs = images.map(function (im) {
       return { path: im.path, name: im.name, jobId: null, status: 'pending', progress: 0, result: null, settled: false, inFlight: false, t0: 0 };
     });
     batchState.pollTimers = {};
     batchState.outcomes = [];
     renderBatchResult();
-    queryFormatCaps(state.format).then(function(caps) {
+    queryFormatCaps(state.format).then(function (caps) {
       setConvertEnabled(false);
       $('#running-controls').removeClass('hidden');
       $('#btn-pause').prop('disabled', !caps.supportsPauseResume);
@@ -1304,7 +1343,7 @@
       genSrcPlatform: state.genSrcPlatform,
       noJson: !state.genJson && !state.genSrc,
     };
-    API_EAB_convertFile(payload).then(function(resp) {
+    API_EAB_convertFile(payload).then(function (resp) {
       if (job.settled) return;
       if (resp.ok && resp.jobId) {
         job.jobId = resp.jobId;
@@ -1317,12 +1356,12 @@
     });
   }
   function startPolling(job) {
-    var interval = setInterval(function() {
+    var interval = setInterval(function () {
       if (job.settled) {
         clearInterval(interval);
         return;
       }
-      API_EAB_pollJob({ jobId: job.jobId }).then(function(resp) {
+      API_EAB_pollJob({ jobId: job.jobId }).then(function (resp) {
         if (job.settled) return;
         if (!resp.ok || !resp.progress) {
           return;
@@ -1452,7 +1491,7 @@
     updateTotalProgress();
     renderBatchResult();
   }
-  window.demoPause = function() {
+  window.demoPause = function () {
     batchState.status = 'paused';
     $('#running-controls').addClass('hidden');
     $('#paused-controls').removeClass('hidden');
@@ -1464,7 +1503,7 @@
       }
     }
   };
-  window.demoResume = function() {
+  window.demoResume = function () {
     batchState.status = 'running';
     $('#paused-controls').addClass('hidden');
     $('#running-controls').removeClass('hidden');
@@ -1477,7 +1516,7 @@
     }
     pumpQueue();
   };
-  window.demoCancel = function() {
+  window.demoCancel = function () {
     batchState.status = 'cancelled';
     for (var i = 0; i < batchState.jobs.length; i++) {
       var job = batchState.jobs[i];
@@ -1505,13 +1544,13 @@
     if (!job || !job.jobId || job.settled) return;
     var pausing = !job.paused;
     if (pausing && batchState.formatCaps && batchState.formatCaps.supportsPauseResume === false) return;
-      (pausing ? API_EAB_pauseJob : API_EAB_resumeJob)({ jobId: job.jobId });
+    (pausing ? API_EAB_pauseJob : API_EAB_resumeJob)({ jobId: job.jobId });
     setJobPaused(job, pausing);
   };
   var _origRenderFileList = renderFileList;
-  renderFileList = function() {
+  renderFileList = function () {
     _origRenderFileList();
-    $('.file-item').each(function() {
+    $('.file-item').each(function () {
       var $item = $(this);
       if ($item.find('.file-item-progress').length) return;
       var $progress = $('<div class="file-item-progress">');
@@ -1563,14 +1602,14 @@
       setConvertEnabled(images.length > 0);
     });
     $('#output-name').on('input', function () { state.outputName = $(this).val(); });
-    var previewUpdater = debounce(function() {
+    var previewUpdater = debounce(function () {
       updateAfterConvertPreview(_previewIdx);
     }, 300);
     $fmt.on('change', previewUpdater);
     $dith.on('change', previewUpdater);
     $astc.on('change', previewUpdater);
     API_EAB_init({});
-    $('.tab-btn').on('click', function() {
+    $('.tab-btn').on('click', function () {
       var tab = $(this).attr('data-tab');
       $('.tab-btn').removeClass('active');
       $(this).addClass('active');
@@ -1579,7 +1618,7 @@
     });
   });
   var _origShowPreview = showPreview;
-  showPreview = function(img) {
+  showPreview = function (img) {
     _origShowPreview(img);
     if (!img) return;
     var idx = -1;
@@ -1592,136 +1631,136 @@
     }
     updateAfterConvertPreview(idx);
   };
-    function getFormatOptions(chip, formatName) {
-      var chipEntry = chipData[chip];
-      if (!chipEntry) return null;
-      var formats = chipEntry.formats || [];
-      for (var i = 0; i < formats.length; i++) {
-        var f = formats[i];
-        var baseName = f.name;
-        if (baseName === 'ASTC') {
-          if (formatName.startsWith('ASTC_')) return f.options || {};
-        } else if (baseName === formatName) {
-          return f.options || {};
-        }
-      }
-      return null;
-    }
-    window.eabAlphaSliderInput = function (el) {
-      var v = $(el).val();
-      $('#alpha-value-display').text(v + '%');
-      state.alphaSlider = parseInt(v);
-    };
-    window.eabZorderToggle = function (el) {
-      $('#zorder-value').prop('disabled', !$(el).prop('checked'));
-    };
-    function renderDynamicOptions(options) {
-      var $container = $('#dynamic-slot');
-      if (!$container.length) return;
-      if (!options || Object.keys(options).length === 0) { $container.html(''); return; }
-      var html = '';
-      function addGroup(label, content) {
-        return '<div class="dynamic-option col-12 col-sm-12 col-md-12"><label>' + label + '</label>' + content + '</div>';
-      }
-      if (options.extra_params) {
-        var def = options.extra_params.default || '';
-              }
-      if (options.multi_cell_height) {
-        var min = options.multi_cell_height.min || 0;
-        var max = options.multi_cell_height.max || 9999;
-        var def = options.multi_cell_height.default || 0;
-        html += addGroup('Multi‑Cell Height', '<input type="number" id="multi-cell-height" min="' + min + '" max="' + max + '" value="' + def + '" step="1" class="form-control">');
-      }
-      if (options.alpha_slider) {
-        var minA = options.alpha_slider.min || 0;
-        var maxA = options.alpha_slider.max || 100;
-        var defA = options.alpha_slider.default || 100;
-        html += '<div class="dynamic-option col-12 col-sm-12 col-md-12">';
-        html += '  <label>Alpha Slider <span id="alpha-value-display" style="font-weight:600;">' + defA + '%</span></label>';
-        html += '  <input type="range" id="alpha-slider" min="' + minA + '" max="' + maxA + '" value="' + defA + '" oninput="eabAlphaSliderInput(this)">';
-        html += '</div>';
-      }
-      if (options.zorder) {
-        var enabled = options.zorder.enabled ? options.zorder.enabled.default : false;
-        var val = options.zorder.value ? options.zorder.value.default : 170;
-        var minVal = options.zorder.value ? options.zorder.value.min : 0;
-        var maxVal = options.zorder.value ? options.zorder.value.max : 255;
-        var checkedAttr = enabled ? 'checked' : '';
-        html += '<div class="dynamic-option col-12 col-sm-12 col-md-12">';
-        html += '  <label>Z‑Order</label>';
-        html += '  <div class="form-check">';
-        html += '    <input type="checkbox" id="zorder-enabled" class="form-check-input" ' + checkedAttr + ' onchange="eabZorderToggle(this)">';
-        html += '    <label class="form-check-label" for="zorder-enabled">Enable Z‑Order</label>';
-        html += '  </div>';
-        html += '  <input type="number" id="zorder-value" min="' + minVal + '" max="' + maxVal + '" value="' + val + '" step="1" ' + (enabled ? '' : 'disabled') + ' class="form-control">';
-        html += '</div>';
-      }
-      $container.html(html);
-      var $extraParams = $('#extra-params');
-      if ($extraParams.length) {
-        $extraParams.on('input', function() { state.extraParams = $(this).val(); });
-        state.extraParams = $extraParams.val();
-      }
-      var $multiCell = $('#multi-cell-height');
-      if ($multiCell.length) {
-        $multiCell.on('input', function() { state.multiCellHeight = parseInt($(this).val()) || 0; });
-        state.multiCellHeight = parseInt($multiCell.val()) || 0;
-      }
-      var $zorderEnabled = $('#zorder-enabled');
-      if ($zorderEnabled.length) {
-        $zorderEnabled.on('change', function() {
-          $('#zorder-value').prop('disabled', !$(this).prop('checked'));
-          state.zorderEnabled = $(this).prop('checked');
-        });
-        state.zorderEnabled = $zorderEnabled.prop('checked');
-      }
-      var $zorderVal = $('#zorder-value');
-      if ($zorderVal.length) {
-        $zorderVal.on('input', function() { state.zorderValue = parseInt($(this).val()) || 0; });
-        state.zorderValue = parseInt($zorderVal.val()) || 0;
-      }
-      var $alphaSlider = $('#alpha-slider');
-      if ($alphaSlider.length) {
-        $alphaSlider.on('input', function() { state.alphaSlider = parseInt($(this).val()); });
-        state.alphaSlider = parseInt($alphaSlider.val()) || 100;
+  function getFormatOptions(chip, formatName) {
+    var chipEntry = chipData[chip];
+    if (!chipEntry) return null;
+    var formats = chipEntry.formats || [];
+    for (var i = 0; i < formats.length; i++) {
+      var f = formats[i];
+      var baseName = f.name;
+      if (baseName === 'ASTC') {
+        if (formatName.startsWith('ASTC_')) return f.options || {};
+      } else if (baseName === formatName) {
+        return f.options || {};
       }
     }
-    function updateDynamicOptions(chipMeta) {
-      var chip = chipMeta || state.chipMeta || '';
-      var format = $('#format-select').val();
-      if (!chip || !format) {
-        $('#dynamic-slot').html('');
-        return;
-      }
-      var options = getFormatOptions(chip, format);
-      renderDynamicOptions(options);
+    return null;
+  }
+  window.eabAlphaSliderInput = function (el) {
+    var v = $(el).val();
+    $('#alpha-value-display').text(v + '%');
+    state.alphaSlider = parseInt(v);
+  };
+  window.eabZorderToggle = function (el) {
+    $('#zorder-value').prop('disabled', !$(el).prop('checked'));
+  };
+  function renderDynamicOptions(options) {
+    var $container = $('#dynamic-slot');
+    if (!$container.length) return;
+    if (!options || Object.keys(options).length === 0) { $container.html(''); return; }
+    var html = '';
+    function addGroup(label, content) {
+      return '<div class="dynamic-option col-12 col-sm-12 col-md-12"><label>' + label + '</label>' + content + '</div>';
     }
-    var _origOnChipChange = onChipChange;
-    onChipChange = function(chip) {
-      state.chipMeta = chip;
-      state.chip = chip;
-      _origOnChipChange(chip);
-      updateDynamicOptions(chip);
-      validateFormat();
-    };
-    var _origOnFormatChange = window.onFormatChange;
-    window.onFormatChange = function(format) {
-      _origOnFormatChange(format);
-      updateDynamicOptions();
-      validateFormat();
-    };
-    window.state = window.state || {};
-    window.state.extraParams = '';
-    window.state.multiCellHeight = 0;
-    window.state.zorderEnabled = false;
-    window.state.zorderValue = 170;
-    window.state.alphaSlider = 100;
-    window.state.jpegGray = false;
+    if (options.extra_params) {
+      var def = options.extra_params.default || '';
+    }
+    if (options.multi_cell_height) {
+      var min = options.multi_cell_height.min || 0;
+      var max = options.multi_cell_height.max || 9999;
+      var def = options.multi_cell_height.default || 0;
+      html += addGroup('Multi‑Cell Height', '<input type="number" id="multi-cell-height" min="' + min + '" max="' + max + '" value="' + def + '" step="1" class="form-control">');
+    }
+    if (options.alpha_slider) {
+      var minA = options.alpha_slider.min || 0;
+      var maxA = options.alpha_slider.max || 100;
+      var defA = options.alpha_slider.default || 100;
+      html += '<div class="dynamic-option col-12 col-sm-12 col-md-12">';
+      html += '  <label>Alpha Slider <span id="alpha-value-display" style="font-weight:600;">' + defA + '%</span></label>';
+      html += '  <input type="range" id="alpha-slider" min="' + minA + '" max="' + maxA + '" value="' + defA + '" oninput="eabAlphaSliderInput(this)">';
+      html += '</div>';
+    }
+    if (options.zorder) {
+      var enabled = options.zorder.enabled ? options.zorder.enabled.default : false;
+      var val = options.zorder.value ? options.zorder.value.default : 170;
+      var minVal = options.zorder.value ? options.zorder.value.min : 0;
+      var maxVal = options.zorder.value ? options.zorder.value.max : 255;
+      var checkedAttr = enabled ? 'checked' : '';
+      html += '<div class="dynamic-option col-12 col-sm-12 col-md-12">';
+      html += '  <label>Z‑Order</label>';
+      html += '  <div class="form-check">';
+      html += '    <input type="checkbox" id="zorder-enabled" class="form-check-input" ' + checkedAttr + ' onchange="eabZorderToggle(this)">';
+      html += '    <label class="form-check-label" for="zorder-enabled">Enable Z‑Order</label>';
+      html += '  </div>';
+      html += '  <input type="number" id="zorder-value" min="' + minVal + '" max="' + maxVal + '" value="' + val + '" step="1" ' + (enabled ? '' : 'disabled') + ' class="form-control">';
+      html += '</div>';
+    }
+    $container.html(html);
+    var $extraParams = $('#extra-params');
+    if ($extraParams.length) {
+      $extraParams.on('input', function () { state.extraParams = $(this).val(); });
+      state.extraParams = $extraParams.val();
+    }
+    var $multiCell = $('#multi-cell-height');
+    if ($multiCell.length) {
+      $multiCell.on('input', function () { state.multiCellHeight = parseInt($(this).val()) || 0; });
+      state.multiCellHeight = parseInt($multiCell.val()) || 0;
+    }
+    var $zorderEnabled = $('#zorder-enabled');
+    if ($zorderEnabled.length) {
+      $zorderEnabled.on('change', function () {
+        $('#zorder-value').prop('disabled', !$(this).prop('checked'));
+        state.zorderEnabled = $(this).prop('checked');
+      });
+      state.zorderEnabled = $zorderEnabled.prop('checked');
+    }
+    var $zorderVal = $('#zorder-value');
+    if ($zorderVal.length) {
+      $zorderVal.on('input', function () { state.zorderValue = parseInt($(this).val()) || 0; });
+      state.zorderValue = parseInt($zorderVal.val()) || 0;
+    }
+    var $alphaSlider = $('#alpha-slider');
+    if ($alphaSlider.length) {
+      $alphaSlider.on('input', function () { state.alphaSlider = parseInt($(this).val()); });
+      state.alphaSlider = parseInt($alphaSlider.val()) || 100;
+    }
+  }
+  function updateDynamicOptions(chipMeta) {
+    var chip = chipMeta || state.chipMeta || '';
+    var format = $('#format-select').val();
+    if (!chip || !format) {
+      $('#dynamic-slot').html('');
+      return;
+    }
+    var options = getFormatOptions(chip, format);
+    renderDynamicOptions(options);
+  }
+  var _origOnChipChange = onChipChange;
+  onChipChange = function (chip) {
+    state.chipMeta = chip;
+    state.chip = chip;
+    _origOnChipChange(chip);
+    updateDynamicOptions(chip);
+    validateFormat();
+  };
+  var _origOnFormatChange = window.onFormatChange;
+  window.onFormatChange = function (format) {
+    _origOnFormatChange(format);
+    updateDynamicOptions();
+    validateFormat();
+  };
+  window.state = window.state || {};
+  window.state.extraParams = '';
+  window.state.multiCellHeight = 0;
+  window.state.zorderEnabled = false;
+  window.state.zorderValue = 170;
+  window.state.alphaSlider = 100;
+  window.state.jpegGray = false;
   var INPUT_FILTERS = {
     'val-input': IMAGES_FILTERS,
     'jpegopt-input': JPEG_FILTERS
   };
-  window.pickFileFor = function(inputId) {
+  window.pickFileFor = function (inputId) {
     if (!isEmbedded()) {
       var typed = prompt('Enter a file path:');
       if (!typed) return;
@@ -1734,7 +1773,7 @@
       filters: INPUT_FILTERS[inputId] || IMAGES_FILTERS,
       multiple: true,
       readBase64: false,
-    }).then(function(resp) {
+    }).then(function (resp) {
       if (!resp || !resp.ok) {
         showError('File picker failed: ' + ((resp && resp.error) || 'unknown error'));
         return;
@@ -1751,7 +1790,7 @@
   };
   function detectPalettedCompanion(rawPath) {
     var isIndex = IDX_RE.test(rawPath);
-    var isLut   = LUT_RE.test(rawPath);
+    var isLut = LUT_RE.test(rawPath);
     if (!isIndex && !isLut) return;
     var $fmtSelect = $('#raw-format');
     if (PALETTED_FORMATS.indexOf(String($fmtSelect.val() || '')) < 0) {
@@ -1766,8 +1805,8 @@
       if (dimMatch[2]) $('#raw-height').val(dimMatch[2]);
     }
   }
-  window.pickRawFileFor = function(inputId) {
-    API_EAB_pickFiles({ filters: RAW_FILTERS, multiple: true, readBase64: false }).then(function(resp) {
+  window.pickRawFileFor = function (inputId) {
+    API_EAB_pickFiles({ filters: RAW_FILTERS, multiple: true, readBase64: false }).then(function (resp) {
       var paths = (resp && resp.paths) || [];
       if (!paths.length) return;
       $('#' + inputId).val(paths[0]).trigger('input');
@@ -1775,8 +1814,8 @@
       if (meta) addTabFiles(meta, paths);
     });
   };
-  window.pickFolderFor = function(inputId) {
-    API_EAB_pickOutput({}).then(function(resp) {
+  window.pickFolderFor = function (inputId) {
+    API_EAB_pickOutput({}).then(function (resp) {
       if (resp.ok && resp.folder) {
         $('#' + inputId).val(resp.folder);
       }
@@ -1797,7 +1836,7 @@
       if (!detailLines || detailLines.length === 0) {
         $err.css('display', 'none');
       } else {
-        var errorLines = detailLines.filter(function(l) {
+        var errorLines = detailLines.filter(function (l) {
           if (typeof l === 'string') return l.toLowerCase().indexOf('error') >= 0 || l.toLowerCase().indexOf('fail') >= 0;
           return (l.cls || '').indexOf('err') >= 0;
         });
@@ -1805,7 +1844,7 @@
           $err.css('display', 'none');
         } else {
           $err.css('display', 'block');
-          errorLines.forEach(function(line) {
+          errorLines.forEach(function (line) {
             $('<div class="v-err-line">')
               .text(typeof line === 'string' ? line : (line.label || '') + ' ' + (line.value || ''))
               .appendTo($err);
@@ -1821,7 +1860,7 @@
         $toggle.css('display', 'flex');
         $det.css('display', 'none');
         $toggle.removeClass('expanded');
-        detailLines.forEach(function(line) {
+        detailLines.forEach(function (line) {
           var $row = $('<div class="v-result-line">');
           if (typeof line === 'string') {
             $row.html('<span style="color:var(--text-dim)">' + line + '</span>');
@@ -1886,7 +1925,7 @@
     });
   }
   function loadPreviewImage(filePath, $frame) {
-    readPreviewData(filePath).then(function(resp) {
+    readPreviewData(filePath).then(function (resp) {
       $frame.find('.v-preview-loading, .preview-placeholder, .v-preview-img').remove();
       if (resp.ok && resp.data) {
         $('<img class="preview-img v-preview-img" alt="">')
@@ -1897,7 +1936,7 @@
       } else {
         $('<div class="preview-placeholder">').text('⚠ Failed to load preview').appendTo($frame);
       }
-    }).catch(function() {
+    }).catch(function () {
       $frame.find('.v-preview-loading').remove();
       $('<div class="preview-placeholder">').text('⚠ Failed to load preview').appendTo($frame);
     });
@@ -1905,14 +1944,14 @@
   function parseResultLines(resultText) {
     if (!resultText) return [];
     var lines = resultText.split('\n').filter(Boolean);
-    return lines.map(function(l) {
+    return lines.map(function (l) {
       var idx = l.indexOf(':');
       if (idx > 0 && idx < 40) {
         return {
           label: l.substring(0, idx + 1),
           value: l.substring(idx + 1).trim(),
           cls: l.toLowerCase().indexOf('pass') >= 0 ? 'ok' :
-               (l.toLowerCase().indexOf('fail') >= 0 || l.toLowerCase().indexOf('error') >= 0) ? 'err' : ''
+            (l.toLowerCase().indexOf('fail') >= 0 || l.toLowerCase().indexOf('error') >= 0) ? 'err' : ''
         };
       }
       return l;
@@ -1948,17 +1987,23 @@
     'DXT1_L2_RGB565', 'DXT1_L1_RGB565', 'DXT1_L2_PALETTED565', 'DXT1_L1_PALETTED565'
   ].concat(RAW_ASTC_BLOCKS.map(function (b) { return 'ASTC_' + b.toUpperCase(); }));
   function rawChipGeneration() {
-    // A single part picker (BT820, FT813…); chipRow() maps it to the lower-case
-    // generation key used everywhere else.
+    // Chip generation first, then the part (BT820, FT813…); chipRow() maps
+    // either to the lower-case generation key used everywhere else.
+    var gen = String($('#raw-chip-gen').val() || '').toUpperCase();
     var part = String($('#raw-chip-name').val() || '').toUpperCase();
-    var row = part ? chipRow(part) : null;
+    var row = gen ? chipRow(gen) : (part ? chipRow(part) : null);
     return row ? row[1] : '';
   }
   function rawIsBt82x() {
     return rawChipGeneration() === 'bt82x';
   }
   function rawFormatsForChip() {
-    if (!rawIsBt82x()) return RAW_LEGACY_FORMATS;
+    if (!rawIsBt82x()) {
+      if (String($('#raw-chip-name').val() || '').toUpperCase() === 'BT819') {
+        return RAW_LEGACY_FORMATS.concat(['ARGB8', 'RGB8', 'YCBCR']);
+      }
+      return RAW_LEGACY_FORMATS;
+    }
     return RAW_BT82X_FORMATS
       .concat(RAW_ASTC_BLOCKS.map(function (b) { return 'ASTC_' + b.toUpperCase(); }))
       .sort();
@@ -1975,7 +2020,11 @@
     var pick = list.indexOf(current) >= 0 ? current : (rawIsBt82x() ? 'ARGB8' : 'RGB565');
     $sel.val(pick);
   }
-  window.onRawChipPick = function () {
+  window.onRawChipPick = function (which) {
+    // Chip generation → EVE chip: picking one clears the other, like the
+    // converter's chip card.
+    if (which === 'gen') $('#raw-chip-name').val('');
+    else if (which === 'part') $('#raw-chip-gen').val('');
     populateRawFormats();
     var meta = tabMetaById('rawviewer');
     if (meta) { syncTabRun(meta); renderTabQueue(meta); }
@@ -2054,14 +2103,14 @@
       $('#r-preview-frame .preview-placeholder').text('⚠ Preview failed: ' + message);
     });
   }
-  $(function() {
+  $(function () {
     var $valInput = $('#val-input');
     if ($valInput.length) $valInput.on('input', onValFileInput);
     var $jpegInput = $('#jpegopt-input');
     if ($jpegInput.length) $jpegInput.on('input', onJpegOptFileInput);
     var $rawInput = $('#raw-input');
     if ($rawInput.length) $rawInput.on('input', onRawFileInput);
-    $('.v-detail-toggle').on('click', function() {
+    $('.v-detail-toggle').on('click', function () {
       var $detail = $(this).closest('.v-result-badge').find('.v-result-detail');
       if (!$detail.length) return;
       var isHidden = $detail.css('display') === 'none';
@@ -2070,18 +2119,24 @@
     });
   });
   var TAB_META = [
-    { id: 'validator', list: '#val-list', field: '#val-input', wrap: '#val-progress-fill', count: '#val-count',
+    {
+      id: 'validator', list: '#val-list', field: '#val-input', wrap: '#val-progress-fill', count: '#val-count',
       empty: '#val-empty', clear: '#btn-val-clear', run: '#btn-validate',
       frame: 'v-preview-frame', badge: 'v-result-badge', busy: 'validating', verb: 'Validating',
-      okState: 'pass', doneText: 'Validation Passed', failText: 'Validation Failed' },
-    { id: 'jpegopt', list: '#jpegopt-list', field: '#jpegopt-input', wrap: '#jpeg-progress-fill', count: '#jpegopt-count',
+      okState: 'pass', doneText: 'Validation Passed', failText: 'Validation Failed'
+    },
+    {
+      id: 'jpegopt', list: '#jpegopt-list', field: '#jpegopt-input', wrap: '#jpeg-progress-fill', count: '#jpegopt-count',
       empty: '#jpegopt-empty', clear: '#btn-jpegopt-clear', run: '#btn-jpegopt-run',
       frame: 'j-preview-frame', badge: 'j-result-badge', busy: 'optimizing', verb: 'Optimizing',
-      okState: 'success', doneText: 'Optimization Complete', failText: 'Optimization Failed' },
-    { id: 'rawviewer', list: '#raw-list', field: '#raw-input', wrap: '#raw-progress-fill', count: '#raw-count',
+      okState: 'success', doneText: 'Optimization Complete', failText: 'Optimization Failed'
+    },
+    {
+      id: 'rawviewer', list: '#raw-list', field: '#raw-input', wrap: '#raw-progress-fill', count: '#raw-count',
       empty: '#raw-empty', clear: '#btn-raw-clear', run: '#btn-raw-run', pairs: true,
       frame: 'r-preview-frame', badge: 'r-result-badge', busy: 'converting', verb: 'Converting',
-      okState: 'success', doneText: 'Conversion Complete', failText: 'Conversion Failed', rawPreview: true }
+      okState: 'success', doneText: 'Conversion Complete', failText: 'Conversion Failed', rawPreview: true
+    }
   ];
   var TAB_FOLDER_EXTS = {
     validator: IMAGE_EXTENSIONS,
@@ -2113,24 +2168,24 @@
   }
   function rawPairFor(path) {
     var isIndex = IDX_RE.test(path);
-    var isLut   = LUT_RE.test(path);
+    var isLut = LUT_RE.test(path);
     if (!isIndex && !isLut && !rawPaletted()) return null;
 
     var partner = rawPairs[path] ||
-                  (isIndex ? path.replace(IDX_RE, '_lut.raw')
-                          : path.replace(LUT_RE, '_index.raw'));
+      (isIndex ? path.replace(IDX_RE, '.lut.raw')
+        : path.replace(LUT_RE, '.index.raw'));
 
     var lutPath = isLut ? path : partner;
 
     var resolved = false;
     if (partner) {
       if (tabQueues.rawviewer.indexOf(partner) >= 0) resolved = true;
-      else if (rawPairs[path] || rawPairs[partner])   resolved = true;
+      else if (rawPairs[path] || rawPairs[partner]) resolved = true;
     }
 
     return {
       partner: partner || '',
-      lut:     lutPath  || '',
+      lut: lutPath || '',
       pending: !resolved
     };
   }
@@ -2147,6 +2202,7 @@
     var $row = $(meta.field).closest('.app-main');
     if (!$row.length) return;
     var empty = tabQueues[meta.id].length === 0 && !$.trim(String($(meta.field).val() || '')).length;
+    if (!empty) $row.addClass('is-options-shown');
     $row.toggleClass('is-queue-empty', empty && !$row.hasClass('is-options-shown'));
   }
   function tabRowHtml(path) {
@@ -2168,8 +2224,9 @@
       var width = Number($('#raw-width').val());
       var height = Number($('#raw-height').val());
       return !(Number.isInteger(width) && width > 0 &&
-               Number.isInteger(height) && height > 0 &&
-               !!String($('#raw-format').val() || ''));
+        Number.isInteger(height) && height > 0 &&
+        !!rawChipGeneration() &&
+        !!String($('#raw-format').val() || ''));
     }
     return false;
   }
@@ -2205,7 +2262,7 @@
         + '<span class="file-item-thumb-placeholder">\uD83C\uDFA8</span>'
         + '<span class="file-item-name">'
         + (pair.lut ? esc(truncateLeft(pair.lut, 60))
-                    : 'No palette file \u2014 click to choose')
+          : 'No palette file \u2014 click to choose')
         + '</span>'
         + '</div></div>';
     }
@@ -2215,7 +2272,7 @@
     if (meta.count) $(meta.count).text('(' + q.length + ')');
     if (meta.empty) $(meta.empty).toggleClass('hidden', q.length > 0);
     if (meta.clear) $(meta.clear).toggleClass('hidden', q.length === 0);
-    if (meta.run)   syncTabRun(meta);
+    if (meta.run) syncTabRun(meta);
 
     $list.find('.file-item-remove').on('click', function () {
       removeTabFile(meta.id, $(this).attr('data-path'));
@@ -2233,6 +2290,7 @@
   function removeTabFile(id, path) {
     var meta = tabMetaById(id);
     if (!meta) return;
+    $(meta.field).closest('.app-main').addClass('is-options-shown');
     var q = tabQueues[id];
     var idx = q.indexOf(path);
     if (idx >= 0) q.splice(idx, 1);
@@ -2250,7 +2308,12 @@
     for (var i = 0; i < paths.length; i++) {
       var p = String(paths[i] || '');
       if (!p) continue;
-      var partnerOf = meta.pairs && LUT_RE.test(p) ? p.replace(LUT_RE, '_index.raw') : '';
+      var partnerOf = '';
+      if (meta.pairs && LUT_RE.test(p)) {
+        var dotIdx = p.replace(LUT_RE, '.index.raw');
+        var underIdx = p.replace(LUT_RE, '_index.raw');
+        partnerOf = tabQueues[meta.id].indexOf(dotIdx) >= 0 ? dotIdx : underIdx;
+      }
       if (partnerOf && tabQueues[meta.id].indexOf(partnerOf) >= 0) {
         rawPairs[partnerOf] = p;
         changed = true;
@@ -2289,7 +2352,9 @@
   window.tabClearQueue = function (id) {
     var meta = tabMetaById(id);
     if (!meta) return;
+    $(meta.field).closest('.app-main').addClass('is-options-shown');
     tabQueues[id] = [];
+    if (id === 'rawviewer') rawPairs = {};
     $(meta.field).val('');
     setResultBadge(meta.badge, 'hidden');
     setPreviewState(meta.frame, null, null);
@@ -2370,14 +2435,14 @@
       lines: parseResultLines(text)
     };
   }
-  window.runValidate = function() {
+  window.runValidate = function () {
     runTabQueue(TAB_META[0], function (path) {
       return API_EAB_runCli({ command: 'validate', args: ['-i', path] });
     }, function (resp) {
       return cliVerdict(resp);
     });
   };
-  window.runJpegOptimize = function() {
+  window.runJpegOptimize = function () {
     var $out = $('#jpegopt-outdir');
     var outdir = ($out.length ? $out.val() : '') || '.';
     var quality = parseInt($('#jpegopt-quality').val()) || 75;
@@ -2390,7 +2455,7 @@
       return cliVerdict(resp);
     });
   };
-  window.runRawViewer = function() {
+  window.runRawViewer = function () {
     var width = parseInt($('#raw-width').val()) || 0;
     var height = parseInt($('#raw-height').val()) || 0;
     if (!width || !height) { showError('Please enter width and height.'); return; }
@@ -2446,11 +2511,123 @@
     });
   }
   var SAMPLE_SETS = {
-    'bt82x':  { folder: 'BT82X',  files: ['case.png', 'ducati.png', 'lighthouse.jpg', 'colorful-finch.jpg'] },
+    'bt82x': { folder: 'BT82X', files: ['case.png', 'ducati.png', 'lighthouse.jpg', 'colorful-finch.jpg'] },
     legacy: { folder: 'Legacy', files: ['case.png', 'ducati.png', 'lighthouse.jpg', 'red-panda.bmp'] }
   };
+  // Raw Viewer samples: samples/raw_viewer_samples/ holds one .raw per chip x
+  // format (flat folder). Generated from that folder's manifest.csv.
+  var RAW_SAMPLE_FOLDER = 'raw_viewer_samples';
+  var RAW_SAMPLES = {
+    FT80X: {
+      ARGB1555: ['ducati_FT80X_ARGB1555_288x163.raw', 288, 163],
+      ARGB2: ['ducati_FT80X_ARGB2_288x163.raw', 288, 163],
+      ARGB4: ['ducati_FT80X_ARGB4_288x163.raw', 288, 163],
+      DXT1_L1_RGB565: ['ducati_FT80X_DXT1_L1_RGB565_288x164_DXT1_L1.raw', 288, 164],
+      L1: ['ducati_FT80X_L1_288x163.raw', 288, 163],
+      L4: ['ducati_FT80X_L4_288x163.raw', 288, 163],
+      L8: ['ducati_FT80X_L8_288x163.raw', 288, 163],
+      PALETTED: ['ducati_FT80X_PALETTED_288x163.index.raw', 288, 163],
+      RGB332: ['ducati_FT80X_RGB332_288x163.raw', 288, 163],
+      RGB565: ['ducati_FT80X_RGB565_288x163.raw', 288, 163]
+    },
+    FT81X: {
+      ARGB1555: ['ducati_FT81X_ARGB1555_288x163.raw', 288, 163],
+      ARGB2: ['ducati_FT81X_ARGB2_288x163.raw', 288, 163],
+      ARGB4: ['ducati_FT81X_ARGB4_288x163.raw', 288, 163],
+      DXT1_L1_PALETTED565: ['ducati_FT81X_DXT1_L1_PALETTED565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L1_RGB565: ['ducati_FT81X_DXT1_L1_RGB565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L2_PALETTED565: ['ducati_FT81X_DXT1_L2_PALETTED565_288x164_DXT1_L2.raw', 288, 164],
+      DXT1_L2_RGB565: ['ducati_FT81X_DXT1_L2_RGB565_288x164_DXT1_L2.raw', 288, 164],
+      L1: ['ducati_FT81X_L1_288x163.raw', 288, 163],
+      L2: ['ducati_FT81X_L2_288x163.raw', 288, 163],
+      L4: ['ducati_FT81X_L4_288x163.raw', 288, 163],
+      L8: ['ducati_FT81X_L8_288x163.raw', 288, 163],
+      PALETTED4444: ['ducati_FT81X_PALETTED4444_288x163.index.raw', 288, 163],
+      PALETTED565: ['ducati_FT81X_PALETTED565_288x163.index.raw', 288, 163],
+      PALETTED8: ['ducati_FT81X_PALETTED8_288x163.index.raw', 288, 163],
+      RGB332: ['ducati_FT81X_RGB332_288x163.raw', 288, 163],
+      RGB565: ['ducati_FT81X_RGB565_288x163.raw', 288, 163]
+    },
+    BT88X: {
+      ARGB1555: ['ducati_BT88X_ARGB1555_288x163.raw', 288, 163],
+      ARGB2: ['ducati_BT88X_ARGB2_288x163.raw', 288, 163],
+      ARGB4: ['ducati_BT88X_ARGB4_288x163.raw', 288, 163],
+      DXT1_L1_PALETTED565: ['ducati_BT88X_DXT1_L1_PALETTED565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L1_RGB565: ['ducati_BT88X_DXT1_L1_RGB565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L2_PALETTED565: ['ducati_BT88X_DXT1_L2_PALETTED565_288x164_DXT1_L2.raw', 288, 164],
+      DXT1_L2_RGB565: ['ducati_BT88X_DXT1_L2_RGB565_288x164_DXT1_L2.raw', 288, 164],
+      L1: ['ducati_BT88X_L1_288x163.raw', 288, 163],
+      L2: ['ducati_BT88X_L2_288x163.raw', 288, 163],
+      L4: ['ducati_BT88X_L4_288x163.raw', 288, 163],
+      L8: ['ducati_BT88X_L8_288x163.raw', 288, 163],
+      PALETTED4444: ['ducati_BT88X_PALETTED4444_288x163.index.raw', 288, 163],
+      PALETTED565: ['ducati_BT88X_PALETTED565_288x163.index.raw', 288, 163],
+      PALETTED8: ['ducati_BT88X_PALETTED8_288x163.index.raw', 288, 163],
+      RGB332: ['ducati_BT88X_RGB332_288x163.raw', 288, 163],
+      RGB565: ['ducati_BT88X_RGB565_288x163.raw', 288, 163]
+    },
+    BT81X: {
+      ARGB1555: ['ducati_BT81X_ARGB1555_288x163.raw', 288, 163],
+      ARGB2: ['ducati_BT81X_ARGB2_288x163.raw', 288, 163],
+      ARGB4: ['ducati_BT81X_ARGB4_288x163.raw', 288, 163],
+      ASTC_10X10: ['ducati_BT81X_ASTC_10X10_290x170.raw', 290, 170],
+      ASTC_10X5: ['ducati_BT81X_ASTC_10X5_290x165.raw', 290, 165],
+      ASTC_10X6: ['ducati_BT81X_ASTC_10X6_290x168.raw', 290, 168],
+      ASTC_10X8: ['ducati_BT81X_ASTC_10X8_290x168.raw', 290, 168],
+      ASTC_12X10: ['ducati_BT81X_ASTC_12X10_288x170.raw', 288, 170],
+      ASTC_12X12: ['ducati_BT81X_ASTC_12X12_288x168.raw', 288, 168],
+      ASTC_4X4: ['ducati_BT81X_ASTC_4X4_288x164.raw', 288, 164],
+      ASTC_5X4: ['ducati_BT81X_ASTC_5X4_290x164.raw', 290, 164],
+      ASTC_5X5: ['ducati_BT81X_ASTC_5X5_290x165.raw', 290, 165],
+      ASTC_6X5: ['ducati_BT81X_ASTC_6X5_288x165.raw', 288, 165],
+      ASTC_6X6: ['ducati_BT81X_ASTC_6X6_288x168.raw', 288, 168],
+      ASTC_8X5: ['ducati_BT81X_ASTC_8X5_288x165.raw', 288, 165],
+      ASTC_8X6: ['ducati_BT81X_ASTC_8X6_288x168.raw', 288, 168],
+      ASTC_8X8: ['ducati_BT81X_ASTC_8X8_288x168.raw', 288, 168],
+      DXT1_L1_PALETTED565: ['ducati_BT81X_DXT1_L1_PALETTED565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L1_RGB565: ['ducati_BT81X_DXT1_L1_RGB565_288x164_DXT1_L1.raw', 288, 164],
+      DXT1_L2_PALETTED565: ['ducati_BT81X_DXT1_L2_PALETTED565_288x164_DXT1_L2.raw', 288, 164],
+      DXT1_L2_RGB565: ['ducati_BT81X_DXT1_L2_RGB565_288x164_DXT1_L2.raw', 288, 164],
+      L1: ['ducati_BT81X_L1_288x163.raw', 288, 163],
+      L2: ['ducati_BT81X_L2_288x163.raw', 288, 163],
+      L4: ['ducati_BT81X_L4_288x163.raw', 288, 163],
+      L8: ['ducati_BT81X_L8_288x163.raw', 288, 163],
+      PALETTED4444: ['ducati_BT81X_PALETTED4444_288x163.index.raw', 288, 163],
+      PALETTED565: ['ducati_BT81X_PALETTED565_288x163.index.raw', 288, 163],
+      PALETTED8: ['ducati_BT81X_PALETTED8_288x163.index.raw', 288, 163],
+      RGB332: ['ducati_BT81X_RGB332_288x163.raw', 288, 163],
+      RGB565: ['ducati_BT81X_RGB565_288x163.raw', 288, 163]
+    },
+    BT82X: {
+      ARGB6: ['ducati_BT82X_ARGB6_288x163.raw', 288, 163],
+      ARGB8: ['ducati_BT82X_ARGB8_288x163.raw', 288, 163],
+      ASTC_10X10: ['ducati_BT82X_ASTC_10X10_288x163.raw', 288, 163],
+      ASTC_10X5: ['ducati_BT82X_ASTC_10X5_288x163.raw', 288, 163],
+      ASTC_10X6: ['ducati_BT82X_ASTC_10X6_288x163.raw', 288, 163],
+      ASTC_10X8: ['ducati_BT82X_ASTC_10X8_288x163.raw', 288, 163],
+      ASTC_12X10: ['ducati_BT82X_ASTC_12X10_288x163.raw', 288, 163],
+      ASTC_12X12: ['ducati_BT82X_ASTC_12X12_288x163.raw', 288, 163],
+      ASTC_4X4: ['ducati_BT82X_ASTC_4X4_288x163.raw', 288, 163],
+      ASTC_5X4: ['ducati_BT82X_ASTC_5X4_288x163.raw', 288, 163],
+      ASTC_5X5: ['ducati_BT82X_ASTC_5X5_288x163.raw', 288, 163],
+      ASTC_6X5: ['ducati_BT82X_ASTC_6X5_288x163.raw', 288, 163],
+      ASTC_6X6: ['ducati_BT82X_ASTC_6X6_288x163.raw', 288, 163],
+      ASTC_8X5: ['ducati_BT82X_ASTC_8X5_288x163.raw', 288, 163],
+      ASTC_8X6: ['ducati_BT82X_ASTC_8X6_288x163.raw', 288, 163],
+      ASTC_8X8: ['ducati_BT82X_ASTC_8X8_288x163.raw', 288, 163],
+      LA1: ['ducati_BT82X_LA1_288x163.raw', 288, 163],
+      LA2: ['ducati_BT82X_LA2_288x163.raw', 288, 163],
+      LA4: ['ducati_BT82X_LA4_288x163.raw', 288, 163],
+      LA8: ['ducati_BT82X_LA8_288x163.raw', 288, 163],
+      PALETTEDARGB8: ['ducati_BT82X_PALETTEDARGB8_288x163.index.raw', 288, 163],
+      RGB6: ['ducati_BT82X_RGB6_288x163.raw', 288, 163],
+      RGB8: ['ducati_BT82X_RGB8_288x163.raw', 288, 163],
+      YCBCR: ['ducati_BT82X_YCBCR_288x164.raw', 288, 164]
+    }
+  };
+  // Fallback for installs that predate samples/raw_viewer_samples/.
   var RAW_SAMPLE_SETS = {
-    'bt82x':  { folder: 'BT82X',  name: 'ducati_288x163_ARGB8.raw',  format: 'ARGB8',  width: 288, height: 163 },
+    'bt82x': { folder: 'BT82X', name: 'ducati_288x163_ARGB8.raw', format: 'ARGB8', width: 288, height: 163 },
     legacy: { folder: 'Legacy', name: 'ducati_288x163_RGB565.raw', format: 'RGB565', width: 288, height: 163 }
   };
   var sampleRel = {};
@@ -2492,17 +2669,101 @@
       return resp.path;
     }, function () { return ''; });
   }
+  // Chip part (BT815, FT813…) → the RAW_SAMPLES key, or '' when unknown.
+  // chipRow() collapses FT81x/BT88x into one group, so map the generation back
+  // to the catalog key the manifest uses.
+  var RAW_SAMPLE_CHIP_BY_GEN = {
+    ft80x: 'FT80X', ft81x: 'FT81X', bt88x: 'BT88X', bt81x: 'BT81X', bt82x: 'BT82X'
+  };
+  function rawSampleChip() {
+    var gen = String($('#raw-chip-gen').val() || '').toUpperCase();
+    var part = String($('#raw-chip-name').val() || '').toUpperCase();
+    var row = gen ? chipRow(gen) : (part ? chipRow(part) : null);
+    if (!row) return '';
+    var key = RAW_SAMPLE_CHIP_BY_GEN[row[1]] || '';
+    return RAW_SAMPLES[key] ? key : '';
+  }
+  // The sample for the picked chip + format, plus any companion layers the
+  // viewer needs (paletted LUT, DXT1 color/index/lut).
+  function rawSampleFiles(chip, fmt) {
+    var entry = RAW_SAMPLES[chip] && RAW_SAMPLES[chip][fmt];
+    if (!entry) return null;
+    var name = entry[0];
+    var files = [name];
+    var stem = name.replace(/\.index\.raw$/i, '').replace(/\.raw$/i, '');
+    if (/\.index\.raw$/i.test(name)) {
+      files.push(stem + '.lut.raw');
+    } else if (/_DXT1_(?:L1|L2)\.raw$/i.test(name)) {
+      var base = name.replace(/_DXT1_(?:L1|L2)\.raw$/i, '');
+      if (fmt.indexOf('PALETTED') >= 0) {
+        files.push(base + '_DXT1_PAL565.index.raw', base + '_DXT1_PAL565.lut.raw');
+      } else {
+        files.push(base + '_DXT1_RGB565.raw');
+      }
+    }
+    return { name: name, files: files, width: entry[1], height: entry[2] };
+  }
+  function loadRawSampleFile(name) {
+    var rel = 'samples/' + RAW_SAMPLE_FOLDER + '/' + name;
+    return readExtFile(rel).then(function (resp) {
+      if (!resp || !resp.ok || !resp.path) return '';
+      sampleRel[resp.path] = rel;
+      return resp.path;
+    }, function () { return ''; });
+  }
   function loadSamples(tab) {
+    if (tab === 'converter') {
+      if (typeof window.clearFiles === 'function') window.clearFiles();
+    } else if (tab === 'validator' || tab === 'jpegopt' || tab === 'rawviewer') {
+      if (typeof window.tabClearQueue === 'function') window.tabClearQueue(tab);
+    }
     if (tab === 'rawviewer') {
-      var rawKey = rawIsBt82x() ? 'bt82x' : 'legacy';
-      var rawSpec = RAW_SAMPLE_SETS[rawKey];
-      loadRawSample(rawKey).then(function (path) {
-        if (!path) { showError('Could not load the sample raw bitmap.'); markSampleFail(tab); return; }
-        populateRawFormats(rawSpec.format);
-        $('#raw-width').val(String(rawSpec.width)).trigger('input');
-        $('#raw-height').val(String(rawSpec.height)).trigger('input');
-        addTabFiles(tabMetaById('rawviewer'), [path]);
-        $('#raw-input').val(path).trigger('input');
+      var chip = rawSampleChip();
+      var fmt = String($('#raw-format').val() || '').toUpperCase();
+      var spec = chip ? rawSampleFiles(chip, fmt) : null;
+      if (chip && !spec) {
+        // The picked format has no sample for this chip — switch to one that
+        // does instead of silently loading a different chip's bitmap.
+        var avail = Object.keys(RAW_SAMPLES[chip]);
+        if (avail.length) {
+          fmt = avail.indexOf('ARGB8') >= 0 ? 'ARGB8' : avail[0];
+          populateRawFormats(fmt);
+          spec = rawSampleFiles(chip, fmt);
+        }
+      }
+      if (!spec) {
+        // No catalog entry at all — fall back to the single legacy sample so
+        // the button still does something useful on an old install.
+        var rawKey = rawIsBt82x() ? 'bt82x' : 'legacy';
+        var rawSpec = RAW_SAMPLE_SETS[rawKey];
+        loadRawSample(rawKey).then(function (path) {
+          if (!path) { showError('Could not load the sample raw bitmap.'); markSampleFail(tab); return; }
+          tabQueues.rawviewer = [];
+          rawPairs = {};
+          $('#raw-input').val('');
+          populateRawFormats(rawSpec.format);
+          $('#raw-width').val(String(rawSpec.width)).trigger('input');
+          $('#raw-height').val(String(rawSpec.height)).trigger('input');
+          addTabFiles(tabMetaById('rawviewer'), [path]);
+          $('#raw-input').val(path).trigger('input');
+        });
+        return;
+      }
+      Promise.all(spec.files.map(loadRawSampleFile)).then(function (paths) {
+        if (!paths[0]) {
+          showError('Could not load the sample raw bitmap — expected samples/' +
+            RAW_SAMPLE_FOLDER + '/' + spec.name + ' next to the extension.');
+          markSampleFail(tab);
+          return;
+        }
+        tabQueues.rawviewer = [];
+        rawPairs = {};
+        $('#raw-input').val('');
+        $('#raw-width').val(String(spec.width)).trigger('input');
+        $('#raw-height').val(String(spec.height)).trigger('input');
+        var queuePaths = /_DXT1_(?:L1|L2)\.raw$/i.test(spec.name) ? [paths[0]] : paths.filter(Boolean);
+        addTabFiles(tabMetaById('rawviewer'), queuePaths);
+        $('#raw-input').val(paths[0]).trigger('input');
       });
       return;
     }
@@ -2516,8 +2777,13 @@
         var $picker = $('#chip-one');
         if ($picker.length) $picker.val('group:' + set.key).trigger('change');
       }
-      if (tab === 'converter') { addImages(set.paths); return; }
+      if (tab === 'converter') {
+        if (typeof window.clearFiles === 'function') window.clearFiles();
+        addImages(set.paths);
+        return;
+      }
       if (tab === 'validator' || tab === 'jpegopt') {
+        if (typeof window.tabClearQueue === 'function') window.tabClearQueue(tab);
         var exts = TAB_FOLDER_EXTS[tab] || [];
         addTabFiles(tabMetaById(tab), set.paths.filter(function (p) {
           return !exts.length || exts.indexOf(String(p).split('.').pop().toLowerCase()) >= 0;

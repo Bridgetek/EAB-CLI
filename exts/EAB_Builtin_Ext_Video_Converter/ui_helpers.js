@@ -85,6 +85,7 @@ function addInputFiles(paths) {
   updateBatchState();
 }
 function removeInputFile(index) {
+  $('.app-main').first().addClass('is-options-shown');
   state.videoFiles.splice(index, 1);
   setCurrentInput(index >= state.videoFiles.length ? state.videoFiles.length - 1 : index);
   updateBatchState();
@@ -186,7 +187,10 @@ function syncQueueChrome() {
   const $clear = $('#btn-clear-all');
   if ($clear.length) $clear.toggleClass('hidden', n === 0);
   const $row = $('.app-main').first();
-  if ($row.length) $row.toggleClass('is-queue-empty', n === 0 && !$row.hasClass('is-options-shown'));
+  if ($row.length) {
+    if (n > 0) $row.addClass('is-options-shown');
+    $row.toggleClass('is-queue-empty', n === 0 && !$row.hasClass('is-options-shown'));
+  }
 }
 window.eabSyncQueueChrome = syncQueueChrome;
 function setTotalProgress(pct) {
@@ -322,15 +326,19 @@ function pickOutputFile() {
     }
   }).catch(err => showError('Failed to open folder picker: ' + err));
 }
-function syncOutputPath(fullPath) {
-  const value = (fullPath || '').trim();
-  $('#output-path').val(value);
+function onOutputPathInput() {
+  const value = ($('#output-path').val() || '').trim();
   const idx = Math.max(value.lastIndexOf('\\'), value.lastIndexOf('/'));
-  $('#output-dir').val(idx > 0 ? value.slice(0, idx) : '.');
+  $('#output-dir').val(idx === 0 ? '/' : idx > 0 ? value.slice(0, idx) : '.');
   $('#output-name').val(idx >= 0 ? value.slice(idx + 1) : value);
   updateConvertEnabled();
 }
+function syncOutputPath(fullPath) {
+  $('#output-path').val((fullPath || '').trim());
+  onOutputPathInput();
+}
 function clearAllInputs() {
+  $('.app-main').first().addClass('is-options-shown');
   state.videoFiles.length = 0;
   for (const p in rowMeta) delete rowMeta[p];
   setCurrentInput(0);

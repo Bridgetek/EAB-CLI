@@ -56,40 +56,27 @@ code {
   height: 100%;
   min-height: 0 !important;
   max-width: none !important;
-  padding: var(--eab-space-5) !important;
-  gap: var(--eab-space-5) !important;
-}
-.app-header {
-  display: block !important;
-  flex: 0 0 auto;
   padding: 0 !important;
-  margin: 0 0 var(--eab-space-2) !important;
-  text-align: center;
-}
-.app-header h1 {
-  display: none !important;
-}
-.app-header p {
-  margin: 0 !important;
-  max-width: 90ch;
-  color: var(--text-dim);
+  gap: 0 !important;
 }
 .tab-bar {
   display: flex;
   flex: 0 0 auto;
-  gap: 4px;
-  margin: 10px 0 0;
+  gap: 0;
+  margin: 0;
+  padding: 0;
   border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
 }
 .tab-btn {
-  padding: 8px 12px;
+  padding: 7px 14px;
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--text-dim);
-  font-size: var(--eab-control-font-size);
+  font-size: var(--eab-control-font-size, 13px);
   cursor: pointer;
-  transition: color var(--eab-dur, 0.15s) var(--eab-ease, ease);
+  transition: color var(--eab-dur, 0.15s) var(--eab-ease, ease), background-color var(--eab-dur, 0.15s) var(--eab-ease, ease);
 }
 .tab-btn:hover {
   color: var(--text);
@@ -97,6 +84,7 @@ code {
 .tab-btn.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+  background: rgba(74, 158, 255, 0.12);
   font-weight: 600;
 }
 .tab-content:not(.active) {
@@ -105,7 +93,7 @@ code {
 .tab-content.active {
   display: flex;
   flex-direction: column;
-  gap: var(--eab-space-3);
+  gap: 0;
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -164,13 +152,23 @@ code {
 .about-heading strong {
   color: var(--text);
 }
-.about-frame {
+.about-frame,
+.guide-frame {
   display: block;
+  flex: 1 1 auto;
   width: 100%;
-  height: min(46vh, 400px);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  height: 100%;
+  min-height: 0;
+  border: 0;
   background: #fff;
+}
+.guide-status {
+  padding: 16px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.guide-status.error {
+  color: var(--error);
 }
 .toolbar {
   display: flex;

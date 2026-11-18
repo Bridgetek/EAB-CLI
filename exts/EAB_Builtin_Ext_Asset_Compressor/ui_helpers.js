@@ -35,10 +35,12 @@ function addFiles(paths) {
   updateBatchState();
 }
 function removeInputFile(index) {
+  $('.app-main').addClass('is-options-shown');
   state.inputFiles.splice(index, 1);
   updateBatchState();
 }
 function clearAllInputs() {
+  $('.app-main').addClass('is-options-shown');
   state.inputFiles.length = 0;
   updateBatchState();
 }

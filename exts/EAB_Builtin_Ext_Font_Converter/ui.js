@@ -182,7 +182,7 @@ const CHIP_TABLE = {
   FT800: 'ft80x', FT801: 'ft80x',
   FT810: 'ft81x', FT811: 'ft81x', FT812: 'ft81x', FT813: 'ft81x',
   BT880: 'bt88x', BT881: 'bt88x', BT882: 'bt88x', BT883: 'bt88x',
-  BT815: 'bt81x', BT816: 'bt81x', BT817: 'bt81x', BT818: 'bt81x',
+  BT815: 'bt81x', BT816: 'bt81x', BT817: 'bt81x', BT818: 'bt81x', BT819: 'bt81x',
   BT820: 'bt82x',
 };
 const CHIP_GEN = { FT80X: 'ft80x', FT81X: 'ft81x', BT88X: 'bt88x', BT81X: 'bt81x', BT82X: 'bt82x' };
@@ -1003,6 +1003,7 @@ function receiveLastConversion() {
   syncEncoderRun();
 }
 function clearEncoderInput() {
+  $('#tab-encoder .app-row').addClass('is-options-shown');
   $('#enc-input, #enc-json').val('');
   const $fill = $('#enc-progress-fill');
   if ($fill.length) $fill.css('width', '0%');
@@ -1010,6 +1011,7 @@ function clearEncoderInput() {
   if (typeof window.eabSyncQueueChrome === 'function') window.eabSyncQueueChrome();
 }
 function resetEncoder() {
+  $('#tab-encoder .app-row').addClass('is-options-shown');
   $('#enc-input, #enc-json, #enc-unknown').val('');
   const $out = $('#enc-output');
   if ($out.length) $out.val('.');
@@ -1403,6 +1405,7 @@ resetConvertState = function () {
 };
 updateBatchState();
 function clearAllInputs() {
+  $('#tab-converter .app-row').addClass('is-options-shown');
   fontFiles.length = 0;
   setCurrentFont(0);
   updateBatchState();
@@ -1725,6 +1728,7 @@ function eabSampleFail(ev) {
 }
 function eabSampleQueue(tab, paths) {
   if (tab === 'encoder') {
+    if (typeof clearEncoderInput === 'function') clearEncoderInput();
     var json = paths.filter(function (p) { return /[.]json$/i.test(p); })[0] || '';
     var text = paths.filter(function (p) { return /encode.*[.]txt$/i.test(p); })[0]
       || paths.filter(function (p) { return /[.]txt$/i.test(p); })[0] || '';
@@ -1734,6 +1738,7 @@ function eabSampleQueue(tab, paths) {
     if (typeof syncEncoderRun === 'function') syncEncoderRun();
     return;
   }
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -1747,6 +1752,11 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (tab === 'encoder') {
+    if (typeof clearEncoderInput === 'function') clearEncoderInput();
+  } else {
+    if (typeof clearAllInputs === 'function') clearAllInputs();
+  }
   var group = eabSampleGroup();
   var folder = conf.folders[group] || SAMPLE_FOLDERS[SAMPLE_DEFAULT_GROUP];
   var base = 'samples/' + folder + '/';

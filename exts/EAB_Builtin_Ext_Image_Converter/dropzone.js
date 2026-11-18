@@ -71,6 +71,13 @@
       markZones(false);
     });
     API_EAB_onDrop(function (msg) { applyDrop(msg.paths); });
+    window.addEventListener('message', function (ev) {
+      var d = ev && ev.data;
+      if (d && d.type === 'eab-context-action' && d.id === 'validate') {
+        var btn = document.querySelector('.tab-btn[data-tab="validator"]');
+        if (btn) btn.click();
+      }
+    });
   }
   function setProgress(state, percent, text) {
     var $status = $('.progress-status');

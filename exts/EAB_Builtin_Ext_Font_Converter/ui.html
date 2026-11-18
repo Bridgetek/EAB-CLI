@@ -26,12 +26,12 @@
             <div class="card-title"><span>📂 Input Fonts <span id="file-count">(0)</span></span>
               <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickFontFiles()">＋ Add files…</button>
               <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="pickFontFolder()">📁 Add folder</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="converter" onclick="eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="converter" onclick="clearAllInputs(); eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
               <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
             </div>
             <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
                  tabindex="0" role="button" aria-label="Drop fonts or browse">
-              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="converter" onclick="eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="converter" onclick="clearAllInputs(); eabUseSample('converter', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
               <span class="dz-icon">🔤</span>
               <div>Drop one or more font files here</div>
               <div>or paste a file here from your clipboard</div>
@@ -141,7 +141,7 @@
                 <option value="FT80X">FT80x · FT800 / FT801</option>
                 <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
                 <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
-                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818 / BT819</option>
                 <option value="BT82X" selected>BT82x · BT820</option>
               </select>
               </div>
@@ -163,6 +163,7 @@
                   <option value="BT816">BT816</option>
                   <option value="BT817">BT817</option>
                   <option value="BT818">BT818</option>
+                  <option value="BT819">BT819</option>
                   <option value="BT820" selected>BT820</option>
                 </select>
               </div>
@@ -337,7 +338,7 @@
             </div>
             <div class="drop-zone align-items-center flex-column justify-content-center" id="enc-drop-zone" data-for="enc-input" data-picker="btn-enc-add-files"
                  tabindex="0" role="button" aria-label="Drop a UTF-8 text file or browse">
-              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="encoder" onclick="eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+              <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="encoder" onclick="clearEncoderInput(); eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
               <span class="dz-icon">🔡</span>
               <div>Drop a UTF-8 text file here</div>
               <div>or paste a file here from your clipboard</div>
@@ -371,7 +372,7 @@
                   <input id="enc-output" type="text" value="." placeholder="Output folder…" class="input-field is-path form-control" spellcheck="false">
                   <button id="btn-enc-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickEncoderOut()">Browse…</button>
                   <button id="btn-enc-open-output" class="btn btn-secondary btn-sm" type="button" onclick="window.eabOpenOutputFolder?.()" title="Open the output folder in the file manager">📂</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="encoder" onclick="eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="encoder" onclick="clearEncoderInput(); eabUseSample('encoder', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
                 </div>
               </div>
             </div>

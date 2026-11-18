@@ -19,11 +19,11 @@
         <div class="card col-12 col-sm-12 col-md-12" id="manifest-card" data-eab-role="input">
           <div class="card-title"><span>💾 Manifest</span>
             <button id="btn-pick-manifest" class="btn btn-secondary btn-sm" type="button" onclick="genLoadFrom()">📄 Choose manifest…</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="genClearAll(); eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
           </div>
           <div class="drop-zone align-items-center flex-column justify-content-center" id="manifest-drop-zone" data-for="gen-path" data-picker="btn-pick-manifest"
                tabindex="0" role="button" aria-label="Drop a manifest JSON or browse">
-            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="genClearAll(); eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
             <span class="dz-icon">📄</span>
             <div>Drop a manifest JSON here</div>
             <div>or paste a file here from your clipboard</div>
@@ -40,7 +40,7 @@
               <button id="btn-add-file" class="btn btn-secondary btn-sm" type="button" onclick="genAddFile()">＋ Add files…</button>
               <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="genAddFolder()">📁 Add folder</button>
               <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" onclick="genClearAll()" title="Remove every entry">🗑 Clear all</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="flashgen" onclick="genClearAll(); eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button>
             </div>
             <label class="check-inline" title="Name every entry &lt;number&gt;_&lt;file&gt;_&lt;format&gt; from what the row already says">
               <input type="checkbox" id="gen-autoname" checked onchange="onAutoNameChange()">
@@ -49,7 +49,7 @@
           </div>
           <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="gen-entries" data-picker="btn-add-file"
                tabindex="0" role="button" aria-label="Drop source files or browse">
-            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="flashgen" onclick="genClearAll(); eabUseSample('flashgen', event)" title="Load the sample manifest and its sources">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
             <span class="dz-icon">📦</span>
             <div>Drop fonts and images here</div>
             <div>or paste a file here from your clipboard</div>
@@ -139,7 +139,7 @@
                   <option value="FT80X">FT80x · FT800 / FT801</option>
                   <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
                   <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
-                  <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                  <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818 / BT819</option>
                   <option value="BT82X">BT82x · BT820</option>
                 </select>
               </div>
@@ -161,7 +161,7 @@
             </div>
             <div class="opt-field">
               <label class="form-label" for="gen-header">📝 Header</label>
-              <input id="gen-header" type="text" class="input-field is-path form-control" placeholder="(none) — e.g. src/assets.h">
+              <input id="gen-header" type="text" class="input-field is-path form-control" placeholder="(none) — e.g. src/assets.h" oninput="planRender()">
             </div>
             <div class="opt-row">
               <div class="opt-check">

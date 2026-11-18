@@ -23,6 +23,7 @@
       $row.find('#file-count').text('(' + n + ')');
       $row.find('#empty-msg').toggleClass('hidden', n > 0);
       $row.find('#btn-clear-all').toggleClass('hidden', n === 0);
+      if (n > 0) $row.addClass('is-options-shown');
       $row.toggleClass('is-queue-empty', n === 0 && !$row.hasClass('is-options-shown'));
     });
   }

@@ -5,4 +5,6 @@ const state = {
   paths: {},
   terminal: null,
   links: null,
+  guideBlobUrl: null,
+  guideLoading: false,
 };

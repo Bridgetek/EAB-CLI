@@ -351,7 +351,7 @@
     ft800: 'ft80x', ft801: 'ft80x', ft80x: 'ft80x', eve1: 'ft80x',
     ft810: 'ft81x', ft811: 'ft81x', ft812: 'ft81x', ft813: 'ft81x', ft81x: 'ft81x', eve2: 'ft81x',
     bt880: 'bt88x', bt881: 'bt88x', bt882: 'bt88x', bt883: 'bt88x', bt88x: 'bt88x',
-    bt815: 'bt81x', bt816: 'bt81x', bt817: 'bt81x', bt818: 'bt81x', bt81x: 'bt81x',
+    bt815: 'bt81x', bt816: 'bt81x', bt817: 'bt81x', bt818: 'bt81x', bt819: 'bt81x', bt81x: 'bt81x',
     eve3: 'bt81x', eve4: 'bt81x', bt820: 'bt82x', bt82x: 'bt82x', eve5: 'bt82x'
   };
 
@@ -363,10 +363,7 @@
     if (payload.ditherAlgo) args.push('-d', payload.ditherAlgo);
     if (payload.astcEffort) args.push('-e', payload.astcEffort);
     if (payload.outputName) args.push('-n', payload.outputName);
-    if (payload.genSrc) {
-      args.push('-g');
-      if (command.indexOf('bt82x') === 0) args.push(payload.genSrcPlatform || 'FT4222');
-    }
+    if (payload.genSrc) args.push('-g');
     if (payload.noJson) args.push('--no-json');
     return addEntry(command, args, [payload.inputFile || '']);
   }, function (entry, response, error) {

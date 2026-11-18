@@ -23,6 +23,7 @@
       var id = INPUT_HERO[i][0].replace('#tab-', '');
       var queued = (window.eabTabQueues && window.eabTabQueues[id]) ? window.eabTabQueues[id].length : 0;
       var empty = queued === 0 && $.trim(String($field.val() || '')).length === 0;
+      if (!empty) $row.addClass('is-options-shown');
       $row.toggleClass('is-queue-empty', empty && !$row.hasClass('is-options-shown'));
     }
   }

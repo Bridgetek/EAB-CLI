@@ -45,6 +45,7 @@ function addGifFiles(paths) {
   updateBatchState();
 }
 function removeGifFile(index) {
+  $('.app-main').first().addClass('is-options-shown');
   gifFiles.splice(index, 1);
   setCurrentGif(index >= gifFiles.length ? gifFiles.length - 1 : index);
   updateBatchState();
@@ -106,7 +107,10 @@ function syncQueueChrome() {
   const $clear = $('#btn-clear-all');
   if ($clear.length) $clear.toggleClass('hidden', n === 0);
   const $row = $('.app-main').first();
-  if ($row.length) $row.toggleClass('is-queue-empty', n === 0 && !$row.hasClass('is-options-shown'));
+  if ($row.length) {
+    if (n > 0) $row.addClass('is-options-shown');
+    $row.toggleClass('is-queue-empty', n === 0 && !$row.hasClass('is-options-shown'));
+  }
 }
 function rowEl(path) {
   var $row = $();

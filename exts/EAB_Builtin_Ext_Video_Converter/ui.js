@@ -287,6 +287,7 @@ function eabSampleFail(ev) {
   setTimeout(function () { $btn.text(text); }, 6000);
 }
 function eabSampleQueue(tab, paths) {
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -299,6 +300,7 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var folder = conf.folders[chipGroup()] || SAMPLE_FOLDERS['legacy'];
   var base = 'samples/' + folder + '/';
   eabSampleList('samples/' + folder).then(function (resp) {

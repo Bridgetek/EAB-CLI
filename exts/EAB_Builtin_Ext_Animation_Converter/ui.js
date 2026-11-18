@@ -162,7 +162,18 @@ function syncChipPicker() {
   const picked = chipPicked();
   $picker.val(picked ? picked.kind + ':' + picked.value : '');
 }
+function bt819Enabled() {
+  return typeof window.API_EAB_hasCliFlag === 'function' && window.API_EAB_hasCliFlag('--enable-bt819');
+}
+function applyBt819Flag() {
+  if (bt819Enabled()) return;
+  $('#chip-name option[value="BT819"]').remove();
+  $('#chip-gen option[value="BT81X"]').each(function () {
+    $(this).text($(this).text().replace(' / BT819', ''));
+  });
+}
 function buildChipPicker() {
+  applyBt819Flag();
   const $picker = $('#chip-one');
   if (!$picker.length || $picker.find('optgroup').length) return;
   for (const kind in CHIP_BOX) {
@@ -194,6 +205,7 @@ $(function () {
   onChipChange(chipGroup());
 });
 function clearAllInputs() {
+  $('.app-main').first().addClass('is-options-shown');
   gifFiles.forEach(p => { delete rowMeta[p]; });
   gifFiles.length = 0;
   setCurrentGif(0);
@@ -495,6 +507,7 @@ function eabSampleFail(ev) {
   setTimeout(function () { $btn.text(text); }, 6000);
 }
 function eabSampleQueue(tab, paths) {
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -507,6 +520,7 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (typeof clearAllInputs === 'function') clearAllInputs();
   var folder = conf.folders[chipGroup()] || SAMPLE_FOLDERS['legacy'];
   var base = 'samples/' + folder + '/';
   eabSampleList('samples/' + folder).then(function (resp) {

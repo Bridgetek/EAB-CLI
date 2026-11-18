@@ -20,12 +20,12 @@
           <div class="card-title"><span>📂 Input Assets <span id="file-count">(0)</span></span>
             <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="addInputFile()">＋ Add files…</button>
             <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="addInputFolder()">📁 Add folder</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="compress" onclick="eabUseSample('compress', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="compress" onclick="clearAllInputs(); eabUseSample('compress', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
             <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
           </div>
           <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
                tabindex="0" role="button" aria-label="Drop asset files or browse">
-            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="compress" onclick="eabUseSample('compress', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Show the result and options columns">Show options ▸</button></div>
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="compress" onclick="clearAllInputs(); eabUseSample('compress', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Show the result and options columns">Show options ▸</button></div>
             <span class="dz-icon">📦</span>
             <div>Drop one or more assets here</div>
             <div>or paste a file here from your clipboard</div>

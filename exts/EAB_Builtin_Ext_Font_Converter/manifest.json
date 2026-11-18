@@ -35,12 +35,20 @@
     "cli.both"
   ],
   "dependencies": {
-    "astc": "^5.5",
-    "sampleapp": "^4.5"
+    "astc": "^5.5"
   },
   "app_dlls": [
     "native/font_cvt.dll"
   ],
   "api_version": "2.0",
-  "start_with_eab": "yes"
+  "start_with_eab": "yes",
+  "context_menus": [
+    {
+      "id": "convert",
+      "label": "Convert with EAB",
+      "extensions": [".ttf", ".otf", ".woff", ".woff2"],
+      "command": "font",
+      "order": 13
+    }
+  ]
 }

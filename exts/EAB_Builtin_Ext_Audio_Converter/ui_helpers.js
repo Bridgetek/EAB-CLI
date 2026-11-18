@@ -10,6 +10,7 @@ function addInputFiles(paths) {
   updateBatchState();
 }
 function removeInputFile(index) {
+  $('#input-list').closest('.app-main').addClass('is-options-shown');
   inputFiles.splice(index, 1);
   setCurrentInput(index >= inputFiles.length ? inputFiles.length - 1 : index);
   updateBatchState();

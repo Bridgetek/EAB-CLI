@@ -1,0 +1,37 @@
+{
+  "id": "emulator_provider",
+  "date_install": "2026-11-07_21:00:00:000",
+  "category": "eve_custom",
+  "name": "Emulator Provider",
+  "version": "1.0.0",
+  "extension_type": "app",
+  "engine": "native",
+  "author": "EAB User",
+  "description": "Single EVE/BT8xx emulator service for every other extension. Publishes the eve.emulator service: screenshot, RAM_G, registers, flash, touch, display list, video performance, audio quality and converter quality. Command: emulator",
+  "icon": "\ud83d\udda5\ufe0f",
+  "ui": "ui.html",
+  "cli_commands": [
+    "emulator"
+  ],
+  "permissions": [
+    "gui.render",
+    "gui.components",
+    "fs.read",
+    "fs.write",
+    "process.spawn",
+    "cli.both"
+  ],
+  "dependencies": {
+    "eve-emu": "^5.0",
+    "zlib": "^1.2",
+    "msvc-runtime": "^14.40"
+  },
+  "app_dlls": [
+    "native/emulator_provider.dll"
+  ],
+  "services": [
+    "eve.emulator"
+  ],
+  "api_version": "2.0",
+  "start_with_eab": "yes"
+}

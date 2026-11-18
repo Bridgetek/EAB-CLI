@@ -13,7 +13,8 @@
   }
   function queueEntries(paths) {
     if (!paths || !paths.length) return 0;
-    if (!genState.entries.length) genAddEntry();
+    if (typeof genEnsureAppendSlot === 'function') genEnsureAppendSlot();
+    else if (!genState.entries.length) genAddEntry();
     return genAddFiles(paths, genState.entries.length - 1).length;
   }
   window.eabAddFiles = queueEntries;
@@ -29,6 +30,7 @@
       // The full-frame drop zone is only for a tool with nothing loaded at all. Once a
       // manifest is in, keep the normal layout even while the entry list is empty.
       var loaded = !!(genState && genState.manifestPath);
+      if (n > 0 || loaded) $row.addClass('is-options-shown');
       $row.toggleClass('is-queue-empty', n === 0 && !loaded && !$row.hasClass('is-options-shown'));
     });
   }

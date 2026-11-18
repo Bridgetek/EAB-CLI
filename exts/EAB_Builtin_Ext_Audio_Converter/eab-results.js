@@ -282,8 +282,24 @@
     return entry;
   }
 
+  function addServiceEntry(service, method, args) {
+    if (!currentAction) return null;
+    var paths = args && args.path ? [String(args.path)] : [];
+    var entry = {
+      commandLabel: 'Service call',
+      command: service + '.' + method + '(' + JSON.stringify(args || {}) + ')',
+      args: [],
+      inputs: paths,
+      status: 'Running',
+      output: '',
+      action: currentAction
+    };
+    currentAction.eabResultEntries.push(entry);
+    return entry;
+  }
+
   function detailResult(response) {
-    var detail = response && response.detail;
+    var detail = response && (response.detail || response.result);
     if (typeof detail === 'string') {
       try { return JSON.parse(detail); } catch (_) { return null; }
     }
@@ -348,11 +364,35 @@
     }
   });
 
+  wrapApi('API_EAB_callService', function (payload) {
+    if (suppressApiTracking || !currentAction) return null;
+    var service = payload.service || '';
+    var method = payload.method || '';
+    var args = payload.args || {};
+    if (method === 'status' || method === 'start' || method === 'stop') {
+      return { lifecycle: true, service: service, method: method, args: args, action: currentAction };
+    }
+    return addServiceEntry(service, method, args);
+  }, function (context, response, error) {
+    if (context && context.lifecycle) {
+      if ((error || !response || !response.ok) && context.method !== 'stop' &&
+        context.action && !(context.action.eabResultEntries && context.action.eabResultEntries.length)) {
+        var savedAction = currentAction;
+        currentAction = context.action;
+        var failEntry = addServiceEntry(context.service, context.method, context.args);
+        currentAction = savedAction;
+        finishEntry(failEntry, error ? { ok: false, error: String(error) } : response);
+      }
+      return;
+    }
+    finishEntry(context, error ? { ok: false, error: String(error) } : response);
+  });
+
   var chipGenerations = {
     ft800: 'ft80x', ft801: 'ft80x', ft80x: 'ft80x', eve1: 'ft80x',
     ft810: 'ft81x', ft811: 'ft81x', ft812: 'ft81x', ft813: 'ft81x', ft81x: 'ft81x', eve2: 'ft81x',
     bt880: 'bt88x', bt881: 'bt88x', bt882: 'bt88x', bt883: 'bt88x', bt88x: 'bt88x',
-    bt815: 'bt81x', bt816: 'bt81x', bt817: 'bt81x', bt818: 'bt81x', bt81x: 'bt81x',
+    bt815: 'bt81x', bt816: 'bt81x', bt817: 'bt81x', bt818: 'bt81x', bt819: 'bt81x', bt81x: 'bt81x',
     eve3: 'bt81x', eve4: 'bt81x', bt820: 'bt82x', bt82x: 'bt82x', eve5: 'bt82x'
   };
 
@@ -463,7 +503,7 @@
       var heading = element('h3', '', 'Input ' + (index + 1) + ': ' +
         (entry.inputs.length ? entry.inputs.join(', ') : 'No input file'));
       var status = element('p', 'eab-result-status eab-result-' + entry.status.toLowerCase(), entry.status);
-      var commandLabel = element('strong', '', 'Equivalent command line');
+      var commandLabel = element('strong', '', entry.commandLabel || 'Equivalent command line');
       var command = element('pre', '', entry.command);
       card.append(heading, status, commandLabel, command);
       renderOutputFiles(card, entry);

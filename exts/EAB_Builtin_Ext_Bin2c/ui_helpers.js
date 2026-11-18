@@ -36,11 +36,13 @@ function addFiles(paths) {
 }
 function removeInputFile(index) {
   if (!state.inputFiles) return;
+  $('.app-main').addClass('is-options-shown');
   state.inputFiles.splice(index, 1);
   state.inputFile = state.inputFiles.length ? state.inputFiles[0] : null;
   updateBatchState();
 }
 function clearInputFiles() {
+  $('.app-main').addClass('is-options-shown');
   if (!state.inputFiles) state.inputFiles = [];
   state.inputFiles.length = 0;
   state.inputFile = null;

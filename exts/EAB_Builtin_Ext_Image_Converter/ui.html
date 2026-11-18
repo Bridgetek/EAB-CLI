@@ -74,7 +74,7 @@
                     class="dz-sample btn btn-secondary"
                     type="button"
                     data-sample="converter"
-                    onclick="eabUseSample('converter', event)"
+                    onclick="clearFiles(); eabUseSample('converter', event)"
                     title="Queue the sample images and set the chip and format for them"
                   >
                     ✨ Use Sample
@@ -276,7 +276,7 @@
                     <option value="FT80X">FT80x · FT800 / FT801</option>
                     <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
                     <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
-                    <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                    <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818 / BT819</option>
                     <option value="BT82X" selected>BT82x · BT820</option>
                   </select>
                 </div>
@@ -302,6 +302,7 @@
                     <option value="BT816">BT816</option>
                     <option value="BT817">BT817</option>
                     <option value="BT818">BT818</option>
+                    <option value="BT819">BT819</option>
                     <option value="BT820" selected>BT820</option>
                   </select>
                 </div>
@@ -464,7 +465,7 @@
                     class="dz-sample btn btn-secondary"
                     type="button"
                     data-sample="validator"
-                    onclick="eabUseSample('validator', event)"
+                    onclick="tabClearQueue('validator'); eabUseSample('validator', event)"
                     title="Queue the sample images for validation"
                   >
                     ✨ Use Sample
@@ -551,7 +552,7 @@
                     class="dz-sample btn btn-secondary"
                     type="button"
                     data-sample="jpegopt"
-                    onclick="eabUseSample('jpegopt', event)"
+                    onclick="tabClearQueue('jpegopt'); eabUseSample('jpegopt', event)"
                     title="Queue the sample JPEGs for optimization"
                   >
                     ✨ Use Sample
@@ -684,8 +685,8 @@
                     class="dz-sample btn btn-secondary"
                     type="button"
                     data-sample="rawviewer"
-                    onclick="eabUseSample('rawviewer', event)"
-                    title="Load the sample raw bitmap and set the format and size"
+                    onclick="tabClearQueue('rawviewer'); eabUseSample('rawviewer', event)"
+                    title="Load the sample raw bitmap for the picked chip and format"
                   >
                     ✨ Use Sample
                   </button>
@@ -745,6 +746,59 @@
             </div>
                       </div>
           <div class="right-col overflow-y-auto">
+            <div
+              class="card col-12 col-sm-12 col-md-12"
+              data-eab-role="options"
+            >
+              <div class="card-title">🔳 EVE Chip</div>
+              <div class="opt-body">
+                <div class="opt-field">
+                  <label class="form-label" for="raw-chip-gen">Chip generation</label>
+                  <select
+                    id="raw-chip-gen"
+                    class="form-select"
+                    onchange="onRawChipPick('gen')"
+                  >
+                    <option value=""></option>
+                    <option value="FT80X">FT80x · FT800 / FT801</option>
+                    <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
+                    <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
+                    <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818 / BT819</option>
+                    <option value="BT82X" selected>BT82x · BT820</option>
+                  </select>
+                </div>
+                <div class="opt-field">
+                  <label class="form-label" for="raw-chip-name">EVE Chip</label>
+                  <select
+                    id="raw-chip-name"
+                    class="form-select"
+                    onchange="onRawChipPick('part')"
+                  >
+                    <option value=""></option>
+                    <option value="FT800">FT800</option>
+                    <option value="FT801">FT801</option>
+                    <option value="FT810">FT810</option>
+                    <option value="FT811">FT811</option>
+                    <option value="FT812">FT812</option>
+                    <option value="FT813">FT813</option>
+                    <option value="BT880">BT880</option>
+                    <option value="BT881">BT881</option>
+                    <option value="BT882">BT882</option>
+                    <option value="BT883">BT883</option>
+                    <option value="BT815">BT815</option>
+                    <option value="BT816">BT816</option>
+                    <option value="BT817">BT817</option>
+                    <option value="BT818">BT818</option>
+                    <option value="BT819">BT819</option>
+                    <option value="BT820">BT820</option>
+                  </select>
+                </div>
+                <div class="hint">
+                  BT81x and BT82x raw data differ (ASTC blocks, paletted LUTs) —
+                  pick the chip the .raw file was produced for.
+                </div>
+              </div>
+            </div>
             <div
               class="card col-12 col-sm-12 col-md-12"
               data-eab-role="options"

@@ -20,12 +20,12 @@
           <div class="card-title"><span>📂 Input Videos <span id="file-count">(0)</span></span>
             <button id="btn-add-files" class="btn btn-secondary btn-sm" type="button" onclick="pickVideoFiles()">＋ Add files…</button>
             <button id="btn-add-folder" class="btn btn-secondary btn-sm" type="button" onclick="pickVideoFolder()">📁 Add folder</button>
-            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="video" onclick="eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
+            <button class="dz-sample-card btn btn-secondary btn-sm" type="button" data-sample="video" onclick="clearAllInputs(); eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button>
             <button id="btn-clear-all" class="btn btn-secondary btn-sm hidden" type="button" title="Remove every queued file" onclick="clearAllInputs()">🗑 Clear all</button>
           </div>
           <div class="drop-zone align-items-center flex-column justify-content-center" id="drop-zone" data-for="input-list" data-picker="btn-add-files"
                tabindex="0" role="button" aria-label="Drop video files or browse">
-            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="video" onclick="eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
+            <div class="dz-corner"><button class="dz-sample btn btn-secondary" type="button" data-sample="video" onclick="clearAllInputs(); eabUseSample('video', event)" title="Queue the sample files and set the chip">✨ Use Sample</button><button class="dz-options btn btn-secondary" type="button" title="Hide the drop zone and show the columns">Show options ▸</button></div>
             <span class="dz-icon">🎬</span>
             <div>Drop one or more videos here</div>
             <div>or paste a file here from your clipboard</div>
@@ -43,7 +43,7 @@
             <div class="col-12 col-sm-12 col-md-12">
               <div class="output-field">
                 <label for="output-path" class="form-label">Output File</label>
-                <input id="output-path" type="text" class="input-field is-path form-control" placeholder="Output file (generated from the input name)" spellcheck="false">
+                <input id="output-path" type="text" class="input-field is-path form-control" placeholder="Output file (generated from the input name)" spellcheck="false" oninput="onOutputPathInput()">
                 <button id="btn-output-browse" class="btn btn-secondary btn-sm" type="button" onclick="pickOutputFile()">Browse…</button>
                 <button id="btn-open-dir" class="btn btn-secondary btn-sm" type="button" onclick="openOutputDir()" title="Open the output folder in the file manager" disabled>📂</button>
               </div>
@@ -97,7 +97,7 @@
                 <option value="FT80X">FT80x · FT800 / FT801</option>
                 <option value="FT81X">FT81x · FT810 / FT811 / FT812 / FT813</option>
                 <option value="BT88X">BT88x · BT880 / BT881 / BT882 / BT883</option>
-                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818</option>
+                <option value="BT81X">BT81x · BT815 / BT816 / BT817 / BT818 / BT819</option>
                 <option value="BT82X" selected>BT82x · BT820</option>
               </select>
             </div>
@@ -119,6 +119,7 @@
                 <option value="BT816">BT816</option>
                 <option value="BT817">BT817</option>
                 <option value="BT818">BT818</option>
+                <option value="BT819">BT819</option>
                 <option value="BT820" selected>BT820</option>
               </select>
             </div>

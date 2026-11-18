@@ -43,4 +43,7 @@ function showTab(name) {
   $('#tab-guide').toggleClass('active', !info);
   $('#tab-btn-info').toggleClass('active', info);
   $('#tab-btn-guide').toggleClass('active', !info);
+  if (!info && typeof loadUserGuide === 'function') {
+    loadUserGuide();
+  }
 }

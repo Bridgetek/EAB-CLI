@@ -591,6 +591,7 @@ var SAMPLE_GROUP_SELECT = '#chip-select';
 var SAMPLE_DEFAULT_GROUP = 'legacy';
 var SAMPLE_TABS = {bin2c: {folders: {bt82x: 'BT82X', legacy: 'Legacy'}, default: 'legacy'}};
 function eabSampleQueue(tab, paths) {
+  if (typeof clearInputFiles === 'function') clearInputFiles();
   var zone = document.querySelector('#tab-' + tab + ' .drop-zone[data-for]')
     || document.querySelector('#tab-' + tab + ' .drop-zone')
     || document.querySelector('.drop-zone[data-for]');
@@ -638,6 +639,7 @@ window.eabUseSample = function (tab, ev) {
   if (ev && ev.preventDefault) ev.preventDefault();
   var conf = SAMPLE_TABS[tab];
   if (!conf) return;
+  if (typeof clearInputFiles === 'function') clearInputFiles();
   var group = eabSampleGroup();
   var folder = conf.folders[group] || SAMPLE_FOLDERS[SAMPLE_DEFAULT_GROUP];
   var base = 'samples/' + folder + '/';

@@ -668,7 +668,11 @@ select { max-width: 240px !important; }
 }
 .file-item.converting .file-item-progress-fill {
   background-image: repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(74, 108, 247, 0.22) 8px, rgba(74, 108, 247, 0.22) 16px);
+  background-size: 32px 100%;
   animation: eab-row-stripe 1.2s linear infinite;
+}
+.file-item.converting.indeterminate .file-item-progress-fill {
+  width: 100% !important;
 }
 .file-item.done .file-item-progress-fill { background: var(--success); opacity: 0.16; }
 .file-item.failed .file-item-progress-fill { background: var(--error); opacity: 0.16; }
@@ -856,6 +860,7 @@ select { max-width: 240px !important; }
 }
 .fp-file-list { max-height: 132px; overflow-y: auto; }
 .fp-file-list .fp-file-item { cursor: default; }
+.fp-file-list .fp-file-item .file-item-status { max-width: 65%; overflow: hidden; text-overflow: ellipsis; }
 /* Queue clock under the image list. The vendor tool runs each flash_prog to the
    end and takes no pause / stop / cancel control, so only the time is shown. */
 .fp-batch-status { min-height: 14px; }
@@ -1155,6 +1160,59 @@ select { max-width: 240px !important; }
 }
 #tab-programmer .card-title { font-size: 12.5px; letter-spacing: 0.015em; }
 #tab-programmer .opt-field > label { color: var(--fp-muted); font-size: 12px; }
+#tab-programmer .fp-offset-note {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--ok, #3fb950);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#tab-programmer .fp-read-status {
+  padding-left: calc(var(--form-label-w, 116px) + 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2px;
+}
+#tab-programmer .fp-read-status.hidden { display: none; }
+#tab-programmer .fp-read-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--border) 60%, transparent);
+  overflow: hidden;
+}
+#tab-programmer .fp-read-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+#tab-programmer .fp-read-status.is-running .fp-read-bar-fill.is-indeterminate {
+  width: 35% !important;
+  animation: fp-read-sweep 1.1s ease-in-out infinite;
+}
+@keyframes fp-read-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+#tab-programmer .fp-read-status.is-done .fp-read-bar-fill {
+  width: 100%;
+  background: var(--ok, #3fb950);
+}
+#tab-programmer .fp-read-status.is-failed .fp-read-bar-fill {
+  width: 100%;
+  background: var(--error, #f85149);
+}
+#tab-programmer .fp-read-text {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-dim);
+  word-break: break-word;
+}
+#tab-programmer .fp-read-status.is-done .fp-read-text { color: var(--ok, #3fb950); }
+#tab-programmer .fp-read-status.is-failed .fp-read-text { color: var(--error, #f85149); }
 #tab-programmer input:focus,
 #tab-programmer select:focus,
 #tab-programmer textarea:focus { box-shadow: 0 0 0 3px var(--fp-glow); }

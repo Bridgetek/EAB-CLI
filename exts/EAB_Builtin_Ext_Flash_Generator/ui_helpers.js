@@ -11,6 +11,22 @@ function setGenProgress(pct) {
 let genBuildRunning = false;
 let genJobId = null;
 const genRowState = {};
+function clearGenRowStates() {
+  for (var k in genRowState) {
+    if (Object.prototype.hasOwnProperty.call(genRowState, k)) delete genRowState[k];
+  }
+}
+function shiftGenRowStatesOnRemove(idx) {
+  var next = {};
+  for (var k in genRowState) {
+    if (!Object.prototype.hasOwnProperty.call(genRowState, k)) continue;
+    var n = Number(k);
+    if (n < idx) next[n] = genRowState[k];
+    else if (n > idx) next[n - 1] = genRowState[k];
+  }
+  clearGenRowStates();
+  for (var j in next) genRowState[j] = next[j];
+}
 function paintGenRows(stateName, text) {
   genState.entries.forEach(function (e, i) {
     genRowState[i] = { state: stateName, text: text || '' };

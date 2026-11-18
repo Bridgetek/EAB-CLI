@@ -43,5 +43,14 @@
     "native/flash_cvt.dll"
   ],
   "api_version": "2.0",
-  "start_with_eab": "yes"
+  "start_with_eab": "yes",
+  "context_menus": [
+    {
+      "id": "flash",
+      "label": "Flash to eve",
+      "extensions": [],
+      "command": "flash_prog",
+      "order": 20
+    }
+  ]
 }

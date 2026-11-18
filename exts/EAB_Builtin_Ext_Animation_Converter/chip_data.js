@@ -5,7 +5,7 @@ var CHIP_TABLE = {
   BT880: ['FT81X/BT88X', 'bt88x'], BT881: ['FT81X/BT88X', 'bt88x'],
   BT882: ['FT81X/BT88X', 'bt88x'], BT883: ['FT81X/BT88X', 'bt88x'],
   BT815: ['BT81X', 'bt81x'], BT816: ['BT81X', 'bt81x'],
-  BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'],
+  BT817: ['BT81X', 'bt81x'], BT818: ['BT81X', 'bt81x'], BT819: ['BT81X', 'bt81x'],
   BT820: ['BT82X', 'bt82x']
 };
 var CHIP_GEN = {

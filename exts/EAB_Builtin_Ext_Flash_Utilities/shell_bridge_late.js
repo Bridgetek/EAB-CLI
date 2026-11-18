@@ -28,6 +28,7 @@
         $row.find('#empty-msg').toggleClass('hidden', n > 0);
         $row.find('#btn-clear-all').toggleClass('hidden', n === 0);
       }
+      if (!empty) $row.addClass('is-options-shown');
       $row.toggleClass('is-queue-empty', empty && !$row.hasClass('is-options-shown'));
     });
   }
@@ -45,7 +46,18 @@
     var picked = chipPicked();
     $picker.val(picked ? picked.kind + ':' + picked.value : '');
   }
+  function bt819Enabled() {
+    return typeof window.API_EAB_hasCliFlag === 'function' && window.API_EAB_hasCliFlag('--enable-bt819');
+  }
+  function applyBt819Flag() {
+    if (bt819Enabled()) return;
+    $('#chip-name option[value="BT819"]').remove();
+    $('#chip-gen option[value="BT81X"]').each(function () {
+      $(this).text($(this).text().replace(' / BT819', ''));
+    });
+  }
   function buildChipPicker() {
+    applyBt819Flag();
     var $picker = $('#chip-one');
     if (!$picker.length || $picker.find('optgroup').length) return;
     CHIP_ORDER.forEach(function (kind) {

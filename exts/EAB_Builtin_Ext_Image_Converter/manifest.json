@@ -64,5 +64,21 @@
     "native/img_cvt.dll"
   ],
   "api_version": "2.0",
-  "start_with_eab": "yes"
+  "start_with_eab": "yes",
+  "context_menus": [
+    {
+      "id": "convert",
+      "label": "Convert with EAB",
+      "extensions": [".png", ".jpg", ".jpeg", ".bmp", ".tga", ".webp", ".gif"],
+      "command": "img_cvt",
+      "order": 10
+    },
+    {
+      "id": "validate",
+      "label": "Validate",
+      "extensions": [".png", ".jpg", ".jpeg"],
+      "command": "img_val",
+      "order": 30
+    }
+  ]
 }

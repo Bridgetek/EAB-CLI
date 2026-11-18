@@ -35,5 +35,14 @@
     "native/audio_cvt.dll"
   ],
   "api_version": "2.0",
-  "start_with_eab": "yes"
+  "start_with_eab": "yes",
+  "context_menus": [
+    {
+      "id": "convert",
+      "label": "Convert with EAB",
+      "extensions": [".wav", ".mp3", ".ogg", ".flac", ".aac"],
+      "command": "aud_cvt",
+      "order": 11
+    }
+  ]
 }

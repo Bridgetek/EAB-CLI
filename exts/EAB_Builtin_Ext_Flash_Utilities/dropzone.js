@@ -82,6 +82,14 @@
       markZones(false);
     });
     API_EAB_onDrop(function (msg) { applyDrop(msg.paths); });
+    window.addEventListener('message', function (ev) {
+      var d = ev && ev.data;
+      if (d && d.type === 'eab-context-action' && d.command === 'flash_prog') {
+        if (typeof window.switchTab === 'function') window.switchTab('programmer');
+        if (typeof window.fpShowPage === 'function') window.fpShowPage('program');
+        if (d.file && typeof window.setFpImages === 'function') window.setFpImages([d.file]);
+      }
+    });
   }
   function setProgress(state, percent, text) {
     var $status = $('.progress-status');

@@ -102,6 +102,8 @@ function clearBuildResults() {
   $('#flash-map').text('');
   $('#flash-map').addClass('hidden');
   $('#map-empty').removeClass('hidden');
+  if (typeof clearGenRowStates === 'function') clearGenRowStates();
+  if (typeof window.eabPaintRows === 'function') window.eabPaintRows();
 }
 function formatBytes(n) {
   const units = ['B', 'KB', 'MB', 'GB'];
@@ -137,6 +139,7 @@ const MANIFEST_COMMENT =
 const GEN_FALLBACK_META = {
   devices: [
     { device: 'BT820', chip: 'bt82x' },
+    { device: 'BT819', chip: 'legacy' },
     { device: 'BT818', chip: 'legacy' }, { device: 'BT817', chip: 'legacy' },
     { device: 'BT816', chip: 'legacy' }, { device: 'BT815', chip: 'legacy' },
     { device: 'BT883', chip: 'legacy' }, { device: 'BT882', chip: 'legacy' },
@@ -362,7 +365,24 @@ function syncChipPicker() {
   const picked = chipPicked();
   $picker.val(picked ? picked.kind + ':' + picked.value : '');
 }
+function bt819Enabled() {
+  return typeof window.API_EAB_hasCliFlag === 'function' && window.API_EAB_hasCliFlag('--enable-bt819');
+}
+function applyBt819Flag() {
+  if (bt819Enabled()) return;
+  $('#chip-name option[value="BT819"]').remove();
+  $('#chip-gen option[value="BT81X"]').each(function () {
+    $(this).text($(this).text().replace(' / BT819', ''));
+  });
+  if (genState.meta && Array.isArray(genState.meta.devices)) {
+    genState.meta.devices = genState.meta.devices.filter(function (d) { return d.device !== 'BT819'; });
+  }
+  if (typeof GEN_FALLBACK_META !== 'undefined' && Array.isArray(GEN_FALLBACK_META.devices)) {
+    GEN_FALLBACK_META.devices = GEN_FALLBACK_META.devices.filter(function (d) { return d.device !== 'BT819'; });
+  }
+}
 function buildChipPicker() {
+  applyBt819Flag();
   const $picker = $('#chip-one');
   if (!$picker.length) return;
   $picker.find('optgroup').remove();
@@ -402,6 +422,7 @@ window.onChipPick = function (which) {
     }
   }
   syncChipPicker();
+  clearBuildResults();
   onGenDeviceChange();
 };
 
@@ -432,6 +453,7 @@ async function genLoadMeta() {
     }
   }
   genState.meta = meta || GEN_FALLBACK_META;
+  applyBt819Flag();
   const note = meta
     ? 'Device and format lists are served by the extension (flashgen --print-meta).'
     : 'Device and format lists come from a built-in table (standalone preview only).';
@@ -447,6 +469,7 @@ function genFillDevices() {
   if (list.some((d) => d.device === 'BT820')) $sel.val('BT820');
   buildChipPicker();
   syncChipPicker();
+  clearBuildResults();
   onGenDeviceChange();
 }
 function genOutputName() {
@@ -471,6 +494,7 @@ function genSplitOutput(path) {
 function syncGenOutput() {
   const $hidden = $('#gen-output');
   if ($hidden.length) $hidden.val(genJoinPath(genOutputDir(), genOutputName() + '.bin'));
+  if (typeof planRender === 'function') planRender();
 }
 function genSetOutput(path) {
   const parts = genSplitOutput(path);
@@ -634,13 +658,16 @@ function genAddEntry() {
     outputs: '',
     options: {},
   });
+  if (typeof genRowState === 'object') delete genRowState[genState.entries.length - 1];
   genRender();
   const $names = $('.gen-entry .gen-name');
   if ($names.length) $names.last().focus();
 }
 function genRemoveEntry(idx) {
   if (idx < 0 || idx >= genState.entries.length) return;
+  $('.app-row').addClass('is-options-shown');
   genState.entries.splice(idx, 1);
+  if (typeof shiftGenRowStatesOnRemove === 'function') shiftGenRowStatesOnRemove(idx);
   genRender();
 }
 function genField(idx, key, value) {
@@ -651,8 +678,14 @@ function genField(idx, key, value) {
     e.options = {};
     if (!genFormatsFor(value, genChip()).length) e.format = '';
   }
+  if (key === 'type' || key === 'format' || key === 'src') {
+    if (typeof genRowState === 'object') delete genRowState[idx];
+  }
   if (key === 'type' || key === 'format') { genRender(); return; }
-  if (key === 'src' && genAutoNameOn()) genRenameRow(idx);
+  if (key === 'src') {
+    if (genAutoNameOn()) genRenameRow(idx);
+    if (typeof window.eabPaintRows === 'function') window.eabPaintRows();
+  }
 }
 function genAutoNameOn() {
   const $box = $('#gen-autoname');
@@ -772,6 +805,7 @@ function genAddFiles(paths, idx) {
   if (!seed || !paths.length) return [];
   const touched = [idx];
   seed.src = paths[0];
+  if (typeof genRowState === 'object') delete genRowState[idx];
   for (let i = 1; i < paths.length; i++) {
     const at = idx + i;
     genState.entries.splice(at, 0, {
@@ -784,6 +818,7 @@ function genAddFiles(paths, idx) {
       outputs: '',
       options: $.extend({}, seed.options),
     });
+    if (typeof genRowState === 'object') delete genRowState[at];
     touched.push(at);
   }
   genRender();
@@ -1283,6 +1318,7 @@ function genFromDoc(doc, path) {
     outputs: Array.isArray(e.outputs) ? e.outputs.join(', ') : (e.outputs || ''),
     options: e.options && typeof e.options === 'object' ? $.extend({}, e.options) : {},
   }));
+  clearBuildResults();
   onGenDeviceChange();
   log(`Loaded ${genState.entries.length} entr${genState.entries.length === 1 ? 'y' : 'ies'} ` +
     `from ${shortName(path)} — autogenerate name off, the file's names are kept.`);
@@ -1299,15 +1335,19 @@ const GEN_TYPE_EXTS = {
 const GEN_SOURCE_EXTS = ['png', 'jpg', 'jpeg', 'bmp']
   .concat(GEN_TYPE_EXTS.font, GEN_TYPE_EXTS.video, GEN_TYPE_EXTS.animation, GEN_TYPE_EXTS.audio, GEN_TYPE_EXTS.raw);
 const GEN_FOLDER_EXTS = GEN_SOURCE_EXTS;
+function genEnsureAppendSlot() {
+  const last = genState.entries[genState.entries.length - 1];
+  if (!last || String(last.src || '').trim() !== '') genAddEntry();
+}
 async function genAddFile() {
-  if (!genState.entries.length) genAddEntry();
+  genEnsureAppendSlot();
   await genBrowseSource(genState.entries.length - 1);
 }
 async function genAddFolder() {
   if (!isEmbedded()) {
     const path = askStandalone('Folder of fonts and images:');
     if (!path) return;
-    if (!genState.entries.length) genAddEntry();
+    genEnsureAppendSlot();
     genAddFiles([path], genState.entries.length - 1);
     return;
   }
@@ -1324,18 +1364,19 @@ async function genAddFolder() {
     showError('No fonts or images matched in that folder.');
     return;
   }
-  if (!genState.entries.length) genAddEntry();
+  genEnsureAppendSlot();
   const touched = genAddFiles(resp.paths, genState.entries.length - 1);
   if (touched.length > 1) await genBatchSettings(touched, resp.paths);
 }
 function genClearAll() {
+  $('.app-row').addClass('is-options-shown');
   genState.entries = [];
   clearBuildResults();
   genRender();
 }
 window.eabAddFiles = function (paths) {
   if (!paths || !paths.length) return 0;
-  if (!genState.entries.length) genAddEntry();
+  genEnsureAppendSlot();
   return genAddFiles(paths, genState.entries.length - 1).length;
 };
 (function dropAndPaste() {
@@ -1515,6 +1556,7 @@ window.eabAddFiles = function (paths) {
 })();
 
 function eabSampleQueue(tab, paths) {
+  if (typeof genClearAll === 'function') genClearAll();
   const sources = paths.filter((p) => !/\.json$/i.test(p));
   const zone = document.querySelector('.drop-zone[data-for="gen-entries"]');
   if (sources.length && typeof window.eabOnDrop === 'function') window.eabOnDrop(sources, zone);
@@ -1553,6 +1595,7 @@ function eabSampleFail(ev) {
 window.eabUseSample = function (tab, ev) {
   if (ev && ev.stopPropagation) ev.stopPropagation();
   if (ev && ev.preventDefault) ev.preventDefault();
+  if (typeof genClearAll === 'function') genClearAll();
   var group = eabSampleGroup();
   var folder = SAMPLE_FOLDERS[group] || SAMPLE_FOLDERS[SAMPLE_DEFAULT_GROUP];
   var base = 'samples/' + folder + '/';
@@ -1581,7 +1624,8 @@ window.eabUseSample = function (tab, ev) {
       if (device.length && !device.val()) {
         device.val(group === 'bt82x' ? 'BT820' : 'BT817');
         syncChipPicker();
-        onGenDeviceChange();
+        clearBuildResults();
+  onGenDeviceChange();
       }
       genLoadManifest(manifest);
     }

@@ -14,7 +14,7 @@
         "font_converter",
         "image_converter"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "eve-emu@5.0.25": {
       "name": "eve-emu",
@@ -28,7 +28,7 @@
         "emulator_provider",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "ffmpeg@4.3": {
       "name": "ffmpeg",
@@ -41,7 +41,7 @@
         "audio_converter",
         "video_converter"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "flash-tools@4.5.0": {
       "name": "flash-tools",
@@ -53,7 +53,7 @@
       "required_by": [
         "flash_utilities"
       ],
-      "installed_at": "2026-11-11T05:12:37Z"
+      "installed_at": "2026-11-18T16:16:20Z"
     },
     "ftdi@3.2.14": {
       "name": "ftdi",
@@ -66,7 +66,7 @@
         "custom_touch",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "jtc@4.5": {
       "name": "jtc",
@@ -78,7 +78,7 @@
       "required_by": [
         "custom_touch"
       ],
-      "installed_at": "2026-11-11T05:12:37Z"
+      "installed_at": "2026-11-18T16:16:20Z"
     },
     "msvc-runtime@14.40.33816": {
       "name": "msvc-runtime",
@@ -92,7 +92,7 @@
         "emulator_provider",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "pngquant@2.17.0": {
       "name": "pngquant",
@@ -104,19 +104,7 @@
       "required_by": [
         "image_converter"
       ],
-      "installed_at": "2026-11-11T05:12:37Z"
-    },
-    "sampleapp@4.5.0": {
-      "name": "sampleapp",
-      "version": "4.5.0",
-      "variant": "windows-x64",
-      "dir": "sampleapp/4.5.0/windows-x64",
-      "digest": "sha256:2978238f5fc2a3418abdec8fc21c42b3da240f02e740ed77c1666c9c611cf1ae",
-      "size": 7561085,
-      "required_by": [
-        "font_converter"
-      ],
-      "installed_at": "2026-11-11T05:12:37Z"
+      "installed_at": "2026-11-18T16:16:20Z"
     },
     "squish@1.15.1": {
       "name": "squish",
@@ -128,7 +116,7 @@
       "required_by": [
         "image_converter"
       ],
-      "installed_at": "2026-11-11T05:12:37Z"
+      "installed_at": "2026-11-18T16:16:20Z"
     },
     "turbojpeg@3.2.0": {
       "name": "turbojpeg",
@@ -140,7 +128,7 @@
       "required_by": [
         "image_converter"
       ],
-      "installed_at": "2026-11-11T05:12:37Z"
+      "installed_at": "2026-11-18T16:16:20Z"
     },
     "uf2conv4eve@1.0.0": {
       "name": "uf2conv4eve",
@@ -153,7 +141,7 @@
         "custom_touch",
         "flash_utilities"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     },
     "zlib@1.2.11": {
       "name": "zlib",
@@ -169,9 +157,9 @@
         "flash_utilities",
         "image_converter"
       ],
-      "installed_at": "2026-11-11T05:05:57Z"
+      "installed_at": "2026-11-10T20:10:20Z"
     }
   },
   "links": {},
-  "updated": "2026-11-11T05:12:37Z"
+  "updated": "2026-11-18T16:16:20Z"
 }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emulator Provider</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🖥️ Emulator Provider</h1>
+      <p>Configuration only — this extension runs no emulator window. It publishes the <code>eve.emulator</code> service that other extensions call.</p>
+    </div>
+
+    <div class="row g-3 app-body">
+      <div class="col-12">
+        <div id="error-panel" class="alert alert-danger hidden"></div>
+      </div>
+
+      <div class="col-12 col-xl-7">
+        <div class="card">
+          <div class="card-title">⚙️ Emulator DLL</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label for="dll-path" class="form-label">DLL path</label>
+              <div class="path-row">
+                <input id="dll-path" type="text" class="form-control" placeholder="leave empty to use the bundled bt8xxemu.dll">
+                <button class="btn btn-secondary" type="button" onclick="browseDll()">Browse…</button>
+              </div>
+              <div class="hint">Empty means the <code>bt8xxemu.dll</code> shipped in <code>native/</code>. <code>mx25lemu.dll</code> and <code>zlib.dll</code> must sit next to it.</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button id="btn-inspect" class="btn btn-secondary" type="button" onclick="inspectDll()">🔍 Inspect</button>
+            <button id="btn-save" class="btn btn-primary" type="button" onclick="saveConfig()">💾 Save</button>
+            <button id="btn-reset" class="btn btn-secondary" type="button" onclick="resetConfig()">↺ Use bundled</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">⬆️ Update DLL</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label for="update-source" class="form-label">New DLL</label>
+              <div class="path-row">
+                <input id="update-source" type="text" class="form-control" placeholder="pick a bt8xxemu.dll to install">
+                <button class="btn btn-secondary" type="button" onclick="browseUpdate()">Browse…</button>
+              </div>
+              <div class="hint">Copies the chosen file over the emulator DLL this provider uses. Stop any running emulator first.</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button id="btn-update" class="btn btn-primary" type="button" onclick="updateDll()">⬆️ Install</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-5">
+        <div class="card">
+          <div class="card-title">📦 DLL info</div>
+          <div class="kv" id="info-kv"><span class="dim">not inspected yet</span></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🔌 Published service</div>
+          <div class="kv" id="service-kv"><span class="dim">registering…</span></div>
+          <div class="hint">Consumers discover this through <code>API_EAB_listServices</code> and call it with <code>API_EAB_callService</code>.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📝 Log</div>
+          <pre id="log" class="log-pane"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script>
+</body>
+</html>

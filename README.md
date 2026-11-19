@@ -81,6 +81,3 @@ EAB-CLI/
 
 ---
 
-## License
-
-MIT

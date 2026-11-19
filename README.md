@@ -1,4 +1,4 @@
-# EVE Asset Builder (EAB) 4.5.0 RC1
+# EVE Asset Builder (EAB) 
 
 **EVE Asset Builder (EAB)** is a desktop and command-line utility for preparing images, fonts, audio, animations, videos, and flash images for Bridgetek EVE display controllers (**FT80x, FT81x, BT88x, BT81x, and BT82x**).
 

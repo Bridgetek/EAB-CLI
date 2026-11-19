@@ -1,0 +1,134 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--eab-bg);
+  color: var(--eab-text);
+  font-family: var(--eab-font);
+  font-size: var(--eab-font-size);
+  line-height: 1.35;
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eab-space-4);
+  height: 100%;
+  min-height: 0;
+  padding: var(--eab-space-5);
+  overflow-y: auto;
+}
+
+.app-header {
+  flex: 0 0 auto;
+}
+
+.app-header h1 {
+  display: none;
+}
+
+.app-header p {
+  margin: 2px 0 0;
+  color: var(--eab-text-dim);
+}
+
+.card {
+  min-width: 0;
+  padding: var(--eab-space-5);
+  border: 1px solid var(--eab-border);
+  border-radius: var(--eab-radius-xl);
+  background: var(--eab-card-bg);
+}
+
+.card-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eab-space-2);
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: var(--eab-space-3);
+  margin-top: var(--eab-space-3);
+  min-width: 0;
+}
+
+button.theme-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eab-space-2);
+  min-width: 0;
+  padding: var(--eab-space-3);
+  border: 1px solid var(--eab-border);
+  border-radius: var(--eab-control-radius);
+  background: var(--eab-surface);
+  color: var(--eab-text);
+  font-family: var(--eab-font);
+  font-size: var(--eab-control-font-size);
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--eab-dur) var(--eab-ease), background-color var(--eab-dur) var(--eab-ease);
+}
+
+button.theme-tile:hover {
+  border-color: var(--eab-accent);
+}
+
+button.theme-tile:focus-visible {
+  outline: none;
+  box-shadow: var(--eab-ring);
+}
+
+button.theme-tile.is-active {
+  border-color: var(--eab-accent);
+  background: var(--eab-hover);
+}
+
+.theme-swatch {
+  display: flex;
+  gap: 4px;
+}
+
+.theme-swatch span {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--eab-border);
+  border-radius: var(--eab-radius-sm);
+}
+
+.theme-name {
+  min-width: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.theme-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--eab-space-2);
+  min-width: 0;
+  color: var(--eab-text-dim);
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+}
+
+.theme-meta .is-active-mark {
+  color: var(--eab-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.theme-tile {
+    transition: none;
+  }
+}

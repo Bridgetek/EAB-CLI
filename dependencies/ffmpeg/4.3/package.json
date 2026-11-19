@@ -1,0 +1,15 @@
+{
+  "name": "ffmpeg",
+  "version": "4.3",
+  "revision": "git-2020-08-06-2c35797",
+  "license": "GPL-3.0-or-later",
+  "source": "https://ffmpeg.org/",
+  "description": "FFmpeg shared build shipped with the EAB 4.5.0 reference (libavcodec 58.99.100). The reference's binaries are kept verbatim so video (AVI) and audio output stay byte-identical.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        { "src": ".", "dst": "native/ffmpeg", "kind": "dir" }
+      ]
+    }
+  }
+}

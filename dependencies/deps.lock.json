@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "platform": "windows-x64",
+  "dependencies": {
+    "astc@5.5.0": {
+      "name": "astc",
+      "version": "5.5.0",
+      "variant": "windows-x64",
+      "dir": "astc/5.5.0/windows-x64",
+      "digest": "sha256:dd60272e05c2bd6cc0dc0ba53ba8fbcdfb1518159f480d4b4683af3a0d2d364a",
+      "size": 1196072,
+      "required_by": [
+        "animation_converter",
+        "font_converter",
+        "image_converter"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "eve-emu@5.0.25": {
+      "name": "eve-emu",
+      "version": "5.0.25",
+      "variant": "windows-x64",
+      "dir": "eve-emu/5.0.25/windows-x64",
+      "digest": "sha256:0a6fc4cc8534cd42b55c3b528763660cd3e6d9faa291be6badf8616683ca1489",
+      "size": 5541200,
+      "required_by": [
+        "custom_touch",
+        "emulator_provider",
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "ffmpeg@4.3": {
+      "name": "ffmpeg",
+      "version": "4.3",
+      "variant": "windows-x64",
+      "dir": "ffmpeg/4.3/windows-x64",
+      "digest": "sha256:a797e22e8405ad28a6192bc8a3887acf56ecee6357c34078586d9c707f946786",
+      "size": 77836954,
+      "required_by": [
+        "audio_converter",
+        "video_converter"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "flash-tools@4.5.0": {
+      "name": "flash-tools",
+      "version": "4.5.0",
+      "variant": "windows-x64",
+      "dir": "flash-tools/4.5.0/windows-x64",
+      "digest": "sha256:e78c6b5a85f74934b59b18852453fb14fb27bf6f588313dfb577a9148e0cc0e4",
+      "size": 157460,
+      "required_by": [
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-18T16:16:20Z"
+    },
+    "ftdi@3.2.14": {
+      "name": "ftdi",
+      "version": "3.2.14",
+      "variant": "windows-x64",
+      "dir": "ftdi/3.2.14/windows-x64",
+      "digest": "sha256:267cb6a02a07c200c310dde26598ae9fddc96876c8b3c7de63acfa9a5ccc21cd",
+      "size": 1376824,
+      "required_by": [
+        "custom_touch",
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "jtc@4.5": {
+      "name": "jtc",
+      "version": "4.5",
+      "variant": "windows-x64",
+      "dir": "jtc/4.5/windows-x64",
+      "digest": "sha256:171970f0abda60b9edd5b281f89126209c53aa3214e376ab14eca040bfb0d500",
+      "size": 18068456,
+      "required_by": [
+        "custom_touch"
+      ],
+      "installed_at": "2026-11-18T16:16:20Z"
+    },
+    "msvc-runtime@14.40.33816": {
+      "name": "msvc-runtime",
+      "version": "14.40.33816",
+      "variant": "windows-x64",
+      "dir": "msvc-runtime/14.40.33816/windows-x64",
+      "digest": "sha256:2d5a9a77cd4eac77d2000f184aa54a30e2b9bfa87565439f3114c561bb19f604",
+      "size": 1044168,
+      "required_by": [
+        "custom_touch",
+        "emulator_provider",
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "pngquant@2.17.0": {
+      "name": "pngquant",
+      "version": "2.17.0",
+      "variant": "windows-x64",
+      "dir": "pngquant/2.17.0/windows-x64",
+      "digest": "sha256:0ef9c41228eb98d34c7119824f32112053de18b4740f470f5919addc7f606354",
+      "size": 301374,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-18T16:16:20Z"
+    },
+    "squish@1.15.1": {
+      "name": "squish",
+      "version": "1.15.1",
+      "variant": "windows-x64",
+      "dir": "squish/1.15.1/windows-x64",
+      "digest": "sha256:131c21df25d48fcc1b7f9418636f3a59d125b650807d1ac8944a0afccfb57d85",
+      "size": 284160,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-18T16:16:20Z"
+    },
+    "turbojpeg@3.2.0": {
+      "name": "turbojpeg",
+      "version": "3.2.0",
+      "variant": "windows-x64",
+      "dir": "turbojpeg/3.2.0/windows-x64",
+      "digest": "sha256:c3d348c06fae22a02f8e4218e6b4fdc8185de8f6d26af3bca3d87868938880b2",
+      "size": 1259519,
+      "required_by": [
+        "image_converter"
+      ],
+      "installed_at": "2026-11-18T16:16:20Z"
+    },
+    "uf2conv4eve@1.0.0": {
+      "name": "uf2conv4eve",
+      "version": "1.0.0",
+      "variant": "windows-x64",
+      "dir": "uf2conv4eve/1.0.0/windows-x64",
+      "digest": "sha256:c3675240db7237a150d437132b435256917e382812d4de022e067087af6236cb",
+      "size": 5606000,
+      "required_by": [
+        "custom_touch",
+        "flash_utilities"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    },
+    "zlib@1.2.11": {
+      "name": "zlib",
+      "version": "1.2.11",
+      "variant": "windows-x64",
+      "dir": "zlib/1.2.11/windows-x64",
+      "digest": "sha256:9dce13e308be19f9ecc0a560d201b47da4b2085600bbf5ae9959f003b908e9fe",
+      "size": 96984,
+      "required_by": [
+        "audio_converter",
+        "custom_touch",
+        "emulator_provider",
+        "flash_utilities",
+        "image_converter"
+      ],
+      "installed_at": "2026-11-10T20:10:20Z"
+    }
+  },
+  "links": {},
+  "updated": "2026-11-18T16:16:20Z"
+}

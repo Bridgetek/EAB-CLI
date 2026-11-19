@@ -1,0 +1,19 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "BT82x",
+  "input_name": "case.png",
+  "output_name": [
+    "logo.raw"
+  ],
+  "output_size": [
+    33488
+  ],
+  "type": "bitmap",
+  "format": "L8",
+  "compressed": "no",
+  "width": 181,
+  "height": 185,
+  "stride": 181,
+  "zorder": false,
+  "dither_algorithm": "FLOYD_STEINBERG"
+}

@@ -1,0 +1,376 @@
+0xffffff07   // CMD_BGCOLOR(0x00FF73)
+0x0000ff73   //    color: 0x0000ff73
+0xffffff4f   // CMD_ANIMDRAW(-1)
+0xffffffff   //    animation channel: -1
+0xffffff5e   // CMD_ANIMFRAME(-230, -156, 16, 23)
+0xFF64FF1A   //    x: -230, y: -156
+0x00000010   //    aoptr: 16
+0x00000017   //    frame: 23
+0xffffff5f   // CMD_ANIMSTART(-1, 192, ANIM_LOOP)
+0xffffffff   //    animation channel: -1
+0x000000c0   //    animation object pointer: 0x000000c0
+0x00000001   //    loop flag: 0x00000001
+0xffffff4d   // CMD_ANIMSTOP(-1)
+0xffffffff   //    animation channel: -1
+0xffffff4e   // CMD_ANIMXY(7, -14, -24)
+0x00000007   //    animation channel: 7
+0xffe8fff2   //    x: -14, y: -24
+0xFFFFFF62   //    CMD_APBREAD(254, 654)
+0x000000FE   //    dest: 254
+0x0000028E   //    addr: 654
+0xFFFFFF63   //    CMD_APBWRITE(1250, 63)
+0x000004E2   //    addr: 1250
+0x0000003F   //    v: 63
+0xffffff52   // CMD_APPENDF(1728, 64)
+0x000006c0   //    pointer: 0x000006c0
+0x00000040   //    number of bytes: 64
+0xffffff1c   // CMD_APPEND(120, 35)
+0x00000078   //    pointer: 0x00000078
+0x00000023   //    number of bytes: 35
+0xffffff87   // CMD_ARC(200, -100, 10, 150, 0x2000, 0xe000)
+0x0064ffc8   //    x: 200, y: -100
+0x0096000a   //    r0: 10, r1: 150
+0xe0002000   //    a0: 8192, a1: 57344
+0xffffff07   // CMD_BGCOLOR(0x00FF73)
+0x0000ff73   //    color: 0x0000ff73
+0xffffff1f   // CMD_BITMAP_TRANSFORM(-15, 22, 19, -17, -26, -31, -4, 42, 1, -6, 18, -9, 0)
+0xfffffff1   //    x0: -15
+0x00000016   //    y0: 22
+0x00000013   //    x1: 19
+0xffffffef   //    y1: -17
+0xffffffe6   //    x2: -26
+0xffffffe1   //    y2: -31
+0xfffffffc   //    tx0: -4
+0x0000002a   //    ty0: 42
+0x00000001   //    tx1: 1
+0xfffffffa   //    ty1: -6
+0x00000012   //    tx2: 18
+0xfffffff7   //    ty2: -9
+0x00000000   //    result: 0
+0xffffff0b   // CMD_BUTTON(-18, -24, 16, 23, 4, OPT_FLAT | OPT_FORMAT | OPT_FILL, "Test")
+0xffe8ffee   //    x: -18, y: -24
+0x00170010   //    width: 16, height: 23
+0x31000004   //    font: 4, options: 12544
+0x74736554   //    string: "Test"
+0x00000000   //    end string
+0xffffff56   // CMD_CALIBRATESUB(14, 23, 200, 696)
+0x0017000e   //    x: 0x0000000e
+0x02b800c8   //    y: 0x00000017
+0x00000000   //    w: 0x000000c8
+0xffffff13   // CMD_CALIBRATE(56)
+0x00000038   //    result: 56
+0xffffff5b   // CMD_CALLLIST(72)
+0x00000048   //    memory address of command list: 0x00000048
+0xffffff8a   // CMD_CGRADIENT(EDGE_ZERO, -240, 150, 512, 615, 0xff0000, 0x00ff00)
+0x00000001   //    shape: EDGE_ZERO
+0x0096ff10   //    x: -240, y: 150
+0x02670200   //    width: 512, height: 615
+0x00ff0000   //    rgb0: 0x00ff0000
+0x0000ff00   //    rgb1: 0x0000ff00
+0xffffff12   // CMD_CLOCK(-32, -43, 20, OPT_FLAT | OPT_NOBACK | OPT_NOTICKS | OPT_NOHANDS, 10, 5, 50, 76)
+0xffd5ffe0   //    x: -32, y: -43
+0xf1000014   //    radius: 20, options: 61696
+0x0005000a   //    hour: 10, minutes: 5
+0x004c0032   //    second: 50, milliseconds: 76
+0xffffff2e   // CMD_COLDSTART
+0xffffff88   // CMD_COPYLIST(0x1a2b3c4d)
+0x1a2b3c4d   //    dst: 439041101
+0xffffff65   // CMD_DDRSHUTDOWN()
+0xffffff66   // CMD_DDRSTARTUP()
+0xffffff29   // CMD_DIAL(-17, 9, 33, OPT_FLAT, 27077)
+0x0009ffef   //    x: -17, y: 9
+0x01000021   //    radius: 33, options: 256
+0x000069c5   //    value: 27077
+0xffffff00   // CMD_DLSTART
+0xffffff7e   // CMD_ENABLEREGION(1)
+0x00000001   //    en: true
+0xffffff5d   // CMD_ENDLIST
+0xffffff68   // CMD_FENCE()
+0xffffff08   // CMD_FGCOLOR(0xC7B600)
+0x00c7b600   //    color: 0x00c7b600
+0xffffff51   // CMD_FILLWIDTH(44)
+0x0000002c   //    fill width: 44
+0xffffff43   // CMD_FLASHATTACH
+0xffffff42   // CMD_FLASHDETACH
+0xffffff3e   // CMD_FLASHERASE
+0xffffff44   // CMD_FLASHFAST
+0xffffffff   //    result: 44
+0xffffff64   // CMD_FLASHPROGRAM(0x00001000, 0x10002000, 0x00002000)
+0x00001000   //    dest: 4096
+0x10002000   //    src: 268443648
+0x00002000   //    num: 8192
+0xffffff40   // CMD_FLASHREAD(44, 640, 76)
+0x0000002c   //    destination: 0x0000002c
+0x00000280   //    source: 0x00000280
+0x0000004c   //    number of bytes: 76
+0xffffff48   // CMD_FLASHSOURCE(896)
+0x00000380   //    pointer: 0x00000380
+0xffffff45   // CMD_FLASHSPIDESEL()
+0xffffff47   // CMD_FLASHSPIRX(0x20001000, 4096)
+0x20001000   //    ptr: 536875008
+0x00001000   //    num: 4096
+0xffffff46   // CMD_FLASHSPITX(8)
+0x00000008   //    num: 8
+0x3ab05509   //    tx data
+0x10de0207   //    tx data
+0xffffff41   // CMD_FLASHUPDATE(640, 40, 64)
+0x00000280   //    destination: 0x00000280
+0x00000028   //    source: 0x00000028
+0x00000040   //    number of bytes: 64
+0xffffff3f   // CMD_FLASHWRITE(0x00002000, 512)
+0x00002000   //    ptr: 8192
+0x00000200   //    num: 512
+0xffffff8e   // CMD_FSDIR(0x20003000, 4096, "path", 0)
+0x20003000   //    dst: 536886272
+0x00001000   //    num: 4096
+0x00000000   //    result: 0 (success)
+0xffffff6d   // CMD_FSOPTION(0x0001 | 0x0008)
+0x00000009   //    options: 0x0001 (OPT_SFNLOWER) | 0x0008 (OPT_DIRSEP_UNIX)
+0xffffff71   // CMD_FSREAD(0x20006000, "/invalid/file.txt", 2)
+0x20006000   //    dst: 536899584
+0x00000002   //    result: 2 (ENOENT - file not found)
+0xffffff80   // CMD_FSSIZE("/videos/movie.mp4", 104857600)
+0x06400000   //    size: 104857600
+0xffffff7f   // CMD_FSSOURCE("/missing/file.png", 2)
+0x00000002   //    result: 2 (ENOENT - file not found)
+0xffffff11   // CMD_GAUGE(-655, -540, 523, OPT_FLAT | OPT_NOBACK | OPT_NOTICKS | OPT_NOPOINTER, 9, 6, 40, 85)
+0xfde4fd71   //    x: -655, y: -540
+0x7100020b   //    radius: 523, options: 28928
+0x00060009   //    major: 9, minor: 6
+0x00550028   //    value: 40, range: 85
+0xffffff21   // CMD_LOADIMAGE(0, OPT_MONO | OPT_FULLSCREEN | OPT_MEDIAFIFO | OPT_DITHER, "content/400_250_400x250_RGB6.raw")
+0x00000000   //    pointer: 0x00000000
+0x00000119   //    options: 281
+0xffffff58   // CMD_GETIMAGE
+0x00000000   //    bitmap address: 0x00000000
+0x00000000   //    bitmap format: 0x00000119
+0x00000000   //    width: 0x00000000
+0x00000000   //    height: 0x00007100
+0x00000000   //    palette: 0x00000009
+0xffffff2f   // CMD_GETMATRIX(-1, 0, 0, -1, -100, -100)
+0xffffffff   //    a: -1
+0x00000000   //    b: 0
+0x00000000   //    c: 0
+0xffffffff   //    d: -1
+0xffffff9c   //    e: -100
+0xffffff9c   //    f: -100
+0xffffff22   // CMD_GETPROPS
+0x00000000   //    pointer: 0x00000000
+0x00000000   //    width: 0
+0x00000000   //    height: 0
+0xffffff20   // CMD_GETPTR
+0x00000000   //    result: 0x00000000
+0xffffff8b   // CMD_GLOW(-10, -20, 100, 75)
+0xffe6fff6   //    x: -10, y: -20
+0x004b0064   //    w: 100, h: 75
+0xffffff30   // CMD_GRADCOLOR(0xFF0105)
+0x00ff0105   //    color: 0x00ff0105
+0xffffff50   // CMD_GRADIENTA(-5, -956, 0x055379F4, 560, 435, 0x0F95FF9E)
+0xfc44fffb   //    x0: -5, y0: -956
+0x055379f4   //    argb0: 0x055379f4
+0x01b30230   //    x1: 560, y1: 435
+0x0f95ff9e   //    argb1: 0x0f95ff9e
+0xffffff09   // CMD_GRADIENT(144, 745, 0xE7D1D2, -866, -1235, 0x205E30)
+0x02e90090   //    x0: 144, y0: 745
+0x00e7d1d2   //    rgb0: 0x00e7d1d2
+0xfffffc9e   //    x1: -866, y1: -1235
+0x00205e30   //    rgb1: 0x00205e30
+0xffffff6b   // CMD_GRAPHICSFINISH()
+0xffffff69   // CMD_I2SSTARTUP(44100)
+0x0000ac44   //    freq: 44100
+0xffffff4a   // CMD_INFLATE(0x20001000, OPT_FLASH)
+0x20001000   //    ptr: 536870912
+0x00000040   //    options: 64 (OPT_FLASH)
+0xffffff02   // CMD_INTERRUPT
+0x00000000   //    milliseconds: 0
+0xffffff0c   // CMD_KEYS(-22, -412, 642, 465, 4, OPT_FLAT | OPT_CENTERX, "12345")
+0xfe64ffea   //    x: -22, y: -412
+0x01d10282   //    width: 642, height: 465
+0x03000004   //    font: 4, options: 768
+0x34333231   //    string: "12345"
+0x00000035   //    end string
+0xffffff81   // CMD_LOADASSET(0x20002000, OPT_FLASH)
+0x20002000   //    ptr: 536875008
+0x00000040   //    options: 64 (OPT_FLASH)
+0xffffff23   // CMD_LOADIDENTITY
+0xffffff82   // CMD_LOADPATCH(OPT_FS)
+0x00002000   //    options: 8192 (OPT_FS)
+0xffffff85   // CMD_LOADWAV(0x20003000, OPT_MEDIAFIFO)
+0x20003000   //    dst: 536879104
+0x00000010   //    options: 16 (OPT_MEDIAFIFO)
+0xffffff2d   // CMD_LOGO
+0xffffff34   // CMD_MEDIAFIFO(80, 52)
+0x00000050   //    pointer: 0x00000050
+0x00000034   //    size: 52
+0xffffff1b   // CMD_MEMCPY(7, 16, 27)
+0x00000007   //    destination: 0x00000007
+0x00000010   //    source: 0x00000010
+0x0000001b   //    number of bytes: 27
+0xffffff16   // CMD_MEMCRC(0x20004000, 1024, 0x00000000)
+0x20004000   //    ptr: 536883200
+0x00000400   //    num: 1024
+0x00000000   //    result: 0
+0xffffff19   // CMD_MEMSET(241, 120, 9)
+0x000000f1   //    pointer: 0x000000f1
+0x00000078   //    value: 120
+0x00000009   //    number of bytes: 9
+0xffffff18   // CMD_MEMWRITE(0, 225000, "content/400_250_400x250_RGB6.raw")
+0x00000000   //    pointer: 0x00000000
+0x00036ee8   //    number of bytes: 225000
+0xffffff1a   // CMD_MEMZERO(751, 1500)
+0x000002ef   //    pointer: 0x000002ef
+0x000005dc   //    number of bytes: 1500
+0xffffff5c   // CMD_NEWLIST(132)
+0x00000084   //    memory address of command list: 0x00000084
+0xffffff53   // CMD_NOP
+0xffffff2a   // CMD_NUMBER(-370, 642, 10, OPT_SIGNED | OPT_CENTER | OPT_RIGHTX, -29)
+0x0282fe8e   //    x: -370, y: 642
+0x0f00000a   //    font: 10, options: 3840
+0xffffffe3   //    number: -29
+0xffffff35   // CMD_PLAYVIDEO(OPT_NODL | OPT_OVERLAY | OPT_FULLSCREEN | OPT_MEDIAFIFO | OPT_SOUND, "content/catvideo.raw")
+0x000000ba   //    options: 186
+0xffffff79   // CMD_PLAYWAV(OPT_FS)
+0x00002000   //    options: 8192 (OPT_FS)
+0xffffff0d   // CMD_PROGRESS(86, -855, 323, 562, 0, 1006, 1500)
+0xfca90056   //    x: 86, y: -855
+0x02320143   //    width: 323, height: 562
+0x03ee0000   //    options: 0, value: 1006
+0x000005dc   //    range: 1500
+0xffffff17   // CMD_REGREAD(11, 0)
+0x0000000b   //    pointer: 0x0000000b
+0x00000000   //    result: 0
+0xffffff86   // CMD_REGWRITE(0x40002000, 54321)
+0x40002000   //    dst: 1073745920
+0x0000d431   //    value: 54321
+0xffffff8d   // CMD_RENDERTARGET(0x20007000, L8, 512, 256)
+0x20007000   //    dst: 536895488
+0x01000000   //    fmt: 0 (L8), w: 512
+0x00000200   //    h: 256
+0xffffff4c   // CMD_RESETFONTS
+0xffffff7d   // CMD_RESTORECONTEXT()
+0xffffff89   // CMD_RESULT()
+0xffffff5a   // CMD_RETURN
+0xffffff39   // CMD_ROMFONT(14, 33)
+0x0000000e   //    font: 14
+0x00000021   //    ROM slot: 33
+0xffffff4b   // CMD_ROTATEAROUND(-8, 32, -2548, -1703936)
+0xfffffff8   //    center of rotation/scaling, x-coordinate: -8
+0x00000020   //    center of rotation/scaling, y-coordinate: -2548
+0xfffff60c   //    clockwise rotation angle: 0
+0xffe60000   //    scale factor: 1006
+0xffffff26   // CMD_ROTATE(-1820)
+0xfffff8e4   //    clockwise rotation angle: -1820
+0xffffff60   // CMD_RUNANIM(-88, -81)
+0xffffffa8   //    wait mask: 0xffffffa8
+0xffffffaf   //    play: -81
+0xffffff7c   // CMD_SAVECONTEXT()
+0xffffff25   // CMD_SCALE(-1441792, 1245184)
+0xffea0000   //    x scale factor: -1441792
+0x00130000   //    y scale factor: 1245184
+0xffffff2b   // CMD_SCREENSAVER
+0xffffff0f   // CMD_SCROLLBAR(-666, 512, 150, 263, OPT_FLAT, 11, 21, 35)
+0x0200fd66   //    x: -666, y: 512
+0x01070096   //    width: 150, height: 263
+0x000b0100   //    options: 256, value: 11
+0x00230015   //    size: 21, range: 35
+0xffffff6e   // CMD_SDATTACH(OPT_4BIT | OPT_HALFSPEED, 0)
+0x00000006   //    options: 6 (OPT_4BIT | OPT_HALFSPEED)
+0x00000000   //    result: 0 (success)
+0xffffff6f   // CMD_SDBLOCKREAD(0x20008000, 0x00001000, 4, 0)
+0x20008000   //    dst: 536903680
+0x00001000   //    src: 4096
+0x00000004   //    count: 4
+0x00000000   //    result: 0 (success)
+0xffffff33   // CMD_SETBASE(24)
+0x00000018   //    numeric base: 24
+0xffffff3d   // CMD_SETBITMAP(0x800000 | 8388607, ARGB2, 43, 120)
+0x00ffffff   //    source: 0x00ffffff
+0x002b0005   //    format: 5, width: 43
+0x00000078   //    height: 120
+0xffffff36   // CMD_SETFONT(1, 0x2000a000, 32)
+0x00000001   //    font: 1
+0x2000a000   //    ptr: 536911872
+0x00000020   //    firstchar: 32
+0xffffff27   // CMD_SETMATRIX
+0xffffff31   // CMD_SETROTATE(6)
+0x00000006   //    rotation: 6
+0xffffff37   // CMD_SETSCRATCH(10)
+0x0000000a   //    bitmap handle: 10
+0xffffff2c   // CMD_SKETCH(-655, 455, 652, 452, 551, L8)
+0x01c7fd71   //    x: -655, y: 455
+0x01c4028c   //    width: 652, height: 452
+0x00000227   //    pointer: 0x00000227
+0x00000003   //    format: 3
+0xffffff8c   // CMD_SKIPCOND(0x2000d000, GREATER, 54321, 0xffff0000, 5)
+0x2000d000   //    a: 536924160
+0x00000003   //    func: 3 (GREATER)
+0x0000d431   //    ref: 54321
+0xffff0000   //    mask: 4294901760
+0x00000005   //    num: 5
+0xffffff0e   // CMD_SLIDER(2626, -566, 162, 695, OPT_FLAT, 29, 58)
+0xfdca0a42   //    x: 2626, y: -566
+0x02b700a2   //    width: 162, height: 695
+0x001d0100   //    options: 256, value: 29
+0x0000003a   //    range: 58
+0xffffff1d   // CMD_SNAPSHOT(20)
+0x00000014   //    pointer: 0x00000014
+0xffffff61   // CMD_SOFTBOOT(BOOT_REGULAR)
+0x00000000   //    mode: 0 (BOOT_REGULAR)
+0xffffff14   // CMD_SPINNER(-31, -20, 3, 25)
+0xffecffe1   //    x: -31, y: -20
+0x00190003   //    style: 3, scale: 25
+0xffffff15   // CMD_STOP
+0xffffff01   // CMD_SWAP
+0xffffff3c   // CMD_SYNC()
+0xffffff57   // CMD_TESTCARD
+0xffffff84   // CMD_TEXTDIM(0x2000e000, 2, OPT_FORMAT, "Hello World")
+0x2000e000   //    dimensions: 536928256
+0x10000002   //    font: 2, options: 4096 (OPT_FORMAT)
+0x6c6c6548   //    string: "Hello World"
+0x6f57206f   //    (string continue)
+0x00646c72   //    end string
+//----------------------------------
+0x48656c6c   //    s: "Hello World" (Hex representation of the string)
+0x6f20576f   //    (continued string)
+0x726c6400   //    (continued string with null terminator)
+0xffffff0a   // CMD_TEXT(-1502, 646, 4, OPT_CENTER | OPT_RIGHTX | OPT_FORMAT | OPT_FILL, "test")
+0x0286fa22   //    x: -1502, y: 646
+0x3e000004   //    font: 4, options: 15872
+0x74736574   //    string: "test"
+0x00000000   //    end string
+0xffffff10   // CMD_TOGGLE(-566, 456, 235, 14, OPT_FLAT | OPT_FORMAT, 29039, "test")
+0x01c8fdca   //    x: -566, y: 456
+0x000e00eb   //    width: 235, font: 14
+0x716f1100   //    options: 4352, state: 29039
+0x74736574   //    string: "test"
+0x00000000   //    end string
+0xffffff76   // CMD_TOUCHRD(0x20011000, 128)
+0x20011000   //    addr: 536940544
+0x00000080   //    num: 128
+0xffffff77   // CMD_TOUCHWR(64)
+0x00000040   //    num: 64
+0xffffff28   // CMD_TRACK(645, 751, 1530, 665, 15)
+0x02ef0285   //    x: 645, y: 751
+0x029905fa   //    width: 1530, height: 665
+0x0000000f   //    tag: 15
+0xffffff24   // CMD_TRANSLATE(-1245184, -720896)
+0xffed0000   //    x translate factor: -1245184
+0xfff50000   //    y translate factor: -720896
+0xffffff3b   // CMD_VIDEOFRAME(80, 36)
+0x00000050   //    destination: 0x00000050
+0x00000024   //    pointer: 0x00000024
+0xffffff3a   // CMD_VIDEOSTART(OPT_MEDIAFIFO)
+0x00000010   //    options: 16 (OPT_MEDIAFIFO)
+0xffffff67   // CMD_WAITCHANGE(0x20013000)
+0x20013000   //    a: 536948736
+0xffffff78   // CMD_WAITCOND(0x20015000, NOTEQUAL, 12345, 0xffff0000)
+0x20015000   //    a: 536956928
+0x00000006   //    func: 6 (NOTEQUAL)
+0x00003039   //    ref: 12345
+0xffff0000   //    mask: 4294901760
+0xffffff59   // CMD_WAIT(999986)
+0x000f4232   //    us: 0x000f4232
+0xffffff83   // CMD_WATCHDOG(500000)
+0x0007a120   //    init_val: 500000
+0xffffff6c   // CMD_WORKAREA(0x20030000)
+0x20030000   //    ptr: 537067520

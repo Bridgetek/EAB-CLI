@@ -1,0 +1,26 @@
+{
+  "name": "eve-emu",
+  "version": "5.0.25",
+  "license": "Bridgetek (reference bundle)",
+  "source": "EVE Asset Builder 4.5.0 reference install",
+  "description": "BT8xx/EVE emulation DLLs used by the reference helper binaries (audio verification).",
+  "variants": {
+    "windows-x64": {
+      "depends_on": {
+        "msvc-runtime": "^14.40"
+      },
+      "provides": [
+        {
+          "src": "bt8xxemu.dll",
+          "dst": "native/bt8xxemu.dll",
+          "kind": "file"
+        },
+        {
+          "src": "eve_hal.dll",
+          "dst": "native/eve_hal.dll",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

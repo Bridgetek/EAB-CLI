@@ -1,0 +1,23 @@
+{
+  "name": "ftdi",
+  "version": "3.2.14",
+  "license": "FTDI (reference bundle)",
+  "source": "EVE Asset Builder 4.5.0 reference install",
+  "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "libMPSSE.dll",
+          "dst": "native/libMPSSE.dll",
+          "kind": "file"
+        },
+        {
+          "src": "LibFT4222-64.dll",
+          "dst": "native/LibFT4222-64.dll",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

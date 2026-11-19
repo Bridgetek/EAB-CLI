@@ -1,0 +1,16 @@
+{
+  "name": "squish",
+  "version": "1.15.1",
+  "license": "MIT (libsquish) / libpng zlib-like licence",
+  "source": "https://github.com/oblivioncth/libsquish/releases/tag/v1.15.1.4",
+  "description": "DXT1 (S3TC/BC1) encoder used by the image converter for the DXT1_* legacy formats. squishpng.exe reads the tile PNG and writes raw DXT1 blocks; libpng16.dll is required to decode that PNG.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        { "src": "squishpng.exe", "dst": "native/squishpng.exe", "kind": "file" },
+        { "src": "libpng16.dll", "dst": "native/libpng16.dll", "kind": "file" },
+        { "src": "Squish.dll", "dst": "native/Squish.dll", "kind": "file" }
+      ]
+    }
+  }
+}

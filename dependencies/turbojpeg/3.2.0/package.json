@@ -1,0 +1,18 @@
+{
+  "name": "turbojpeg",
+  "version": "3.2.0",
+  "license": "BSD-3-Clause / IJG (libjpeg-turbo)",
+  "source": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/tag/3.2.0",
+  "description": "libjpeg-turbo runtime used by the image converter for JPEG decode/encode.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": ".",
+          "dst": "native/turbojpeg",
+          "kind": "dir"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "Legacy",
+  "input_name": "mssong.ttf",
+  "output_name": [
+    "mssong_25_L4.raw"
+  ],
+  "output_size": [
+    16276
+  ],
+  "type": "legacy font",
+  "format": "L4",
+  "compressed": "no",
+  "font_point_size": 25,
+  "font_pixel_size": 25,
+  "font_dpi": 72,
+  "base_line": 11,
+  "caps_height": 11,
+  "mid_line": 11,
+  "x_width": 13,
+  "x_offset": 0,
+  "first_character": 1,
+  "memory_location": "RAM_G",
+  "offset": 0,
+  "eve_command": "cmd_setfont2",
+  "font_width": 14,
+  "font_height": 24,
+  "font_stride": 7,
+  "code_point_mode": "ordinal",
+  "input_chars": " ,!,\",#,$,%,&,',(,),*,+,,,-,.,/,0,1,2,3,4,5,6,7,8,9,:,;,<,=,>,?,@,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,[,\\,],^,_,`,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,{,|,},~",
+  "converted_chars": " ,!,\",#,$,%,&,',(,\n,),*,+,,,-,.,/,0,1,2,3,4,5,6,7,8,9,:,;,<,=,>,?,@,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,[,\\,],^,_,`,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,{,|,},~"
+}

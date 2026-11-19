@@ -1,0 +1,586 @@
+{
+  "schema": 1,
+  "generated": "2026-11-18T16:05:45Z",
+  "generatedBy": "eab_tools deps catalog",
+  "dependencies": {
+    "astc": {
+      "description": "ASTC texture encoder used for ASTC_* bitmap and extended-font formats. The reference binary is kept verbatim so encoded blocks stay byte-identical.",
+      "versions": {
+        "5.5.0": {
+          "revision": null,
+          "license": "Apache-2.0",
+          "source": "https://github.com/ARM-software/astc-encoder",
+          "description": "ASTC texture encoder used for ASTC_* bitmap and extended-font formats. The reference binary is kept verbatim so encoded blocks stay byte-identical.",
+          "variants": {
+            "windows-x64": {
+              "path": "astc/5.5.0/windows-x64",
+              "size": 1196072,
+              "fileCount": 1,
+              "digest": "sha256:dd60272e05c2bd6cc0dc0ba53ba8fbcdfb1518159f480d4b4683af3a0d2d364a",
+              "provides": [
+                {
+                  "src": "astcenc.exe",
+                  "dst": "native/astcenc.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "astcenc.exe",
+                  "size": 1196072,
+                  "sha256": "7c255305707d16f0bf4862050732255d20cc27a41d8b7e0df646b4fe361fb86f"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "eve-emu": {
+      "description": "BT8xx/EVE emulation DLLs used by the reference helper binaries (audio verification).",
+      "versions": {
+        "5.0.25": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "BT8xx/EVE emulation DLLs used by the reference helper binaries (audio verification).",
+          "variants": {
+            "windows-x64": {
+              "path": "eve-emu/5.0.25/windows-x64",
+              "size": 5541200,
+              "fileCount": 3,
+              "digest": "sha256:0a6fc4cc8534cd42b55c3b528763660cd3e6d9faa291be6badf8616683ca1489",
+              "depends_on": {
+                "msvc-runtime": "^14.40"
+              },
+              "provides": [
+                {
+                  "src": "bt8xxemu.dll",
+                  "dst": "native/bt8xxemu.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "eve_hal.dll",
+                  "dst": "native/eve_hal.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "bt8xxemu.dll",
+                  "size": 5407344,
+                  "sha256": "b7a341dfaada3e6fa819cb0815dacd8730387fcb0dac31a8ec7117eb16256eb2"
+                },
+                {
+                  "path": "eve_hal.dll",
+                  "size": 100464,
+                  "sha256": "ca30722b9a8ac504f0e452216a012e5514b193ba868f7906ac462a6e8502d839"
+                },
+                {
+                  "path": "mx25lemu.dll",
+                  "size": 33392,
+                  "sha256": "eb9edf016a9a3fd56208bd46dadbf805d83f0930ede114e422bebad8cf712cb2"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ffmpeg": {
+      "description": "FFmpeg shared build shipped with the EAB 4.5.0 reference (libavcodec 58.99.100). The reference's binaries are kept verbatim so video (AVI) and audio output stay byte-identical.",
+      "versions": {
+        "4.3": {
+          "revision": "git-2020-08-06-2c35797",
+          "license": "GPL-3.0-or-later",
+          "source": "https://ffmpeg.org/",
+          "description": "FFmpeg shared build shipped with the EAB 4.5.0 reference (libavcodec 58.99.100). The reference's binaries are kept verbatim so video (AVI) and audio output stay byte-identical.",
+          "variants": {
+            "windows-x64": {
+              "path": "ffmpeg/4.3/windows-x64",
+              "size": 77836954,
+              "fileCount": 11,
+              "digest": "sha256:a797e22e8405ad28a6192bc8a3887acf56ecee6357c34078586d9c707f946786",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/ffmpeg",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "avcodec-58.dll",
+                  "size": 50149390,
+                  "sha256": "78831b0931e0948f8cf426e676bcd97fd8239370f6dc2ed5f42c8420cea5f83c"
+                },
+                {
+                  "path": "avdevice-58.dll",
+                  "size": 2761742,
+                  "sha256": "c351405b2d628e9da52fd212aa70569e988263fd3a209c4231199641180aa2e5"
+                },
+                {
+                  "path": "avfilter-7.dll",
+                  "size": 11024910,
+                  "sha256": "e07a57d6954423700038031ba929f9c0b1c08ed0fd0afbe5c217e239c39f7a0e"
+                },
+                {
+                  "path": "avformat-58.dll",
+                  "size": 11201038,
+                  "sha256": "7a2f2cba4c4be4038a242b5168a8f8a7efb8502afb5a7136bfd7d90b22811f45"
+                },
+                {
+                  "path": "avutil-56.dll",
+                  "size": 869902,
+                  "sha256": "5218bcab4c383a66abebbcb61fb6dd6ce69bfd9d48dbd8d17a0ca4058494cd9b"
+                },
+                {
+                  "path": "ffmpeg.exe",
+                  "size": 357390,
+                  "sha256": "763ba5f5233d9ea43cb592b27efa967ac24c6d4ccc062200391be6b714e1d645"
+                },
+                {
+                  "path": "ffplay.exe",
+                  "size": 156686,
+                  "sha256": "d3cd61489545ebb290aa86ebe342b6e2b8340c5815af2f7e4a19d9cb89937ff7"
+                },
+                {
+                  "path": "ffprobe.exe",
+                  "size": 188430,
+                  "sha256": "ae36f22626bcc0491d840bd82250cb992262b2e75af5df57b50d1c1109dd975c"
+                },
+                {
+                  "path": "postproc-55.dll",
+                  "size": 135182,
+                  "sha256": "14daf77bf6c7061b081bbc608258579837e2d4301b99ab7b9d6ee677099cfc78"
+                },
+                {
+                  "path": "swresample-3.dll",
+                  "size": 434702,
+                  "sha256": "074f994d1e41d04c161fe9221ac2640e74ae4462aa07651c7c8a914707a36fa2"
+                },
+                {
+                  "path": "swscale-5.dll",
+                  "size": 557582,
+                  "sha256": "2176f16f335277ab0e453168857dc25655d52c86a9d5b9c8299802e73e9addb6"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "flash-tools": {
+      "description": "SPI flash programmers for BT82X (flash.exe) and pre-BT82X (flash_2x.exe), plus the NAND patch blob flash.exe loads at start-up.",
+      "versions": {
+        "4.5.0": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "SPI flash programmers for BT82X (flash.exe) and pre-BT82X (flash_2x.exe), plus the NAND patch blob flash.exe loads at start-up.",
+          "variants": {
+            "windows-x64": {
+              "path": "flash-tools/4.5.0/windows-x64",
+              "size": 157460,
+              "fileCount": 3,
+              "digest": "sha256:e78c6b5a85f74934b59b18852453fb14fb27bf6f588313dfb577a9148e0cc0e4",
+              "provides": [
+                {
+                  "src": "flash.exe",
+                  "dst": "native/flash.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "flash_2x.exe",
+                  "dst": "native/flash_2x.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "patch_nand.bin",
+                  "dst": "native/patch_nand.bin",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "flash.exe",
+                  "size": 86640,
+                  "sha256": "c908682157178102786f43d9d8be9118fc952490180f87cc97ba8aaa55eefb60"
+                },
+                {
+                  "path": "flash_2x.exe",
+                  "size": 68208,
+                  "sha256": "2fe7a9f20fa0097f123e3f8d277f1682aab42c147b9bdca47a99a073529e1760"
+                },
+                {
+                  "path": "patch_nand.bin",
+                  "size": 2612,
+                  "sha256": "fe58733a8d2fca4a595156969b93f7167f3a9f4ed3c62e3a3aefe4642183f506"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ftdi": {
+      "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
+      "versions": {
+        "3.2.14": {
+          "revision": null,
+          "license": "FTDI (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "FTDI MPSSE / FT4222 driver DLLs used to talk to the EVE hardware.",
+          "variants": {
+            "windows-x64": {
+              "path": "ftdi/3.2.14/windows-x64",
+              "size": 1376824,
+              "fileCount": 3,
+              "digest": "sha256:267cb6a02a07c200c310dde26598ae9fddc96876c8b3c7de63acfa9a5ccc21cd",
+              "provides": [
+                {
+                  "src": "libMPSSE.dll",
+                  "dst": "native/libMPSSE.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "LibFT4222-64.dll",
+                  "dst": "native/LibFT4222-64.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "LibFT4222-64.dll",
+                  "size": 504704,
+                  "sha256": "54f25f6741bb1962ffeb01e20d844cf05fd6dde575bd896da599e27dbfd54a56"
+                },
+                {
+                  "path": "ftd2xx.dll",
+                  "size": 314552,
+                  "sha256": "9c282c4580aac9388adadf8c2d9794cca2f953af36331aedf814e936cfed97ad"
+                },
+                {
+                  "path": "libMPSSE.dll",
+                  "size": 557568,
+                  "sha256": "a2a81cd035f68e37d55fe94592839062440dab713660fe10c0a0165b991905a2"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "jtc": {
+      "description": "Custom-touch firmware/patch generators (16 MB payload).",
+      "versions": {
+        "4.5": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "Custom-touch firmware/patch generators (16 MB payload).",
+          "variants": {
+            "windows-x64": {
+              "path": "jtc/4.5/windows-x64",
+              "size": 18068456,
+              "fileCount": 2,
+              "digest": "sha256:171970f0abda60b9edd5b281f89126209c53aa3214e376ab14eca040bfb0d500",
+              "provides": [
+                {
+                  "src": "jtc.exe",
+                  "dst": "native/jtc.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "jtc_FT81X_BT88X.exe",
+                  "dst": "native/jtc_FT81X_BT88X.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "jtc.exe",
+                  "size": 9034776,
+                  "sha256": "75d5e6cffd0fa59bb60c6c01deda9bc9a77583f2d06a6e448534ad3636cad449"
+                },
+                {
+                  "path": "jtc_FT81X_BT88X.exe",
+                  "size": 9033680,
+                  "sha256": "774c344faa208c60347659d32458ac0a85880f69477b49e4710fc2bcc0855ea7"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "msvc-runtime": {
+      "description": "Visual C++ runtime DLLs required by the FTDI/EVE emulation DLLs and the bundled helper executables.",
+      "versions": {
+        "14.40.33816": {
+          "revision": null,
+          "license": "Microsoft Visual C++ Redistributable (redistributable terms)",
+          "source": "https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist",
+          "description": "Visual C++ runtime DLLs required by the FTDI/EVE emulation DLLs and the bundled helper executables.",
+          "variants": {
+            "windows-x64": {
+              "path": "msvc-runtime/14.40.33816/windows-x64",
+              "size": 1044168,
+              "fileCount": 4,
+              "digest": "sha256:2d5a9a77cd4eac77d2000f184aa54a30e2b9bfa87565439f3114c561bb19f604",
+              "provides": [
+                {
+                  "src": "msvcp140.dll",
+                  "dst": "native/msvcp140.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "vcruntime140.dll",
+                  "dst": "native/vcruntime140.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "vcruntime140_1.dll",
+                  "dst": "native/vcruntime140_1.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "concrt140.dll",
+                  "dst": "native/concrt140.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "concrt140.dll",
+                  "size": 333632,
+                  "sha256": "511aba3d00b9925e7bc64e2132d77a76c1fd9e9d200ec0ef864b7a0f00c68995"
+                },
+                {
+                  "path": "msvcp140.dll",
+                  "size": 575056,
+                  "sha256": "7b8a6f283884e6448559dcf510b00c1a885bfb8e598ea05cd2c290c874657326"
+                },
+                {
+                  "path": "vcruntime140.dll",
+                  "size": 98224,
+                  "sha256": "9d2b40f0395cc5d1b4d5ea17b84970c29971d448c37104676db577586d4ad1b1"
+                },
+                {
+                  "path": "vcruntime140_1.dll",
+                  "size": 37256,
+                  "sha256": "34048abaa070ecc13b318cea31425f4ca3edd133d350318ac65259e6058c8b32"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "pngquant": {
+      "description": "pngquant palette quantizer used by the image converter for every paletted output format.",
+      "versions": {
+        "2.17.0": {
+          "revision": null,
+          "license": "GPL-3.0-or-later (pngquant dual licence: GPL-3 / commercial)",
+          "source": "https://pngquant.org",
+          "description": "pngquant palette quantizer used by the image converter for every paletted output format.",
+          "variants": {
+            "windows-x64": {
+              "path": "pngquant/2.17.0/windows-x64",
+              "size": 301374,
+              "fileCount": 3,
+              "digest": "sha256:0ef9c41228eb98d34c7119824f32112053de18b4740f470f5919addc7f606354",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/pngquant",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "COPYRIGHT",
+                  "size": 35621,
+                  "sha256": "e4f467f7abf860b4e620f5f60fdd88bc3a63a0fdb98a481fb002b5e511c9b826"
+                },
+                {
+                  "path": "notice.md",
+                  "size": 438,
+                  "sha256": "68714f69f2cd6b2622ac80572ca9440a23dacf9d92d4e7fc032f57baffb87c8a"
+                },
+                {
+                  "path": "pngquant.exe",
+                  "size": 265315,
+                  "sha256": "33c3e9de690a5a8347318c815e8279d7c1007991be72cbc4e098fbf1a9279975"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "squish": {
+      "description": "DXT1 (S3TC/BC1) encoder used by the image converter for the DXT1_* legacy formats. squishpng.exe reads the tile PNG and writes raw DXT1 blocks; libpng16.dll is required to decode that PNG.",
+      "versions": {
+        "1.15.1": {
+          "revision": null,
+          "license": "MIT (libsquish) / libpng zlib-like licence",
+          "source": "https://github.com/oblivioncth/libsquish/releases/tag/v1.15.1.4",
+          "description": "DXT1 (S3TC/BC1) encoder used by the image converter for the DXT1_* legacy formats. squishpng.exe reads the tile PNG and writes raw DXT1 blocks; libpng16.dll is required to decode that PNG.",
+          "variants": {
+            "windows-x64": {
+              "path": "squish/1.15.1/windows-x64",
+              "size": 284160,
+              "fileCount": 3,
+              "digest": "sha256:131c21df25d48fcc1b7f9418636f3a59d125b650807d1ac8944a0afccfb57d85",
+              "provides": [
+                {
+                  "src": "squishpng.exe",
+                  "dst": "native/squishpng.exe",
+                  "kind": "file"
+                },
+                {
+                  "src": "libpng16.dll",
+                  "dst": "native/libpng16.dll",
+                  "kind": "file"
+                },
+                {
+                  "src": "Squish.dll",
+                  "dst": "native/Squish.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "Squish.dll",
+                  "size": 44032,
+                  "sha256": "5ccd79f182de68f7ff1f5d83513351b86552d05f60c8852391b012e175093c39"
+                },
+                {
+                  "path": "libpng16.dll",
+                  "size": 195072,
+                  "sha256": "a84302e0f79f8635ced01d21bc204269e78188b26013ec4f1d90f6d6c5c8ec4c"
+                },
+                {
+                  "path": "squishpng.exe",
+                  "size": 45056,
+                  "sha256": "e0d87c765aaf03151de61940a847e226eccacde3d7ca6aefc146fc9a45363713"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "turbojpeg": {
+      "description": "libjpeg-turbo runtime used by the image converter for JPEG decode/encode.",
+      "versions": {
+        "3.2.0": {
+          "revision": null,
+          "license": "BSD-3-Clause / IJG (libjpeg-turbo)",
+          "source": "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/tag/3.2.0",
+          "description": "libjpeg-turbo runtime used by the image converter for JPEG decode/encode.",
+          "variants": {
+            "windows-x64": {
+              "path": "turbojpeg/3.2.0/windows-x64",
+              "size": 1259519,
+              "fileCount": 3,
+              "digest": "sha256:c3d348c06fae22a02f8e4218e6b4fdc8185de8f6d26af3bca3d87868938880b2",
+              "provides": [
+                {
+                  "src": ".",
+                  "dst": "native/turbojpeg",
+                  "kind": "dir"
+                }
+              ],
+              "files": [
+                {
+                  "path": "LICENSE.md",
+                  "size": 6077,
+                  "sha256": "ba6bceebcba0fdd35488477c2cca8c4632ce82c74dbfbc87d886ce6fc4433579"
+                },
+                {
+                  "path": "notice.md",
+                  "size": 578,
+                  "sha256": "dfc14a3ba652ef518be11910311f9b4ef8a10469bd4f19adf9d7890baaa494fb"
+                },
+                {
+                  "path": "turbojpeg.dll",
+                  "size": 1252864,
+                  "sha256": "d472792fec8afcf0adad4e41a3e671885a07fcca47e7b5cb07d50b812293274a"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "uf2conv4eve": {
+      "description": "UF2 converter used to flash Raspberry Pi Pico boards over the mass-storage bootloader.",
+      "versions": {
+        "1.0.0": {
+          "revision": null,
+          "license": "Bridgetek (reference bundle)",
+          "source": "EVE Asset Builder 4.5.0 reference install",
+          "description": "UF2 converter used to flash Raspberry Pi Pico boards over the mass-storage bootloader.",
+          "variants": {
+            "windows-x64": {
+              "path": "uf2conv4eve/1.0.0/windows-x64",
+              "size": 5606000,
+              "fileCount": 1,
+              "digest": "sha256:c3675240db7237a150d437132b435256917e382812d4de022e067087af6236cb",
+              "provides": [
+                {
+                  "src": "uf2conv4eve.exe",
+                  "dst": "native/uf2conv4eve.exe",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "uf2conv4eve.exe",
+                  "size": 5606000,
+                  "sha256": "edc97bcbb5ea4b2aba6a2cf937729251648b20ee980bebb91376c420a03cdaf3"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "zlib": {
+      "description": "zlib runtime DLL required by the Flash/audio helper executables.",
+      "versions": {
+        "1.2.11": {
+          "revision": null,
+          "license": "zlib",
+          "source": "https://zlib.net/",
+          "description": "zlib runtime DLL required by the Flash/audio helper executables.",
+          "variants": {
+            "windows-x64": {
+              "path": "zlib/1.2.11/windows-x64",
+              "size": 96984,
+              "fileCount": 1,
+              "digest": "sha256:9dce13e308be19f9ecc0a560d201b47da4b2085600bbf5ae9959f003b908e9fe",
+              "provides": [
+                {
+                  "src": "zlib.dll",
+                  "dst": "native/zlib.dll",
+                  "kind": "file"
+                }
+              ],
+              "files": [
+                {
+                  "path": "zlib.dll",
+                  "size": 96984,
+                  "sha256": "999eb98a1916a098c6c88f726a12b1702fea88bdaf04d3c0f281ec2d2630ff6d"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

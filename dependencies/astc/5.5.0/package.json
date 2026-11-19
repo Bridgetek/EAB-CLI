@@ -1,0 +1,18 @@
+{
+  "name": "astc",
+  "version": "5.5.0",
+  "license": "Apache-2.0",
+  "source": "https://github.com/ARM-software/astc-encoder",
+  "description": "ASTC texture encoder used for ASTC_* bitmap and extended-font formats. The reference binary is kept verbatim so encoded blocks stay byte-identical.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "astcenc.exe",
+          "dst": "native/astcenc.exe",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

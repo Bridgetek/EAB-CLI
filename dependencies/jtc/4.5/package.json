@@ -1,0 +1,23 @@
+{
+  "name": "jtc",
+  "version": "4.5",
+  "license": "Bridgetek (reference bundle)",
+  "source": "EVE Asset Builder 4.5.0 reference install",
+  "description": "Custom-touch firmware/patch generators (16 MB payload).",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "jtc.exe",
+          "dst": "native/jtc.exe",
+          "kind": "file"
+        },
+        {
+          "src": "jtc_FT81X_BT88X.exe",
+          "dst": "native/jtc_FT81X_BT88X.exe",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}

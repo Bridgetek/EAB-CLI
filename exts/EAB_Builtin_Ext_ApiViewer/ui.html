@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Reference</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>📚 API Reference</h1>
+      <p>Every host API an extension may call — with its version, an example and what changed in which release</p>
+    </div>
+    <div class="app-body row g-3">
+      <div class="col-12">
+        <div id="api-error" class="alert alert-danger hidden" role="alert" tabindex="-1"></div>
+      </div>
+      <div class="col-12 col-xl-4">
+        <div class="card h-100">
+          <div class="card-title">
+            <span>📚 APIs</span>
+            <span id="api-version" class="api-badge api-badge-muted">—</span>
+          </div>
+          <div class="opt-row">
+            <input id="api-search" class="input-field form-control" type="search" placeholder="Search name, command or text…" aria-label="Search the API list">
+            <button id="api-refresh" class="btn btn-secondary" type="button" onclick="loadApis()" title="Ask the host for the catalogue again">🔄</button>
+          </div>
+          <div id="api-cats" class="cat-row"></div>
+          <div id="api-list" class="file-list"><div class="file-list-empty">Reading the host catalogue…</div></div>
+          <div id="api-count" class="hint"></div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-8">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-title">
+                <span id="api-title">📖 API detail</span>
+                <span id="api-status" class="api-badge hidden"></span>
+              </div>
+              <div id="api-empty" class="panel-empty">Pick an API on the left to see its payload, its
+                return fields, a runnable example and its history.</div>
+              <div id="api-body" class="hidden">
+                <div class="api-badges">
+                  <span id="api-kind" class="api-badge api-badge-muted"></span>
+                  <span id="api-category" class="api-badge api-badge-muted"></span>
+                  <span id="api-since" class="api-badge api-badge-muted"></span>
+                  <span id="api-detail-version" class="api-badge api-badge-muted"></span>
+                </div>
+                <div id="api-summary" class="api-summary"></div>
+                <div id="api-sig" class="api-sig"></div>
+                <div id="api-payload-block">
+                  <div class="card-sub">Payload</div>
+                  <div id="api-payload" class="api-table"></div>
+                </div>
+                <div id="api-returns-block">
+                  <div class="card-sub">Answers with</div>
+                  <div id="api-returns" class="api-table"></div>
+                </div>
+                <div class="card-sub">Example</div>
+                <div class="api-example">
+                  <code id="api-example"></code>
+                  <button id="api-copy" class="btn btn-secondary" type="button" onclick="copyExample()">Copy</button>
+                </div>
+                <div class="card-sub">History</div>
+                <div id="api-history" class="hist-list"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="card">
+              <div class="card-title"><span>🚚 Releases</span></div>
+              <div id="release-list" class="hist-list"></div>
+              <div id="api-note" class="hint"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="api-toast" class="api-toast hidden" role="status"></div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="ui.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

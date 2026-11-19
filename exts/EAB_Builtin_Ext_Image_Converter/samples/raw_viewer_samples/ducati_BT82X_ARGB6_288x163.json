@@ -1,0 +1,19 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "BT82x",
+  "input_name": "ducati.png",
+  "output_name": [
+    "ducati_BT82X_ARGB6_288x163.raw"
+  ],
+  "output_size": [
+    140832
+  ],
+  "type": "bitmap",
+  "format": "ARGB6",
+  "compressed": "no",
+  "width": 288,
+  "height": 163,
+  "stride": 864,
+  "zorder": false,
+  "dither_algorithm": "NONE"
+}

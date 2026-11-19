@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVE Extension</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="ui.css">
+</head>
+<body>
+<div id="root">
+  <div class="app-container flex-column m-0 overflow-hidden">
+    <div class="app-header">
+      <h1>🧩 EVE Extension</h1>
+      <p>Generate BT82x extension patch files (.bin / .h / .c / .py / .json)</p>
+    </div>
+    <div class="app-toolbar">
+      <div class="btn-progress-wrap overflow-hidden position-relative">
+        <div id="progress-fill" class="btn-progress-fill"></div>
+        <button id="btn-run" class="btn btn-primary" onclick="startRun()">🧩 Generate Patch</button>
+      </div>
+      <span id="run-status" class="eab-run-status"></span>
+    </div>
+    <div class="row g-3 app-body">
+      <div class="col-12">
+        <div id="error-panel" class="alert alert-danger hidden"></div>
+
+      </div>
+      <div class="col-12 col-xl-6">
+<div class="card">
+          <div class="card-title">💾 Output</div>
+          <div class="row">
+            <div class="col-12">
+              <div class="output-field">
+                <label for="output-dir" class="form-label">Output Folder</label>
+                <input id="output-dir" type="text" class="input-field is-path form-control" placeholder="Output folder..." value="." spellcheck="false">
+                <button id="btn-output-browse" class="btn btn-secondary" type="button" onclick="pickOutputDir()">Browse…</button>
+                <button id="btn-open-output" class="btn btn-secondary" type="button" onclick="openOutputDir()" title="Open the output folder in the file manager">📂</button>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="output-field">
+                <label for="output-name" class="form-label">Output Name</label>
+                <input id="output-name" type="text" class="input-field form-control" placeholder="patch">
+              </div>
+            </div>
+          </div>
+          <div class="hint" id="name-hint">Output base name (default: patch). Unchecked: <b>patch</b></div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+<div class="card opt-card advanced">
+          <div class="card-title">⚙ Output Styles</div>
+          <div class="opt-body">
+            <div class="opt-check">
+              <input type="checkbox" id="style-bin" checked onchange="updateEnable()" class="form-check-input">
+              <label class="form-check-label" for="style-bin">Binary (<code>--binfile</code>)</label>
+            </div>
+            <div class="opt-check">
+              <input type="checkbox" id="style-c" onchange="updateEnable()" class="form-check-input">
+              <label class="form-check-label" for="style-c">C (<code>--cfiles</code>)</label>
+            </div>
+            <div class="opt-check">
+              <input type="checkbox" id="style-py" onchange="updateEnable()" class="form-check-input">
+              <label class="form-check-label" for="style-py">Python (<code>--pyfiles</code>)</label>
+            </div>
+            <div class="opt-check">
+              <input type="checkbox" id="style-json" onchange="updateEnable()" class="form-check-input">
+              <label class="form-check-label" for="style-json">JSON (<code>--jsonfiles</code>)</label>
+            </div>
+            <div class="opt-check">
+              <input type="checkbox" id="split" disabled onchange="updateEnable()" class="form-check-input">
+              <label class="form-check-label" for="split">Split patch binary from C / Python output code files</label>
+            </div>
+          </div>
+          <div class="hint">Each selected style generates its own file set; split implies a .bin is also written for C / Python.</div>
+        </div>
+      </div>
+      <div class="col-12 col-xl-6">
+<div class="card opt-card">
+          <div class="card-title">🔳 EVE Chip</div>
+          <div class="opt-body">
+            <div class="opt-field">
+              <label for="chip" class="form-label">Patch chip</label>
+              <select id="chip" class="form-select">
+                <option value="bt82x" selected>BT82x</option>
+              </select>
+            </div>
+          </div>
+          <div class="hint">Extension patches are a BT82x-only feature (LOADPATCH / EVE API 5).</div>
+        </div>
+      </div>
+      <div class="col-12">
+<div class="card">
+          <div class="card-title">🧬 Patches</div>
+          <div class="table-wrap">
+            <table class="table table-sm" id="patch-table">
+              <thead>
+                <tr>
+                  <th class="patch-col-name">Name</th>
+                  <th class="patch-col-ver">Version</th>
+                  <th>Description</th>
+                  <th class="patch-col-chk" title="Select all (skip mandatory)"><input type="checkbox" id="check-all" onchange="toggleAll()"></th>
+                </tr>
+              </thead>
+              <tbody id="patch-tbody"><tr><td colspan="4" class="loading">Loading patches…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="preview_image.js"></script>
+<script src="state.js"></script>
+<script src="safety_net.js"></script>
+<script src="decoder.js"></script>
+<script src="ui_helpers.js"></script>
+<script src="cli_args.js"></script>
+<script src="advanced.js"></script>
+<script src="click_safety.js"></script>
+<script src="tooltips.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="eab-results.js"></script>
+<script>
+/* eab-select-keep-focus: keep a combobox focused after a pick so the arrow keys keep changing it. */
+document.addEventListener('change', function (event) {
+  var el = event.target;
+  if (event.isTrusted === false) return;
+  if (!el || el.tagName !== 'SELECT' || el.disabled || el.multiple) return;
+  var id = el.id;
+  setTimeout(function () {
+    var target = (id && document.getElementById(id)) || el;
+    if (!target.isConnected || target.disabled || document.activeElement === target) return;
+    try { target.focus({ preventScroll: true }); } catch (err) { try { target.focus(); } catch (e2) { } }
+  }, 0);
+}, true);
+</script></body>
+</html>

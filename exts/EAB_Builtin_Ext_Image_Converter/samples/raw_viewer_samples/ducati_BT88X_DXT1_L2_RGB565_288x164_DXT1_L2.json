@@ -1,0 +1,20 @@
+{
+  "eab_version": "4.5",
+  "chip_gen": "Pre82x",
+  "input_name": "ducati.png",
+  "output_name": [
+    "ducati_BT88X_DXT1_L2_RGB565_288x164_DXT1_L2.raw",
+    "ducati_BT88X_DXT1_L2_RGB565_288x164_DXT1_RGB565.raw"
+  ],
+  "output_size": [
+    11808,
+    11808
+  ],
+  "type": "bitmap",
+  "format": "DXT1_L2_RGB565",
+  "compressed": "no",
+  "width": 288,
+  "height": 164,
+  "color_layer_width": 72,
+  "color_layer_height": 41
+}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<style>
+body   {background-color:white;}
+
+a {
+  color: #0055ff;
+  font-family: Segoe UI,sans-serif;
+  font-size: 13pt;
+  font-weight: normal;
+}
+
+a.h3 {
+  color: #0055ff;
+  font-family: Segoe UI,sans-serif;
+  font-size: 13pt;
+  font-weight: normal;
+}
+
+p {
+  color: #2c3e50;
+  font-family: Segoe UI,sans-serif;
+  font-size: 13pt;
+}
+
+p.h3 {
+  color: #2c3e50;
+  font-family: Segoe UI, sans-serif;
+  font-size: 13pt;
+  font-weight: bold;
+}
+
+p.h2 {
+  color: #2c3e50;
+  font-family: Segoe UI, sans-serif;
+  font-size: 15pt;
+  font-weight: bold;
+}
+
+</style>
+<body>
+<p class="h2">EVE Asset Builder</p>
+
+<p class="h3">Copyright (C) BridgeTek Pte Ltd</p>
+<p class="h3">Version ###VERSION###</p>
+
+<p class="h3">Open-source software are utilized in this software:</p>
+
+<p>1. <a href="https://www.rust-lang.org/">Rust</a>&nbsp;and its crates: <a href="https://serde.rs/">serde</a>, <a href="https://github.com/serde-rs/json">serde_json</a>, <a href="https://github.com/rust-lang/log">log</a>, <a href="https://github.com/image-rs/image">image</a>, <a href="https://github.com/image-rs/image-png">png</a>, <a href="https://github.com/rust-lang/flate2-rs">flate2</a>, <a href="https://github.com/zopfli-rs/zopfli">zopfli</a>, <a href="https://github.com/rust-lang/regex">regex</a>, <a href="https://github.com/nagisa/rust_libloading">libloading</a>, <a href="https://github.com/KokaKiwi/rust-hex">hex</a>, <a href="https://github.com/unicode-rs/unicode-general-category">unicode-general-category</a><br />
+2.&nbsp;<a href="https://freetype.org/">FreeType</a>&nbsp;(<a href="https://github.com/PistonDevelopers/freetype-rs">freetype-rs</a>) and <a href="https://github.com/RazrFalcon/ttf-parser">ttf-parser</a><br />
+3.&nbsp;<a href="https://www.ffmpeg.org/">FFmpeg</a><br />
+4.&nbsp;<a href="https://github.com/ARM-software/astc-encoder/">ASTC Encoder</a><br />
+5.&nbsp;<a href="https://zlib.net/">zlib</a><br />
+6.&nbsp;<a href="https://tauri.app/">Tauri</a>&nbsp;and <a href="https://react.dev/">React</a>&nbsp;(desktop shell and user interface)</p>
+
+<p class="h3">Third-party components:</p>
+<p>FTDI drivers (<a href="https://ftdichip.com/drivers/d2xx-drivers/">D2XX</a>, <a href="https://ftdichip.com/products/ft4222h/">FT4222</a>/MPSSE) used to access the EVE hardware, the Microsoft Visual C++ Redistributable and Edge WebView2 runtimes they and the desktop shell require, and the Bridgetek helper tools for custom touch firmware generation and EVE audio emulation (<code>jtc.exe</code>, <code>bt8xxemu.dll</code>, <code>eve_hal.dll</code>).</p>
+
+<p class="h3">ASTC Encoder releases:</p>
+<p><a href="https://github.com/ARM-software/astc-encoder/releases/">https://github.com/ARM-software/astc-encoder/releases</a></p>
+<p class="h3">Credits:</p>
+
+<p>Icons made by <a href="https://www.freepik.com/"> Freepik</a>,
+<a href="https://smashicons.com/">Smashicons</a>,
+<a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a>,
+<a href="https://www.flaticon.com/authors/dave-gandy" title="Dave Gandy">Dave Gandy</a>,
+<a href="https://www.flaticon.com/authors/royyan-wijaya" title="Royyan Wijaya">Royyan Wijaya</a>,
+<a target="_blank" href="https://icons8.com">Icons8</a>,
+<a href="https://www.flaticon.com/free-icons/ux-design" title="ux design icons">Komar Dews - Flaticon</a>
+</p>
+
+<p>Audio for testing by <a href="https://pixabay.com/es/users/lesfm-22579021/">Lesfm</a> from Pixabay, and <a href="https://mixkit.co/">mixkit</a></p>
+<p>Video for testing by <a href="https://www.vecteezy.com/free-videos/">Vecteezy</a></p>
+</p>
+<p class="h3">
+EVE Asset Builder Utilities
+</p>
+<p>eab_tools.exe is the command line mode of EAB, located under the folder: <b>$(EAB Installation Folder)\tools</b></p>
+<p>For help, click <a href="open_commmand_prompt">Command Prompt</a> button on the left panel and enter: <b>eab_tools -h</b></p>
+
+<p><a class="h3" href="eab_user_guide">EAB User Guide</a></p>
+<p><a class="h3" href="extension_user_guide">Extension User Guide</a></p>
+
+<p class="h3">Please check our <a class="h3" href="https://brtchip.com/eab/">website</a> for updates.</p>
+</body>

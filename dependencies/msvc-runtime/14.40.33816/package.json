@@ -1,0 +1,33 @@
+{
+  "name": "msvc-runtime",
+  "version": "14.40.33816",
+  "license": "Microsoft Visual C++ Redistributable (redistributable terms)",
+  "source": "https://learn.microsoft.com/cpp/windows/latest-supported-vc-redist",
+  "description": "Visual C++ runtime DLLs required by the FTDI/EVE emulation DLLs and the bundled helper executables.",
+  "variants": {
+    "windows-x64": {
+      "provides": [
+        {
+          "src": "msvcp140.dll",
+          "dst": "native/msvcp140.dll",
+          "kind": "file"
+        },
+        {
+          "src": "vcruntime140.dll",
+          "dst": "native/vcruntime140.dll",
+          "kind": "file"
+        },
+        {
+          "src": "vcruntime140_1.dll",
+          "dst": "native/vcruntime140_1.dll",
+          "kind": "file"
+        },
+        {
+          "src": "concrt140.dll",
+          "dst": "native/concrt140.dll",
+          "kind": "file"
+        }
+      ]
+    }
+  }
+}
